@@ -143,6 +143,9 @@ public static List<Proveedor> proveedores=new ArrayList<>();
           this.conectar();
           stmt=conn.createStatement();
           String sql;
+            sql="DELETE FROM bdpatrones.producto WHERE proveedor="+p.getCodigo();
+          stmt.executeUpdate(sql);
+          
           sql="DELETE FROM bdpatrones.proveedor WHERE idProveedor="+p.getCodigo();
           stmt.executeUpdate(sql);
            JOptionPane.showMessageDialog(null,"Proveedor borrado exitosamente");

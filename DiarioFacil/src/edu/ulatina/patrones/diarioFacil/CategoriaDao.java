@@ -138,8 +138,11 @@ public static List<Categoria> categorias=new ArrayList<>();
           this.conectar();
           stmt=conn.createStatement();
           String sql;
+          sql="DELETE FROM bdpatrones.producto WHERE categoria="+t.getCodCategoria();
+          stmt.executeUpdate(sql);
           sql="DELETE FROM bdpatrones.categoria WHERE idCategoria="+t.getCodCategoria();
           stmt.executeUpdate(sql);
+          
            JOptionPane.showMessageDialog(null,"Categoría borrada exitosamente");
       }catch(Exception e){
           e.printStackTrace();

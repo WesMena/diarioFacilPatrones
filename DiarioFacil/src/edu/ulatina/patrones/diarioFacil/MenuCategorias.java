@@ -129,6 +129,11 @@ public class MenuCategorias {
                                                    
                                }
                            }
+                           
+                           if(productos.isEmpty()){
+                               productosStr="La categoría elegida no contiene ningún "
+                                       + "producto";
+                           }
                            JOptionPane.showMessageDialog(null,productosStr);
                         
                        }
@@ -144,7 +149,9 @@ public class MenuCategorias {
                 case 5:
                    try{
                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                              + " de la categoría a modificar"));
+                              + " de la categoría a modificar \n"
+                              + "AVISO:esto también borrará todos los productos "
+                              + "asociados a esta categoría"));
                       Optional<Categoria> opCat=categoria.get(id);
                       
                     
