@@ -17,9 +17,10 @@ public class Tester {
   
     
    public static void main(String[] args) {
-       MenuCategorias categorias=new MenuCategorias();
-       categorias.menu();
-       
+       //MenuCategorias categorias=new MenuCategorias();
+       //categorias.menu();
+       MenuLogin log = new MenuLogin();
+       log.loginUI();
      // MenuProveedores proveedores=new MenuProveedores();
      // proveedores.menu();
     }
