@@ -88,5 +88,7 @@ public class Producto {
     public void setCodCategoria(int codCategoria) {
         this.codCategoria = codCategoria;
     }
+
+  
     
 }

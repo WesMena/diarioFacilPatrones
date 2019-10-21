@@ -6,6 +6,7 @@
 package edu.ulatina.patrones.diarioFacil;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +26,16 @@ public static List<Categoria> categorias=new ArrayList<>();
            this.conectar();
            stmt=conn.createStatement();
            String sql; 
-           sql="SELECT idCategoria,nombreCategoria FROM categoria";
+           sql="SELECT idCategoria,nombreCategoria,borrado FROM categoria";
            rs=stmt.executeQuery(sql);
            while(rs.next()){
              int id=rs.getInt("idCategoria");
              String nombre=rs.getString("nombreCategoria");
-             
-       categorias.add(new Categoria(id,nombre));
+             int borrado=rs.getByte("borrado");
+             if(borrado==0){
+        categorias.add(new Categoria(id,nombre));                
+             }
+
             
              
            }
@@ -68,14 +72,20 @@ public static List<Categoria> categorias=new ArrayList<>();
 
     public void save(Categoria t) {
          Statement stmt=null; 
+         boolean fallido=false;
         try{
             this.conectar();
             stmt=conn.createStatement();
             String sql; 
             sql="INSERT INTO bdpatrones.categoria VALUES("+
                     t.getCodCategoria()+",'"+t.getNombreCategoria()
-                    +"')";
-            stmt.executeUpdate(sql);
+                    +"',0)";
+           try{
+             stmt.executeUpdate(sql);  
+           }catch(SQLException sqlE){
+               fallido=true;
+           }
+           
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -87,8 +97,14 @@ public static List<Categoria> categorias=new ArrayList<>();
                 e.printStackTrace();
             }
         }
+        if(fallido){
+          JOptionPane.showMessageDialog(null,"El id ingresado pertenece a una "
+                  + "categoría que ya no forma parte del sistema ");   
+        }else{
         categorias.add(t);
-        JOptionPane.showMessageDialog(null,"Categoría agregada exitosamente");
+        JOptionPane.showMessageDialog(null,"Categoría agregada exitosamente");    
+        }
+        
     }
 
  
@@ -138,9 +154,8 @@ public static List<Categoria> categorias=new ArrayList<>();
           this.conectar();
           stmt=conn.createStatement();
           String sql;
-          sql="DELETE FROM bdpatrones.producto WHERE categoria="+t.getCodCategoria();
-          stmt.executeUpdate(sql);
-          sql="DELETE FROM bdpatrones.categoria WHERE idCategoria="+t.getCodCategoria();
+          sql="UPDATE bdpatrones.categoria SET borrado=1 WHERE idCategoria="+t.getCodCategoria();
+          
           stmt.executeUpdate(sql);
           
            JOptionPane.showMessageDialog(null,"Categoría borrada exitosamente");

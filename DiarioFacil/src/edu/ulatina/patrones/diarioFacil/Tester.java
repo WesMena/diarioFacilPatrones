@@ -17,11 +17,11 @@ public class Tester {
   
     
    public static void main(String[] args) {
-       MenuCategorias categorias=new MenuCategorias();
-       categorias.menu();
+      // MenuCategorias categorias=new MenuCategorias();
+      // categorias.menu();
        
-     // MenuProveedores proveedores=new MenuProveedores();
-     // proveedores.menu();
+      MenuProveedores proveedores=new MenuProveedores();
+     proveedores.menu();
     }
    // 
 }

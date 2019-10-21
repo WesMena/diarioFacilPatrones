@@ -27,6 +27,8 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
            this.conectar();
            stmt=conn.createStatement();
            String sql; 
+           
+           
            sql="SELECT idProducto,NombreProducto, MarcaProducto,"
                    + "PrecioProducto,stockActual,stockMinimo,"
                    + "categoria,proveedor FROM producto";
