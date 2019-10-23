@@ -41,6 +41,13 @@ public abstract class Usuario {
         this.isActive = isActive;
     }
     
+    public Usuario(String emailUsuario,String password,String nombreUsuario,boolean isActive){
+        this.emailUsuario = emailUsuario;
+        this.nombreUsuario = nombreUsuario;
+        this.password = password;
+        this.isActive = isActive;
+    }
+    
     public Usuario(){};
 
     public String getEmailUsuario() {

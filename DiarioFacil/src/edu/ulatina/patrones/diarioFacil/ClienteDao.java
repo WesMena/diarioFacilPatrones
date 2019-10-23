@@ -9,8 +9,11 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -76,17 +79,73 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
 
     @Override
     public List<Cliente> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Cliente> clientes = new ArrayList();
+        try{
+            super.conectar();
+            stm = conn.createStatement();
+            rset = stm.executeQuery("select * from cliente");
+            while(rset.next()){
+                clientes.add(new Cliente(rset.getInt("idCliente"),rset.getString("CorreoCliente"),rset.getString("PassCliente"),rset.getString("NombreCliente"),rset.getBoolean("borrado"),rset.getBoolean("ClientePref")));
+            }
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }finally{
+            super.desconectar();
+            try {
+                stm.close();
+                rset.close();
+            } catch (SQLException ex) {
+                System.err.println(""+ex.getMessage());
+            }
+            
+        }
+        
+        return clientes;
     }
 
     @Override
     public void save(Cliente t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            super.conectar();
+            proc = conn.prepareCall("{Call insert_user(?,?,?)}");
+            proc.setString("nombre", t.getNombreUsuario());
+            proc.setString("email", t.getEmailUsuario());
+            proc.setString("userPassword", t.getPassword());
+            proc.execute();
+        }catch(SQLException e ){
+            System.err.println(""+e.getMessage());
+        }finally{
+            super.desconectar();
+            try{
+                proc.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
     }
 
     @Override
     public void update(Cliente t, String[] params) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            super.conectar();
+            proc = conn.prepareCall("{Call update_user(?,?,?,?,?,?)}");
+            proc.setString("nombre", t.getNombreUsuario());
+            proc.setString("email", t.getEmailUsuario());
+            proc.setString("userPassword", t.getPassword());
+            proc.setInt("idMod", t.getId());
+            proc.setBoolean("borrado", t.isIsActive());
+            proc.setBoolean("isPref", t.isIsPref());
+            proc.execute();
+        }catch(SQLException e ){
+            System.err.println(""+e.getMessage());
+        }finally{
+            super.desconectar();
+            try{
+                proc.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
     }
 
     @Override

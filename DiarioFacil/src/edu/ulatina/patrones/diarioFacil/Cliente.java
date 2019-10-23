@@ -28,5 +28,10 @@ public class Cliente extends  Usuario{
         super(id,emailUsuario,password,nombreUsuario,isActive);
         this.isPref = isPref;
     }
+    
+    public Cliente(String emailUsuario,String password,String nombreUsuario,boolean isActive,boolean isPref){
+        super(emailUsuario,password,nombreUsuario,isActive);
+        this.isPref = isPref;
+    }
 
 }
