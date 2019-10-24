@@ -21,7 +21,36 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
     public static List<Producto> productos=new ArrayList<>();
 
     public ProductoDao() {
-          ResultSet rs=null;
+         
+    }
+
+    @Override
+    public Optional<Producto> get(long id) {
+        Optional<Producto> producto = Optional.empty();
+        List<Producto> lstProductos = new ArrayList<>();
+        lstProductos = this.getAll();
+        
+        ResultSet rs=null;
+       Statement stmt=null; 
+       
+           for (Producto p:lstProductos ){
+           
+            if  (id==p.getId()) {
+                
+                producto= Optional.of(p);
+                
+            }
+        }
+           
+            
+             
+       
+        return producto;
+    }
+
+    @Override
+    public List<Producto> getAll() {
+        ResultSet rs=null;
        Statement stmt=null; 
        try{
            this.conectar();
@@ -43,7 +72,7 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
              int stockMinimo=rs.getInt("stockMinimo");
              int categoria=rs.getInt("categoria");
              int proveedor=rs.getInt("proveedor");
-            productos.add(new Producto(proveedor,id,nombre,stockMinimo,stockActual,
+            productos.add(new Producto(id,categoria,proveedor,nombre,stockMinimo,stockActual,
             precio,categoria));
             
              
@@ -59,15 +88,7 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
                e.printStackTrace();
            }
        }
-    }
-
-    @Override
-    public Optional<Producto> get(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<Producto> getAll() {
+        
         return productos;
     }
 

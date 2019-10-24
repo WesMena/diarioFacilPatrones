@@ -9,7 +9,8 @@ package edu.ulatina.patrones.diarioFacil;
  *
  * @author USER
  */
-public class Producto {
+public class Producto{
+    int id;
    int codProveedor=0;
    int codProducto=0;
    String nombreProd="";
@@ -19,11 +20,13 @@ public class Producto {
    int codCategoria=0;
 
     public Producto() {
+        
     }
     public Producto(int id){
+        
         codProducto=id;
     }
-   public Producto(int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria){
+   public Producto(int id, int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria){
        this.codProducto=codProd;
        this.codProveedor=codProveedor;
        this.nombreProd=nom;
@@ -31,6 +34,7 @@ public class Producto {
        this.stockMinimo=stockMin;
        this.codCategoria=categoria;
        this.precio=precio;
+       this.id=id;
    }
 
     public int getCodProveedor() {
@@ -87,6 +91,14 @@ public class Producto {
 
     public void setCodCategoria(int codCategoria) {
         this.codCategoria = codCategoria;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
 }
