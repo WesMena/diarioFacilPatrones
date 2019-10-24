@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.ImageIcon;
@@ -143,6 +144,19 @@ public class MenuAdministrador {
     public void menuAdminUserVer(){
         //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
             dao = new ClienteDao();
+            //PnlSearch 
+            JTextField txtSearch = new JTextField();
+            JButton btnReload  = new JButton("Actualizar");
+            JLabel lblseacrh  = new JLabel("Buscar : ");
+            JPanel pnlSearchBar;
+            btnReload.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
+            
+            pnlSearchBar = new JPanel(new BorderLayout());
+            pnlSearchBar.setSize(750, 20);
+            pnlSearchBar.add(lblseacrh,BorderLayout.WEST);
+            pnlSearchBar.add(txtSearch,BorderLayout.CENTER);
+            pnlSearchBar.add(btnReload,BorderLayout.EAST);
+            
             JPanel pnlBack = new JPanel();
             JTable tblUsersClientes = new JTable();
             DefaultTableModel modelo = new DefaultTableModel();
@@ -164,8 +178,9 @@ public class MenuAdministrador {
                 modelo.addRow(new Object[]{c.getId(),c.getNombreUsuario(),c.getEmailUsuario(),c.getPassword(),c.isIsPref(),c.isIsActive()});
             }
             tblUsersClientes.setModel(modelo);
-            pnlBack = new JPanel(new GridLayout(1,1));
-            pnlBack.add(new JScrollPane(tblUsersClientes,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
+            pnlBack = new JPanel(new BorderLayout());
+            pnlBack.add(pnlSearchBar,BorderLayout.NORTH);
+            pnlBack.add(new JScrollPane(tblUsersClientes,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS),BorderLayout.CENTER);
             
             JComponent[] component = new JComponent[]{pnlBack};
         
@@ -184,6 +199,96 @@ public class MenuAdministrador {
             
         //</editor-fold>
         
+        //<editor-fold defaultstate="collapsed" desc="Logica">
+            txtSearch.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    if(!Character.isDigit(e.getKeyChar()))
+                        e.consume();
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    Optional<String> text = Optional.ofNullable(txtSearch.getText());
+                    dao = new ClienteDao();
+                    List<Cliente> filter = dao.getAll();
+                    List<Cliente> filtered = new ArrayList<>();
+                    if(!"".equals(text.get())){
+                        text.ifPresent((String c) ->{
+                            filter.stream().filter((x)-> x.Id==Integer.parseInt(text.get())).forEach((Cliente cl)->{
+                            filtered.add(cl);
+                            }); 
+                        });
+                        DefaultTableModel modelFiltered = new DefaultTableModel(){
+                            @Override
+                            public boolean isCellEditable(int row,int column){
+                                return false;
+                            }   
+                        };
+                        modelFiltered.addColumn("ID_usuario");
+                        modelFiltered.addColumn("Nombre Usuario");
+                        modelFiltered.addColumn("Email ");
+                        modelFiltered.addColumn("Contraseña");
+                        modelFiltered.addColumn("Es cliente preferencial");
+                        modelFiltered.addColumn("Desactivado");
+                        filtered.forEach((Cliente c) -> {
+                            modelFiltered.addRow(new Object[]{c.Id,c.nombreUsuario,c.emailUsuario,c.password,c.isIsPref(),c.isIsActive()});
+                        });
+                        tblUsersClientes.setModel(modelFiltered);
+                    }else{
+                        List<Cliente> original = dao.getAll();
+                        //Reload original data
+                        DefaultTableModel modelFiltered = new DefaultTableModel(){
+                            @Override
+                            public boolean isCellEditable(int row,int column){
+                                return false;
+                            }   
+                        };
+                        modelFiltered.addColumn("ID_usuario");
+                        modelFiltered.addColumn("Nombre Usuario");
+                        modelFiltered.addColumn("Email ");
+                        modelFiltered.addColumn("Contraseña");
+                        modelFiltered.addColumn("Es cliente preferencial");
+                        modelFiltered.addColumn("Desactivado");
+                        original.forEach((Cliente c) -> {
+                            modelFiltered.addRow(new Object[]{c.Id,c.nombreUsuario,c.emailUsuario,c.password,c.isIsPref(),c.isIsActive()});
+                        });
+                        tblUsersClientes.setModel(modelFiltered);
+                        
+                    }
+                }
+            });
+            
+            btnReload.addActionListener((ActionEvent e) -> {
+                List<Cliente> original = dao.getAll();
+                //Reload original data
+                DefaultTableModel modelFiltered = new DefaultTableModel(){
+                    @Override
+                    public boolean isCellEditable(int row,int column){
+                        return false;
+                    }   
+                };
+                modelFiltered.addColumn("ID_usuario");
+                modelFiltered.addColumn("Nombre Usuario");
+                modelFiltered.addColumn("Email ");
+                modelFiltered.addColumn("Contraseña");
+                modelFiltered.addColumn("Es cliente preferencial");
+                modelFiltered.addColumn("Desactivado");
+                original.forEach((Cliente c) -> {
+                    modelFiltered.addRow(new Object[]{c.Id,c.nombreUsuario,c.emailUsuario,c.password,c.isIsPref(),c.isIsActive()});
+                });
+                tblUsersClientes.setModel(modelFiltered);
+            });
+           
+            
+        //</editor-fold>
         //Arranque
         dialog.setVisible(true);
     }
@@ -283,9 +388,10 @@ public class MenuAdministrador {
             JButton btnEdit = new JButton("Editar");
             JButton btnSee= new JButton(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-visible-16.png"));
             btnEdit.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-edit-16.png"));
-           JButton  btnCargarInfodelId = new JButton("Cargar datos del ID");
-           btnCargarInfodelId.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-load-cargo-16.png"));
+            JButton  btnCargarInfodelId = new JButton("Cargar datos del ID");
+            btnCargarInfodelId.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-load-cargo-16.png"));
            
+
            //PnlIdMod
            pnlIdMod  = new JPanel(new BorderLayout());
            pnlIdMod.add(lblIdMod,BorderLayout.WEST);
@@ -396,6 +502,8 @@ public class MenuAdministrador {
         //Arranque
         dialog.setVisible(true);
     }
+    
+
     
 
     
