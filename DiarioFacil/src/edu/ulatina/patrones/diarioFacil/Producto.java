@@ -93,6 +93,9 @@ public class Producto{
         this.codCategoria = codCategoria;
     }
 
+
+  
+
     public int getId() {
         return id;
     }
@@ -100,5 +103,5 @@ public class Producto{
     public void setId(int id) {
         this.id = id;
     }
-    
+
 }

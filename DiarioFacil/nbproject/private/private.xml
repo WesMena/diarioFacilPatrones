@@ -3,38 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-database-administrator-24.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/AdminDao.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-categorize-30.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuProveedores.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-entrar-8.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Dao.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Administrador.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Tester.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProveedorDao.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Proveedor.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuLogin.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Conexion.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/CategoriaDao.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ClienteDao.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuCategorias.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-error-24.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Usuario.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-verificado-24.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Categoria.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Cliente.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-packaging-30.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductoDao.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-save-as-16.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-visible-16.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-administrador-8.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuAdministrador.java</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-facturacion-8.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ojos-8.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-select-users-30.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-login-24.png</file>
-            <file>file:/C:/Users/Nvidi/Documents/NetBeansProjects/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Producto.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Tester.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Categoria.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Proveedor.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Producto.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Dao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuProveedores.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuCategorias.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/CategoriaDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProveedorDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductoDao.java</file>
         </group>
     </open-files>
 </project-private>

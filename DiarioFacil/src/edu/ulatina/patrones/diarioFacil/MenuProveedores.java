@@ -138,9 +138,7 @@ public class MenuProveedores {
                 case 5:
                     try{
                     id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                            + " del proveedor a borrar \n"
-                            + "AVISO: esto también borrará todos los productos "
-                            + " asociados a este proveedor."));        
+                            + " del proveedor a borrar"));        
                     Optional<Proveedor> opProveedor=proveedor.get(id);
                     if(opProveedor.isPresent()==false){
                      JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún proveedor");

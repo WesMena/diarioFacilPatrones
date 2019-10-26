@@ -149,9 +149,7 @@ public class MenuCategorias {
                 case 5:
                    try{
                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                              + " de la categoría a modificar \n"
-                              + "AVISO:esto también borrará todos los productos "
-                              + "asociados a esta categoría"));
+                              + " de la categoría a modificar"));
                       Optional<Categoria> opCat=categoria.get(id);
                       
                     

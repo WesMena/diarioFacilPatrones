@@ -22,6 +22,7 @@ public class Proveedor {
     this.codigo=cod;
     this.nombre=nom;
     this.correo=correo;
+    
 }
     public int getCodigo() {
         return codigo;
@@ -46,4 +47,9 @@ public class Proveedor {
     public void setCorreo(String correo) {
         this.correo = correo;
     }  
+
+  
+   
+    
+    
 }

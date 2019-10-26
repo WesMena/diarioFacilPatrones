@@ -6,6 +6,7 @@
 package edu.ulatina.patrones.diarioFacil;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +29,17 @@ public static List<Proveedor> proveedores=new ArrayList<>();
            this.conectar();
            stmt=conn.createStatement();
            String sql; 
-           sql="SELECT idProveedor,CorreoProveedor, NombreProveedor FROM proveedor";
+           sql="SELECT idProveedor,CorreoProveedor, NombreProveedor,borrado FROM proveedor";
            rs=stmt.executeQuery(sql);
            while(rs.next()){
              int id=rs.getInt("idProveedor");
              String nombre=rs.getString("NombreProveedor");
              String correo=rs.getString("CorreoProveedor");
-             proveedores.add(new Proveedor(id,nombre,correo));
+             int borrado=rs.getByte("borrado");
+             if(borrado==0){
+             proveedores.add(new Proveedor(id,nombre,correo));     
+             }
+            
              
            }
        }catch(Exception e){
@@ -73,14 +78,20 @@ public static List<Proveedor> proveedores=new ArrayList<>();
   
     public void save(Proveedor proveedor) {
         Statement stmt=null; 
+        boolean fallido=false; 
         try{
             this.conectar();
             stmt=conn.createStatement();
             String sql; 
             sql="INSERT INTO bdpatrones.proveedor VALUES("+
                     proveedor.getCodigo()+",'"+proveedor.getCorreo()
-                    +"','"+proveedor.getNombre()+"')";
-            stmt.executeUpdate(sql);
+                    +"','"+proveedor.getNombre()+"',0)";
+            try{
+            stmt.executeUpdate(sql);     
+            }catch(SQLException sqlE){
+                fallido=true;
+            }
+           
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -92,8 +103,15 @@ public static List<Proveedor> proveedores=new ArrayList<>();
                 e.printStackTrace();
             }
         }
+        if(fallido){
+            JOptionPane.showMessageDialog(null,"El id ingresado pertenece a un "
+                  + "proveedor que ya no forma parte del sistema ");
+            
+        }else{
         proveedores.add(proveedor);
-        JOptionPane.showMessageDialog(null,"Proveedor agregado exitosamente");
+        JOptionPane.showMessageDialog(null,"Proveedor agregado exitosamente");     
+        }
+       
     }
 
  
@@ -142,12 +160,17 @@ public static List<Proveedor> proveedores=new ArrayList<>();
       try{
           this.conectar();
           stmt=conn.createStatement();
+       
+          
+          
           String sql;
-            sql="DELETE FROM bdpatrones.producto WHERE proveedor="+p.getCodigo();
+          
+          sql="UPDATE bdpatrones.proveedor SET borrado=1 WHERE idProveedor="+p.getCodigo();
+            
           stmt.executeUpdate(sql);
           
-          sql="DELETE FROM bdpatrones.proveedor WHERE idProveedor="+p.getCodigo();
-          stmt.executeUpdate(sql);
+         
+ 
            JOptionPane.showMessageDialog(null,"Proveedor borrado exitosamente");
       }catch(Exception e){
           e.printStackTrace();

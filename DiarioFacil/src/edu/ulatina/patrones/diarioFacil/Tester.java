@@ -17,6 +17,13 @@ public class Tester {
   
     
    public static void main(String[] args) {
+
+      // MenuCategorias categorias=new MenuCategorias();
+      // categorias.menu();
+       
+      MenuProveedores proveedores=new MenuProveedores();
+     proveedores.menu();
+
        //MenuCategorias categorias=new MenuCategorias();
        //categorias.menu();
 //       ClienteDao dao  = new ClienteDao();
@@ -35,6 +42,7 @@ public class Tester {
        log.loginUI();
      // MenuProveedores proveedores=new MenuProveedores();
      // proveedores.menu();
+
     }
    // 
 }
