@@ -3,16 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Tester.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Categoria.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Proveedor.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Producto.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Dao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ArmaCombos.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductosCombo.java</file>
             <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuProveedores.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuCategorias.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/CategoriaDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ComboDao.java</file>
             <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProveedorDao.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductoDao.java</file>
         </group>
     </open-files>
 </project-private>

@@ -60,7 +60,7 @@ public static List<Proveedor> proveedores=new ArrayList<>();
     public Optional<Proveedor> get(long id) {
         Optional<Proveedor> opProveedor=Optional.empty();
         for(Proveedor p:proveedores){
-            if(p.getCodigo()==id){
+            if(p.getCodigo()==id ){
                 opProveedor=Optional.of(p);
             }
         }

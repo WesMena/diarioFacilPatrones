@@ -7,8 +7,9 @@ package edu.ulatina.patrones.diarioFacil;
 
 /**
  *
- * @author maria
+ * @author USER
  */
-public class Combo {
-    
+public abstract class ComboFactory {
+    CaracteristicasCombo caracteristicas; 
+  public abstract CaracteristicasCombo decirCaracteristicas();   
 }
