@@ -17,18 +17,25 @@ public class Tester {
   
     
    public static void main(String[] args) {
+       MenuProducto menuProducto= new MenuProducto();
+       menuProducto.menu();
 
       // MenuCategorias categorias=new MenuCategorias();
       // categorias.menu();
        
+
+      /*MenuProveedores proveedores=new MenuProveedores();
+     proveedores.menu();*/
+
 //      MenuProveedores proveedores=new MenuProveedores();
 //     proveedores.menu();
+
 
        //MenuCategorias categorias=new MenuCategorias();
        //categorias.menu();
 //       ClienteDao dao  = new ClienteDao();
 //       dao.save( new Cliente("XXXX","XXXXXXPASS","CDF",false,false));
-       try {
+      /* try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -37,9 +44,9 @@ public class Tester {
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Tester.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-       MenuLogin log = new MenuLogin();
-       log.loginUI();
+        }*/
+       /*MenuLogin log = new MenuLogin();
+       log.loginUI();*/
      // MenuProveedores proveedores=new MenuProveedores();
      // proveedores.menu();
 
