@@ -23,8 +23,13 @@ public class Tester {
       // MenuCategorias categorias=new MenuCategorias();
       // categorias.menu();
        
+
       /*MenuProveedores proveedores=new MenuProveedores();
      proveedores.menu();*/
+
+//      MenuProveedores proveedores=new MenuProveedores();
+//     proveedores.menu();
+
 
        //MenuCategorias categorias=new MenuCategorias();
        //categorias.menu();
