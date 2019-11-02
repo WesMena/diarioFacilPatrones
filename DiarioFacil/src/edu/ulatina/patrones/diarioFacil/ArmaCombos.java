@@ -16,7 +16,7 @@ public class ArmaCombos {
        int id; 
     String nombre; 
     double precio; 
-    List<ProductosCombo> productos=new ArrayList<>();
+   
     boolean activado;
     boolean borrado;    
 
@@ -25,7 +25,7 @@ public class ArmaCombos {
         id=carac.getId();
         nombre=carac.getNombre();
         precio=carac.getPrecio();
-        productos=carac.getProductos();
+        
         activado=carac.isActivado();
         borrado=carac.isBorrado();
         
@@ -55,13 +55,7 @@ public class ArmaCombos {
         this.precio = precio;
     }
 
-    public List<ProductosCombo> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<ProductosCombo> productos) {
-        this.productos = productos;
-    }
+ 
 
     public boolean isActivado() {
         return activado;

@@ -19,13 +19,14 @@ public class ProductosCombo {
     
  //combos, producto, cantidad, borrado   
 
-    public ProductosCombo() {
-    }
+   
 
-    public ProductosCombo(int idCombo, Producto prod, int cantidad) {
+    public ProductosCombo(int idCombo, Producto prod, int cantidad, boolean borrado) {
         this.idCombo = idCombo;
         this.prod = prod;
         this.cantidad = cantidad;
+        this.borrado=borrado; 
+        
     }
 
     public int getIdCombo() {

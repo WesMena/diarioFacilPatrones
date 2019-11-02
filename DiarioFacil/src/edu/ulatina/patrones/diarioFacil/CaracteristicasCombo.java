@@ -16,7 +16,7 @@ public abstract class CaracteristicasCombo {
        int id; 
     String nombre; 
     double precio; 
-    List<ProductosCombo> productos=new ArrayList<>();
+
     boolean activado;
     boolean borrado; 
 
@@ -44,13 +44,7 @@ public abstract class CaracteristicasCombo {
         this.precio = precio;
     }
 
-    public List<ProductosCombo> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<ProductosCombo> productos) {
-        this.productos = productos;
-    }
+  
 
     public boolean isActivado() {
         return activado;

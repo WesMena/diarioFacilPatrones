@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ArmaCombos.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductosCombo.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuProveedores.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ComboDao.java</file>
-            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProveedorDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Tester.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuCombos.java</file>
         </group>
     </open-files>
 </project-private>

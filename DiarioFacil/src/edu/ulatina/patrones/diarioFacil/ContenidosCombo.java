@@ -15,13 +15,13 @@ import java.util.List;
 public class ContenidosCombo extends CaracteristicasCombo {
 
 
-    public ContenidosCombo(int id, String nombre, double precio, boolean activado, boolean borrado,List<ProductosCombo> productos) {
+    public ContenidosCombo(int id, String nombre, double precio, boolean activado, boolean borrado) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.activado = activado;
         this.borrado = borrado;
-        this.productos=productos;
+        
        
     }
     

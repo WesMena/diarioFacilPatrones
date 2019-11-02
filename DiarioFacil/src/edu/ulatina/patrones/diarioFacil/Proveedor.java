@@ -13,15 +13,16 @@ public class Proveedor {
      int codigo=0;
     String nombre="";
     String correo="";
-
+    boolean borrado;
     public Proveedor() {
     }
     
     
-  public Proveedor(int cod, String nom, String correo){
+  public Proveedor(int cod, String nom, String correo, boolean borrado){
     this.codigo=cod;
     this.nombre=nom;
     this.correo=correo;
+    this.borrado=borrado; 
     
 }
     public int getCodigo() {
@@ -47,6 +48,14 @@ public class Proveedor {
     public void setCorreo(String correo) {
         this.correo = correo;
     }  
+
+    public boolean isBorrado() {
+        return borrado;
+    }
+
+    public void setBorrado(boolean borrado) {
+        this.borrado = borrado;
+    }
 
   
    

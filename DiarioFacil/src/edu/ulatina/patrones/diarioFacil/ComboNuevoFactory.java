@@ -19,4 +19,7 @@ public class ComboNuevoFactory extends ComboFactory {
     public CaracteristicasCombo decirCaracteristicas() {
        return caracteristicas; 
     }
+
+  
+    
 }

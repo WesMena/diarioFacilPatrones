@@ -18,7 +18,6 @@ public class ComboExistenteFactory extends ComboFactory  {
                 this.caracteristicas.id=combo.id;
                 this.caracteristicas.nombre=combo.nombre;
                 this.caracteristicas.precio=combo.precio;
-                this.caracteristicas.productos=combo.productos;
                 this.caracteristicas.activado=combo.activado;
                 this.caracteristicas.borrado=combo.borrado;
             }
