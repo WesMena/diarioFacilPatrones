@@ -191,11 +191,9 @@ public class MenuCombos {
                       break;
                      }else{
                         
-                          System.out.println("llegó aquí 2");
                           
-                            System.out.println("llegó aquí 3");
                           ArmaCombos armaModifica=opCombo.get();
-                          System.out.println("Combo Actual: "+armaModifica.getId());
+                          
                           
                       strModifica.append("Ingrese una opción:\n");
                   strModifica.append("1.Cambiar nombre del combo \n");
@@ -396,7 +394,7 @@ public class MenuCombos {
                            
                            
                            
-                           Dao prodCombo=new productoComboDao();
+                           Dao prodCombo=new ProductoComboDao();
                       
                           List<ProductosCombo> listaAux=new ArrayList<>();
                    List<ProductosCombo> listaOriginal=prodCombo.getAll();

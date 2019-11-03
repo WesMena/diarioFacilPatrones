@@ -39,7 +39,7 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
              
              
              int id=rs.getInt("idCombo");
-             System.out.println("cod combo: "+id);
+             
              String nombre=rs.getString("NombreCombo");
              int activado=rs.getByte("activado");
              boolean boolActivo;
@@ -64,7 +64,7 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
                     ,false);
              ComboFactory comboAgrega=new ComboNuevoFactory(rellenoCombo);
              ArmaCombos inicial=new ArmaCombos(comboAgrega);
-             System.out.println("codigo combo interno:"+inicial.getId());
+            
              combos.add(inicial);
              
              }else{

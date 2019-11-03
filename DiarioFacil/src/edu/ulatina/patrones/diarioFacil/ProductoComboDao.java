@@ -19,17 +19,11 @@ import javax.swing.JOptionPane;
  * @author USER
  */
 
-//Al agregar un producto al combo, si el producto ya existe, suma cantidades,
-//pero si existe y está borrado, las reescribe
 
-//Al ver todos los productos del combo, lo que hace es traer todos y crear una
-//una segunda lista solo con los que tienen el id de combo que coincide
-
-
-public class productoComboDao extends Conexion implements Dao<ProductosCombo> {
+public class ProductoComboDao extends Conexion implements Dao<ProductosCombo> {
 public static List<ProductosCombo> prodCombo;
 
-    public productoComboDao() {
+    public ProductoComboDao() {
         prodCombo=new ArrayList<>();
         ResultSet rs=null;
         Statement stmt=null;

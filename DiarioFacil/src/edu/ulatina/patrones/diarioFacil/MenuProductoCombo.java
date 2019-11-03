@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author USER
  */
 public class MenuProductoCombo {
-Dao prodCombo=new productoComboDao();
+Dao prodCombo=new ProductoComboDao();
    public void menu(int idCombo, boolean comboNuevo){
        
        int opcion=0; 
@@ -217,10 +217,10 @@ Dao prodCombo=new productoComboDao();
    public void verProductos(int idCombo){
         List<ProductosCombo> listaAux=new ArrayList<>();
                    List<ProductosCombo> listaOriginal=new ArrayList<>();
-                   productoComboDao daoPrueba=new productoComboDao();
+                   ProductoComboDao daoPrueba=new ProductoComboDao();
                    
                            listaOriginal=daoPrueba.getAll();
-                   for(ProductosCombo pro:((productoComboDao)daoPrueba).getAll()){
+                   for(ProductosCombo pro:((ProductoComboDao)daoPrueba).getAll()){
                        if(pro.getIdCombo()==idCombo && pro.isBorrado()==false){
                            
                           listaAux.add(pro);
