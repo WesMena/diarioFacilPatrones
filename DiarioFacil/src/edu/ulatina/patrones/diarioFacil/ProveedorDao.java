@@ -37,7 +37,9 @@ public static List<Proveedor> proveedores=new ArrayList<>();
              String correo=rs.getString("CorreoProveedor");
              int borrado=rs.getByte("borrado");
              if(borrado==0){
-             proveedores.add(new Proveedor(id,nombre,correo));     
+             proveedores.add(new Proveedor(id,nombre,correo,true));     
+             }else{
+             proveedores.add(new Proveedor(id,nombre,correo,false));      
              }
             
              
@@ -60,7 +62,7 @@ public static List<Proveedor> proveedores=new ArrayList<>();
     public Optional<Proveedor> get(long id) {
         Optional<Proveedor> opProveedor=Optional.empty();
         for(Proveedor p:proveedores){
-            if(p.getCodigo()==id){
+            if(p.getCodigo()==id ){
                 opProveedor=Optional.of(p);
             }
         }
@@ -184,13 +186,14 @@ public static List<Proveedor> proveedores=new ArrayList<>();
           }
       }
       
-      Proveedor provAux=new Proveedor();
+  
       for(Proveedor proveedor:proveedores){
+         
           if(proveedor.getCodigo()==p.getCodigo()){
-              provAux=proveedor;
+          proveedor.setBorrado(true);     
           }
       }
-      proveedores.remove(provAux);
+   
     }
     
 }

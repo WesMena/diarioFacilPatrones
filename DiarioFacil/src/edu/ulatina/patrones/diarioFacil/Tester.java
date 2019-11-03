@@ -17,9 +17,15 @@ public class Tester {
   
     
    public static void main(String[] args) {
-       MenuProducto menuProducto= new MenuProducto();
-       menuProducto.menu();
+     
 
+       
+       MenuCombos combo=new MenuCombos();
+       combo.menu();
+       
+        // MenuProducto menuProducto= new MenuProducto();
+      // menuProducto.menu();
+       
       // MenuCategorias categorias=new MenuCategorias();
       // categorias.menu();
        

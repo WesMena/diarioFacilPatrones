@@ -60,7 +60,7 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
            
            sql="SELECT idProducto,NombreProducto, MarcaProducto,"
                    + "PrecioProducto,stockActual,stockMinimo,"
-                   + "categoria,proveedor FROM producto";
+                   + "categoria,proveedor,borrado FROM producto";
            rs=stmt.executeQuery(sql);
            while(rs.next()){
                
@@ -74,8 +74,16 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
              int stockMinimo=rs.getInt("stockMinimo");
              int categoria=rs.getInt("categoria");
              int proveedor=rs.getInt("proveedor");
+             int borrado=rs.getByte("borrado");
+             boolean estadoBorrado;
+             if(borrado==1){
+                 estadoBorrado=true;
+             }else{
+                 estadoBorrado=false;
+             }
+             
             productos.add(new Producto(id,categoria,proveedor,nombre,stockMinimo,stockActual,
-            precio,categoria));
+            precio,categoria,estadoBorrado));
             
              
            }
@@ -101,8 +109,8 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             this.conectar();
             stmt=conn.createStatement();
             String sql; 
-            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`)VALUES('"+
-                    producto.getNombreProd()+"','"+producto.getPrecio()
+            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`nombreCategoria`,`NombreProveedor` )VALUES('"+
+                    producto.getNombreProd()+"','"+producto.getPrecio()+"','"+producto.getNombreCategoria()+"','"+producto.getNombreProveedor()
                     +"')";
             stmt.executeUpdate(sql);
         }catch(Exception e){

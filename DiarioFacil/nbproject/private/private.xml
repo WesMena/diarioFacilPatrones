@@ -3,8 +3,29 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/josem/Documents/GitHub/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuAdministrador.java</file>
-            <file>file:/C:/Users/josem/Documents/GitHub/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuLogin.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Tester.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Categoria.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Cliente.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ContenidosCombo.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuProveedores.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/productoComboDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ComboDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductoDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Conexion.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ArmaCombos.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/CaracteristicasCombo.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Proveedor.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuLogin.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/Producto.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProductosCombo.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuCombos.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ComboFactory.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ComboNuevoFactory.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/CategoriaDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ProveedorDao.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ComboExistenteFactory.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/MenuProductoCombo.java</file>
+            <file>file:/C:/Users/USER/Desktop/U/diarioFacilPatrones/DiarioFacil/src/edu/ulatina/patrones/diarioFacil/ClienteDao.java</file>
         </group>
     </open-files>
 </project-private>

@@ -5,6 +5,8 @@
  */
 package edu.ulatina.patrones.diarioFacil;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author USER
@@ -19,7 +21,12 @@ public class Producto{
    double precio=0;
    int codCategoria=0;
  boolean borrado= false;
+ String nombreProveedor="";
+ String nombreCategoria="";
 
+   
+
+  
     public boolean isBorrado() {
         return borrado;
     }
@@ -44,7 +51,22 @@ public class Producto{
        this.codCategoria=categoria;
        this.precio=precio;
        this.id=id;
+       
    }
+   public Producto(int id, int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria,
+           boolean borrado){
+       this.codProducto=codProd;
+       this.codProveedor=codProveedor;
+       this.nombreProd=nom;
+       this.stockActual=stockActual;
+       this.stockMinimo=stockMin;
+       this.codCategoria=categoria;
+       this.precio=precio;
+       this.id=id;
+       this.borrado=borrado;
+       
+   }
+   
 
     public int getCodProveedor() {
         return codProveedor;
@@ -58,6 +80,23 @@ public class Producto{
         return codProducto;
     }
 
+    public String getNombreProveedor() {
+        return nombreProveedor;
+    }
+
+    public void setNombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
+    }
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+    
+    
     public void setCodProducto(int codProducto) {
         this.codProducto = codProducto;
     }
@@ -112,5 +151,6 @@ public class Producto{
     public void setId(int id) {
         this.id = id;
     }
-
+    
+  
 }

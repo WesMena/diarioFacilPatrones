@@ -60,21 +60,26 @@ public class MenuProveedores {
                    }
                     nombre=JOptionPane.showInputDialog("Ingrese el nombre");
                     correo=JOptionPane.showInputDialog("Ingrese el correo");
-                    Proveedor p=new Proveedor(id,nombre,correo);
+                    Proveedor p=new Proveedor(id,nombre,correo,false);
                     proveedor.save(p);
                     break; 
                 case 2:
+                    boolean entro=false; 
                     List<Proveedor> lst=proveedor.getAll();
                     String proveedores="Lista de proveedores \n"; 
                     
                     for(Proveedor prove:lst){
+                        if(prove.isBorrado()==false){
+                            entro=true;
                         proveedores=proveedores+"Código:"+prove.getCodigo()+
                                 " Nombre: "+prove.getNombre()+
-                                " Correo: "+prove.getCorreo()+"\n";
+                                " Correo: "+prove.getCorreo()+"\n";       
+                        }
+                     
                         
                                 
                     }
-                    if(lst.isEmpty()){
+                    if(lst.isEmpty()|| entro==false){
                         proveedores="No hay ningún proveedor registrado";
                     }
                     JOptionPane.showMessageDialog(null,proveedores);
@@ -83,7 +88,7 @@ public class MenuProveedores {
                     try{
                        id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id")); 
                        Optional<Proveedor> opProv=proveedor.get(id);
-                       if(opProv.isPresent()==false){
+                       if(opProv.isPresent()==false || opProv.get().isBorrado()==true){
                        JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún proveedor");    
                        break;
                        }else{
@@ -105,7 +110,7 @@ public class MenuProveedores {
                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
                               + " del proveedor a modificar"));    
                       Optional<Proveedor> opProve=proveedor.get(id);
-                      if(opProve.isPresent()==false){
+                      if(opProve.isPresent()==false || opProve.get().isBorrado()==true){
                        JOptionPane.showMessageDialog(null,"El id ingresado no corresponde"
                                + " con ningún proveedor");
                       break;   
@@ -125,7 +130,7 @@ public class MenuProveedores {
                              email=opProve.get().getCorreo();
                          }
                          String[] actualiza=new String[]{nom,email};
-                         Proveedor provAux=new Proveedor(id,nom,email);
+                         Proveedor provAux=new Proveedor(id,nom,email,false);
                          proveedor.update(provAux, actualiza);
                          
                       }
@@ -140,12 +145,12 @@ public class MenuProveedores {
                     id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
                             + " del proveedor a borrar"));        
                     Optional<Proveedor> opProveedor=proveedor.get(id);
-                    if(opProveedor.isPresent()==false){
+                    if(opProveedor.isPresent()==false || opProveedor.get().isBorrado()==true){
                      JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún proveedor");
                     
                     break;  
                     }else{
-                        Proveedor provDel=new Proveedor(id,"","");
+                        Proveedor provDel=new Proveedor(id,"","",false);
                         proveedor.delete(provDel);
                         
                     }
