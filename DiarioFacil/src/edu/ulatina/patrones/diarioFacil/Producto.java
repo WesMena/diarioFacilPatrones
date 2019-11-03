@@ -18,7 +18,16 @@ public class Producto{
    int stockActual=0;
    double precio=0;
    int codCategoria=0;
+ boolean borrado= false;
 
+    public boolean isBorrado() {
+        return borrado;
+    }
+
+    public void setBorrado(boolean borrado) {
+        this.borrado = borrado;
+    }
+ 
     public Producto() {
         
     }

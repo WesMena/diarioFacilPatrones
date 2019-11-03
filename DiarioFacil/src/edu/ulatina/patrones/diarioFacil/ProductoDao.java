@@ -149,7 +149,8 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
           this.conectar();
           stmt=conn.createStatement();
           String sql;
-            sql="DELETE FROM bdpatrones.producto WHERE idProducto="+t.getId();
+            sql="UPDATE bdpatrones.producto SET borrado='"+
+                    t.isBorrado()+"' WHERE idProducto="+t.getId();
           stmt.executeUpdate(sql);
       }catch(Exception e){
           e.printStackTrace();
