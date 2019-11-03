@@ -18,6 +18,10 @@ public class Tester {
     
    public static void main(String[] args) {
 
+       
+       MenuCombos combo=new MenuCombos();
+       combo.menu();
+       
       // MenuCategorias categorias=new MenuCategorias();
       // categorias.menu();
        

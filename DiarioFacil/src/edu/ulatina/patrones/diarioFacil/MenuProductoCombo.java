@@ -13,9 +13,9 @@ import javax.swing.JOptionPane;
  * @author USER
  */
 public class MenuProductoCombo {
-
+Dao prodCombo=new productoComboDao();
    public void menu(int idCombo, boolean comboNuevo){
-       Dao prodCombo=new productoComboDao();
+       
        int opcion=0; 
        int idProd=0;
        boolean invalido;
@@ -63,9 +63,9 @@ public class MenuProductoCombo {
                   ProductoDao prod=new ProductoDao();
                   List<Producto> lst=prod.getAll();
                   for(Producto produ:lst){
-                      
+                     
                        
-                      if(produ.getCodProducto()==idProd){
+                      if(produ.getId()==idProd){
                           existe=true;
                           //Poner que esto tenga en consideración 
                           //si está borrado
@@ -80,7 +80,7 @@ public class MenuProductoCombo {
                   }
                       
                   
-                       
+                
                        
                    }catch(NumberFormatException nfe){
                        break;
@@ -92,7 +92,7 @@ public class MenuProductoCombo {
                              + "del producto a agregar"));
                        }catch(NumberFormatException nfe){
                            incorrecto=true;
-                           break;
+                          
                        }
                        
                    }while(incorrecto==true);
@@ -104,52 +104,33 @@ public class MenuProductoCombo {
                    break;
                    
                case 2:
-                   List<ProductosCombo> listaAux=new ArrayList<>();
-                   List<ProductosCombo> listaOriginal=prodCombo.getAll();
-                   for(ProductosCombo pro:listaOriginal){
-                       if(pro.getIdCombo()==idCombo && pro.isBorrado()==false){
-                           
-                          listaAux.add(pro);
-                          
-                       }
-                   }
-                   
-                   String productos="Lista de productos \n";
-                   for(ProductosCombo prodEnLista:listaAux){
-                       productos="Código: "+prodEnLista.getProd().getId()+
-                               " Nombre: "+prodEnLista.getProd().getNombreProd()+
-                               " Cantidad:"+prodEnLista.getCantidad()+"\n";
-                   }
-                   
-                   if(listaAux.isEmpty()){
-                      productos="El combo no contiene ningún producto";
-                   }
-                    JOptionPane.showMessageDialog(null,productos);
+                  this.verProductos(idCombo);
                     break;
-                    
                case 3:
                    try{
                      idProd=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
                               + " del producto a modificar")); 
                 List<ProductosCombo> listaProductos=prodCombo.getAll();
                 Optional<ProductosCombo> opProd=Optional.empty();
+            
                  for(ProductosCombo prodCmb:listaProductos){
                      
                     if(prodCmb.getProd().getId()==idProd &&
-                            prodCmb.getIdCombo()
-                            ==idCombo){
+                            prodCmb.getIdCombo()==idCombo){
                     opProd=Optional.of(prodCmb);
                     
                   }
    }               
-                 Producto prod;
-                     prod=opProd.get().getProd();
+               
                  
                  if(opProd.isPresent()==false ||opProd.get().isBorrado()==true){
                    JOptionPane.showMessageDialog(null,"El id ingresado no corresponde"
                                + " con ningún producto del combo");   
                    break;
                  }else{
+                       Producto prod;
+                     prod=opProd.get().getProd();
+                     
                      int nuevaCant=0;
                      boolean formatoIncorrecto=false;
                      do{
@@ -166,7 +147,7 @@ public class MenuProductoCombo {
                      }while(formatoIncorrecto==true);
                      
                      String comprobar=Integer.toString(nuevaCant);
-                     if(comprobar.equalsIgnoreCase("")){
+                     if(comprobar.equalsIgnoreCase("0")){
                          nuevaCant=opProd.get().getCantidad();
                      }
                      
@@ -203,14 +184,16 @@ public class MenuProductoCombo {
                     opProd=Optional.of(prodCmb);
                     
                   }
-   }               
-                 Producto prod;
-                     prod=opProd.get().getProd();
+   }             
                    if(opProd.isPresent()==false ||opProd.get().isBorrado()==true){
                    JOptionPane.showMessageDialog(null,"El id ingresado no corresponde"
                                + " con ningún producto del combo");   
                    break;
                  }else{
+                       
+                         
+                 Producto prod;
+                     prod=opProd.get().getProd();
                      ProductosCombo prodBorra=new ProductosCombo
                         (idCombo,prod,0,false);
                      
@@ -229,5 +212,33 @@ public class MenuProductoCombo {
                    break;
            }      
        }while(opcion!=5);
+   }
+   
+   public void verProductos(int idCombo){
+        List<ProductosCombo> listaAux=new ArrayList<>();
+                   List<ProductosCombo> listaOriginal=new ArrayList<>();
+                   productoComboDao daoPrueba=new productoComboDao();
+                   
+                           listaOriginal=daoPrueba.getAll();
+                   for(ProductosCombo pro:((productoComboDao)daoPrueba).getAll()){
+                       if(pro.getIdCombo()==idCombo && pro.isBorrado()==false){
+                           
+                          listaAux.add(pro);
+                          
+                       }
+                   }
+                  
+                   String productos="Lista de productos \n";
+                   for(ProductosCombo prodEnLista:listaAux){
+                       productos=productos+"Código: "+prodEnLista.getProd().getId()+
+                               " Nombre: "+prodEnLista.getProd().getNombreProd()+
+                               " Cantidad:"+prodEnLista.getCantidad()+"\n";
+                   }
+                   
+                   if(listaAux.isEmpty()){
+                      productos="El combo no contiene ningún producto";
+                   }
+                    JOptionPane.showMessageDialog(null,productos);
+                    
    }
 }

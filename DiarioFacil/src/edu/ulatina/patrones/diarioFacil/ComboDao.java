@@ -20,9 +20,10 @@ import javax.swing.JOptionPane;
  * @author USER
  */
 public class ComboDao extends Conexion implements Dao<ArmaCombos > {
- public static List<ArmaCombos> combos=new ArrayList<>();
+ public static List<ArmaCombos> combos;
 
     public ComboDao() {
+        combos=new ArrayList<>();
            ResultSet rs=null;
        Statement stmt=null; 
     
@@ -38,11 +39,12 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
              
              
              int id=rs.getInt("idCombo");
+             System.out.println("cod combo: "+id);
              String nombre=rs.getString("NombreCombo");
              int activado=rs.getByte("activado");
              boolean boolActivo;
              
-             if(activado==0){
+             if(activado==1){
                  boolActivo=true;
              }else{
                  boolActivo=false;
@@ -61,13 +63,20 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
                  ContenidosCombo rellenoCombo=new ContenidosCombo(id,nombre,precio,boolActivo
                     ,false);
              ComboFactory comboAgrega=new ComboNuevoFactory(rellenoCombo);
+             ArmaCombos inicial=new ArmaCombos(comboAgrega);
+             System.out.println("codigo combo interno:"+inicial.getId());
+             combos.add(inicial);
+             
              }else{
               ContenidosCombo rellenoCombo=new ContenidosCombo(id,nombre,precio,boolActivo
                     ,true);   
               ComboFactory comboAgrega=new ComboNuevoFactory(rellenoCombo);
+               ArmaCombos inicial=new ArmaCombos(comboAgrega);
+               combos.add(inicial);
+               
              }
              
-             
+            
              
            }
        }catch(Exception e){
@@ -181,7 +190,7 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
            String sql; 
           sql="UPDATE bdpatrones.combos SET NombreCombo='"+nuevoNombre+
                   "',activado="+activado+",precio="+nuevoPrecio+"WHERE"
-                  + "idCombo="+combo.getId();
+                  + " idCombo="+combo.getId();
           stmt.executeUpdate(sql); 
            
        }catch(Exception e){
@@ -212,7 +221,7 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
           this.conectar();
           stmt=conn.createStatement();
           String sql; 
-          sql="UPDATE bdpatrones.combos SET borrado=1 WHERE idProveedor="+
+          sql="UPDATE bdpatrones.combos SET borrado=1 WHERE idCombo="+
                   combo.getId();
           stmt.executeUpdate(sql);
           JOptionPane.showMessageDialog(null,"Combo borrado exitosamente");

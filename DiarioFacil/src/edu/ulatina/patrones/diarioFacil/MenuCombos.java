@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package edu.ulatina.patrones.diarioFacil;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.JOptionPane;
@@ -141,39 +142,25 @@ public class MenuCombos {
                   
                   
               case 3: 
-                  try{
-                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id del "
+                  MenuProductoCombo mpc=new MenuProductoCombo();
+                   try{
+             int idMod;
+                       idMod=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id del "
                                + "combo a buscar")); 
                        
-                       Optional<ArmaCombos> opComb=combo.get(id);
+                       Optional<ArmaCombos> opComb=combo.get(idMod);
                        
                        if(opComb.isPresent()==false){
                         JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún combo");       
-                        break; 
-                       }else{
-                           StringBuffer cmbId=new StringBuffer(); 
-                           cmbId.append("Productos del combo "
-                                   +opComb.get().getNombre()+"\n");
-                           productoComboDao productos=new productoComboDao();
-                          
-                           for(ProductosCombo prod:productos.getAll()){
-                               if(prod.getIdCombo()==id){
-                                cmbId.append("Id Prod: "+prod.getIdCombo()+" Nombre: "+prod.getProd().getNombreProd()+" Cantidad: "
-                                      +prod.getIdCombo()+"\n");      
-                               }
-                           }
-                           //Hay que cambiar esto :,(
                         
-                           JOptionPane.showMessageDialog(null, cmbId);
-                                   
+                       }else{
+                          mpc.verProductos(idMod);  
                        }
-                      
-                            
+                   }catch(NumberFormatException nfe){
+                       break;
+                   }
                        
-                    }catch(NumberFormatException nfe){
-                        break;
-                    
-                    }
+           
                  
               break; 
               
@@ -188,13 +175,28 @@ public class MenuCombos {
                   try{
                       idComboMod=Integer.parseInt(JOptionPane.showInputDialog
                                     ("Ingrese el código del combo"));
-                     Optional<ArmaCombos> opCombo=combo.get(idComboMod);
+                      List<ArmaCombos> listaModifica=combo.getAll();
+                     
+                     Optional<ArmaCombos> opCombo=Optional.empty();
+                     
+                     for(ArmaCombos armCmb:listaModifica){
+                         if(armCmb.getId()==idComboMod){
+                             opCombo=Optional.of(armCmb);
+                         }
+                     }
+                     
+                    
                      if(opCombo.isPresent()==false ||opCombo.get().isBorrado()==true){
                       JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún combo");       
                       break;
                      }else{
-                          ComboExistenteFactory comboModifica=new ComboExistenteFactory(opCombo.get().getId()); 
-                          ArmaCombos armaModifica=new ArmaCombos(comboModifica);
+                        
+                          System.out.println("llegó aquí 2");
+                          
+                            System.out.println("llegó aquí 3");
+                          ArmaCombos armaModifica=opCombo.get();
+                          System.out.println("Combo Actual: "+armaModifica.getId());
+                          
                       strModifica.append("Ingrese una opción:\n");
                   strModifica.append("1.Cambiar nombre del combo \n");
                   strModifica.append("2.Cambiar precio del combo \n");
@@ -213,9 +215,6 @@ public class MenuCombos {
                             opInvalida=true;
                         }
                        }while(opInvalida==true);
-                       
-                   }while(opModifica!=5);
-                   
                    switch(opModifica){
                        case 1:
                            nuevoNombre=JOptionPane.showInputDialog("Ingrese el nuevo nombre "
@@ -227,7 +226,7 @@ public class MenuCombos {
                            
                            String[] actualizaNom={nuevoNombre,precioNom,"1"};
                            combo.update(armaModifica, actualizaNom);
-                           JOptionPane.showMessageDialog(null, "El nombre ha sido modificado");
+                           
                            
                            break;
                            
@@ -267,7 +266,7 @@ public class MenuCombos {
                      
                  }while(precioInvalido==true);    
                            
-                       JOptionPane.showMessageDialog(null, "El precio ha sido modificado");    
+                       
                        break;    
                        
                        case 3:
@@ -308,6 +307,11 @@ public class MenuCombos {
                            
                        break;    
                    }   
+                       
+                       
+                   }while(opModifica!=5);
+                   
+                  
                          
                          
                      }
@@ -333,13 +337,24 @@ public class MenuCombos {
                 try{
                       idComboBorra=Integer.parseInt(JOptionPane.showInputDialog
                                     ("Ingrese el código del combo"));
-                     Optional<ArmaCombos> opCombo=combo.get(idComboBorra);
+                      List<ArmaCombos> listaBorra=combo.getAll();
+                     
+                     Optional<ArmaCombos> opCombo=Optional.empty();
+                     
+                     for(ArmaCombos armCmb:listaBorra){
+                         if(armCmb.getId()==idComboBorra){
+                             opCombo=Optional.of(armCmb);
+                         }
+                     } 
+                      
+                      
+                 
                      if(opCombo.isPresent()==false ||opCombo.get().isBorrado()==true){
                       JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún combo");       
                       break;
                      }else{
-                      ComboExistenteFactory comboBorra=new ComboExistenteFactory(opCombo.get().getId()); 
-                          ArmaCombos armaBorra=new ArmaCombos(comboBorra);   
+                     
+                          ArmaCombos armaBorra=opCombo.get();   
                           combo.delete(armaBorra);
                           
                      }  
@@ -350,7 +365,7 @@ public class MenuCombos {
                 break; 
                 
               case 6: 
-                  //volver(no hay que ponerle nada :V) 
+         
                
                 break; 
                  
@@ -360,5 +375,61 @@ public class MenuCombos {
                   
           }
       }while(opcion!=6); 
+    }
+    public void verProductos(){
+         try{
+             int id;
+                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id del "
+                               + "combo a buscar")); 
+                       
+                       Optional<ArmaCombos> opComb=combo.get(id);
+                       
+                       if(opComb.isPresent()==false){
+                        JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún combo");       
+                        
+                       }else{
+                           String cmbId="";
+                           
+                           cmbId="Productos del combo "
+                                   +opComb.get().getNombre()+"\n";
+                           
+                           
+                           
+                           
+                           Dao prodCombo=new productoComboDao();
+                      
+                          List<ProductosCombo> listaAux=new ArrayList<>();
+                   List<ProductosCombo> listaOriginal=prodCombo.getAll();
+                   for(ProductosCombo pro:listaOriginal){
+                       if(pro.getIdCombo()==id && pro.isBorrado()==false){
+                           
+                          listaAux.add(pro);
+                          
+                       }
+                   }
+                   
+                   String productos="Lista de productos \n";
+                   for(ProductosCombo prodEnLista:listaAux){
+                       productos=productos+"Código: "+prodEnLista.getProd().getId()+
+                               " Nombre: "+prodEnLista.getProd().getNombreProd()+
+                               " Cantidad:"+prodEnLista.getCantidad()+"\n";
+                   }
+                   
+                   if(listaAux.isEmpty()){
+                      productos="El combo no contiene ningún producto";
+                   }
+                    JOptionPane.showMessageDialog(null,productos);
+                           
+                        
+                       
+                                   
+                       }
+                      
+                            
+                       
+                    }catch(NumberFormatException nfe){
+
+                    
+                    }
     }
 }

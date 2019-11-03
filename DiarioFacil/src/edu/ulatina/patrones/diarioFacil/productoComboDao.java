@@ -27,9 +27,10 @@ import javax.swing.JOptionPane;
 
 
 public class productoComboDao extends Conexion implements Dao<ProductosCombo> {
-public static List<ProductosCombo> prodCombo=new ArrayList<>();
+public static List<ProductosCombo> prodCombo;
 
     public productoComboDao() {
+        prodCombo=new ArrayList<>();
         ResultSet rs=null;
         Statement stmt=null;
          try{
@@ -44,11 +45,16 @@ public static List<ProductosCombo> prodCombo=new ArrayList<>();
                  int cantidad=rs.getInt("cantidad");
                  int borrado=rs.getByte("borrado");
                 Producto prodAux=new Producto(); 
-                 for(Producto produ:ProductoDao.productos){
+                ProductoDao daoAux=new ProductoDao();
+                
+                 for(Producto produ:daoAux.getAll()){
+                   
                      if(produ.getId()==idProd){
                         prodAux=produ;
+                      
                      }
                  }
+               
                  
                  if(borrado==0){
                      ProductosCombo prodcmb=new ProductosCombo(idCombo,prodAux,cantidad,false);
@@ -143,7 +149,7 @@ public static List<ProductosCombo> prodCombo=new ArrayList<>();
             }
         }
            if(fallido){
-              
+          
                
                for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&
@@ -153,12 +159,30 @@ public static List<ProductosCombo> prodCombo=new ArrayList<>();
                            cant=String.valueOf(t.getCantidad());
                            String[] reemplazo=new String[]{cant};
                            this.update(t, reemplazo);
+                           for(ProductosCombo prodCmb:prodCombo)
+                           {
+                               if(prodCmb.getProd().getId()==t.getProd().getId()){
+                                   prodCmb.setCantidad(t.getCantidad());
+                               }
+                           }
+                          
+                                   
+                           //tiene que recorrer prodCombo, encontrarlo y 
+                          //reemplazar la cantidad 
                           
                        }else{
                            String cant;
                            int sumaCant=t.getCantidad()+prod.getCantidad();
                            cant=String.valueOf(sumaCant);
                            String[] reemplazo=new String[]{cant};
+                      
+                           for(ProductosCombo prodCmb:prodCombo)
+                           {
+                               if(prodCmb.getProd().getId()==t.getProd().getId()){
+                                   prodCmb.setCantidad(sumaCant);
+                               }
+                           }
+                           
                            
                            this.update(t, reemplazo);
                            
@@ -200,7 +224,8 @@ public static List<ProductosCombo> prodCombo=new ArrayList<>();
       for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&
                            prod.getProd().getId()==t.getProd().getId()){
-                           prod=t;
+                       
+                           prod.setCantidad(cantidad);
                    }
         }
       
