@@ -114,7 +114,10 @@ public class MenuLogin {
                     JOptionPane.showMessageDialog(null, "Login correcto", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png"));
                     dialog.setVisible(false);
                     //Abrir el menu de cliente
-                    dialog.dispose();
+                    Menu cliente = new ClienteLogin();
+                    dialog.setVisible(false);
+                    cliente.DesplegarMenu();
+                    dialog.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Las credenciales son incorrectas", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-error-24.png"));
                 }
@@ -131,9 +134,9 @@ public class MenuLogin {
                 if(((AdminDao)userDao).login(txtUserNam.getText(), txtPassword.getText())){
                     JOptionPane.showMessageDialog(null, "Login correcto", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png"));
                     //Abrir menu de admin
-                    MenuAdministrador menu = new MenuAdministrador();
+                    Menu admin = new AdminLogin();
                     dialog.setVisible(false);
-                    menu.menuAdmin();
+                    admin.DesplegarMenu();
                     dialog.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Las credenciales son incorrectas", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-error-24.png")); 

@@ -37,23 +37,36 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Nvidi
  */
-public class MenuAdministrador {
+public class MenuAdministrador implements IMenu {
     public static Dao dao;
-    public void menuAdmin(){
+    
+    @Override
+    public void mostrarMenu(){
         //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
-        JPanel pnlBack = new JPanel( new GridLayout(4,1));
+        JPanel pnlBack = new JPanel( new GridLayout(7,1));
         JButton btnAdminUser = new JButton("Usuarios");
         JButton btnAdminProveedores = new JButton("Proveedores");
-        JButton btnAdminCatPro = new JButton("Categorias y productos");
+        JButton btnAdminCat = new JButton("Categorias");
+        JButton btnAdminProd = new JButton("Productos");        
         JButton btnAdminCombo = new JButton("Combos");
+        JButton btnAdminBuscarOrd = new JButton("Buscar Orden");        
+        JButton btnAdminReporte = new JButton("Reporte");
+        
         btnAdminUser.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-select-users-30.png"));
         btnAdminProveedores.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-trolley-30.png"));
-        btnAdminCatPro.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-categorize-30.png"));
+        btnAdminCat.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-categorize-30.png"));
+        btnAdminProd.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/Productos.png"));
         btnAdminCombo.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-packaging-30.png"));
+        btnAdminBuscarOrd.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/buscarOrden.png"));
+        btnAdminReporte.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/Reporte.png"));
+        
         pnlBack.add(btnAdminUser);
         pnlBack.add(btnAdminProveedores);
-        pnlBack.add(btnAdminCatPro);
+        pnlBack.add(btnAdminCat);
+        pnlBack.add(btnAdminProd);        
         pnlBack.add(btnAdminCombo);
+        pnlBack.add(btnAdminBuscarOrd);
+        pnlBack.add(btnAdminReporte);
 
         
         JComponent[] component = new JComponent[]{pnlBack};
@@ -65,10 +78,10 @@ public class MenuAdministrador {
         Toolkit kit = Toolkit.getDefaultToolkit();
         Image icon = kit.getImage("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-database-administrator-24.png");
         //opt.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-visible-16.png"));
-        JDialog dialog = opt.createDialog(null, "DiarioFacil-Login");
+        JDialog dialog = opt.createDialog(null, opt.getName());
         dialog.setIconImage(icon);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(350, 300);
+        dialog.setSize(350, 400);
         dialog.setResizable(true);
         //</editor-fold>
         
@@ -80,6 +93,21 @@ public class MenuAdministrador {
             dialog.setVisible(true);
         });
         
+        btnAdminProveedores.addActionListener((ActionEvent e) -> {
+            dialog.setVisible(false);
+            //Llamar la ui de administracion de Proveedores
+            MenuProveedores proveedores=new MenuProveedores();
+            proveedores.menu();
+            dialog.setVisible(true);
+        });
+        
+        btnAdminCat.addActionListener((ActionEvent e) -> {
+            dialog.setVisible(false);
+            //Llamar la ui de administracion de Categorias
+            MenuCategorias categorias=new MenuCategorias();
+            categorias.menu();
+            dialog.setVisible(true);
+        });
         
         
         //</editor-fold>

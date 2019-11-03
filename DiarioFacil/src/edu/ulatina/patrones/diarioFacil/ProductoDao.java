@@ -95,18 +95,74 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
     }
 
     @Override
-    public void save(Producto t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(Producto producto) {
+       Statement stmt=null; 
+        try{
+            this.conectar();
+            stmt=conn.createStatement();
+            String sql; 
+            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`nombreCategoria`,`NombreProveedor` )VALUES('"+
+                    producto.getNombreProd()+"','"+producto.getPrecio()+"','"+producto.getNombreCategoria()+"','"+producto.getNombreProveedor()
+                    +"')";
+            stmt.executeUpdate(sql);
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                this.desconectar();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
-    public void update(Producto t, String[] params) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Producto producto, String[] params) {
+       Statement stmt=null;
+        try{
+            this.conectar();
+            stmt=conn.createStatement();
+            String sql;
+            sql="UPDATE bdpatrones.producto SET NombreProducto='"+
+                    producto.getNombreProd()+"',PrecioProducto='"+producto.getPrecio()+
+                    "' WHERE idProducto="+producto.getId();
+            stmt.executeUpdate(sql);
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                stmt.close();
+                this.desconectar();
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void delete(Producto t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Statement stmt=null; 
+      try{
+          this.conectar();
+          stmt=conn.createStatement();
+          String sql;
+            sql="UPDATE bdpatrones.producto SET borrado='"+
+                    t.isBorrado()+"' WHERE idProducto="+t.getId();
+          stmt.executeUpdate(sql);
+      }catch(Exception e){
+          e.printStackTrace();
+      }finally{
+          try{
+              stmt.close();
+              this.desconectar();
+              
+          }catch(Exception e){
+              e.printStackTrace();
+          }
+      }
     }
     
 }

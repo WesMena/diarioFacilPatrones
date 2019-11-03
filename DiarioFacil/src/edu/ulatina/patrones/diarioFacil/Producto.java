@@ -5,6 +5,8 @@
  */
 package edu.ulatina.patrones.diarioFacil;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author USER
@@ -18,7 +20,21 @@ public class Producto{
    int stockActual=0;
    double precio=0;
    int codCategoria=0;
+ boolean borrado= false;
+ String nombreProveedor="";
+ String nombreCategoria="";
 
+   
+
+  
+    public boolean isBorrado() {
+        return borrado;
+    }
+
+    public void setBorrado(boolean borrado) {
+        this.borrado = borrado;
+    }
+ 
     public Producto() {
         
     }
@@ -49,6 +65,23 @@ public class Producto{
         return codProducto;
     }
 
+    public String getNombreProveedor() {
+        return nombreProveedor;
+    }
+
+    public void setNombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
+    }
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+    
+    
     public void setCodProducto(int codProducto) {
         this.codProducto = codProducto;
     }
@@ -103,5 +136,6 @@ public class Producto{
     public void setId(int id) {
         this.id = id;
     }
-
+    
+  
 }

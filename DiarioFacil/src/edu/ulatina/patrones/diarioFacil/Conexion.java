@@ -17,7 +17,7 @@ import java.util.List;
  * @author USER
  */
 public class Conexion {
-String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     String DB_URL = "jdbc:mysql://localhost:3306/bdpatrones?serverTimezone=UTC";
     
      //Aquí van las credenciales, recordar cambiarlas según las de su pc.
@@ -29,7 +29,7 @@ String JDBC_DRIVER = "com.mysql.jdbc.Driver";
    public void conectar() {
         try {
          
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (Exception e) {
             e.printStackTrace();
