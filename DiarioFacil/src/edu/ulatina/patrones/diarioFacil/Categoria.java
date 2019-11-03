@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Categoria {
   private int codCategoria=0;
-    private String nombreCategoria="";
+  private String nombreCategoria;
 
 
     public Categoria() {
@@ -41,6 +41,7 @@ public class Categoria {
         this.nombreCategoria = nombreCategoria;
     }
 
+    
 
    
    

@@ -2,6 +2,7 @@
 package edu.ulatina.patrones.diarioFacil;
 
 import static edu.ulatina.patrones.diarioFacil.MenuCategorias.categoria;
+import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,8 @@ public class MenuProducto {
                     Producto newProducto = new Producto();
                     newProducto.setNombreProd(JOptionPane.showInputDialog("Ingrese el nombre del nuevo producto."));
                     newProducto.setPrecio(Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio del nuevo producto.")));
+                    newProducto.setNombreCategoria(JOptionPane.showInputDialog("Ingrese el nombre de la categoria."));
+                    newProducto.setNombreProveedor((JOptionPane.showInputDialog("Ingrese el nombre de la proveedor.")));
                     productoDao.save(newProducto);
                     break; 
                 case 4:
