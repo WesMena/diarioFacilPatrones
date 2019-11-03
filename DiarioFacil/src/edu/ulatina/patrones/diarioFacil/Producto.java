@@ -51,7 +51,22 @@ public class Producto{
        this.codCategoria=categoria;
        this.precio=precio;
        this.id=id;
+       
    }
+   public Producto(int id, int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria,
+           boolean borrado){
+       this.codProducto=codProd;
+       this.codProveedor=codProveedor;
+       this.nombreProd=nom;
+       this.stockActual=stockActual;
+       this.stockMinimo=stockMin;
+       this.codCategoria=categoria;
+       this.precio=precio;
+       this.id=id;
+       this.borrado=borrado;
+       
+   }
+   
 
     public int getCodProveedor() {
         return codProveedor;

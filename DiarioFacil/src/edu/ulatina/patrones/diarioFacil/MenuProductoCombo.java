@@ -65,7 +65,7 @@ Dao prodCombo=new ProductoComboDao();
                   for(Producto produ:lst){
                      
                        
-                      if(produ.getId()==idProd){
+                      if(produ.getId()==idProd && produ.isBorrado()==false){
                           existe=true;
                           //Poner que esto tenga en consideración 
                           //si está borrado
