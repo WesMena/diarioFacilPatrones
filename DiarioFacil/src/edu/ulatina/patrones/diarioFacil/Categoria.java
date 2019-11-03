@@ -14,15 +14,16 @@ import java.util.List;
  */
 public class Categoria {
   private int codCategoria=0;
-  private String nombreCategoria;
-
+    private String nombreCategoria="";
+private boolean borrado;
 
     public Categoria() {
     }
 
-    public Categoria(int cod, String nom){
+    public Categoria(int cod, String nom, boolean borrado){
         this.codCategoria=cod;
         this.nombreCategoria=nom;
+        this.borrado=borrado; 
         
     }
     public int getCodCategoria() {
@@ -41,7 +42,14 @@ public class Categoria {
         this.nombreCategoria = nombreCategoria;
     }
 
-    
+    public boolean isBorrado() {
+        return borrado;
+    }
+
+    public void setBorrado(boolean borrado) {
+        this.borrado = borrado;
+    }
+
 
    
    
