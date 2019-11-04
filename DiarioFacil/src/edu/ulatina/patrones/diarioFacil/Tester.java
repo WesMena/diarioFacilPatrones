@@ -20,6 +20,10 @@ public class Tester {
        MenuProducto menuProducto= new MenuProducto();
        menuProducto.menu();
 
+       
+       MenuCombos combo=new MenuCombos();
+       combo.menu();
+       
       // MenuCategorias categorias=new MenuCategorias();
       // categorias.menu();
        

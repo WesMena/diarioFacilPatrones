@@ -33,7 +33,9 @@ public static List<Categoria> categorias=new ArrayList<>();
              String nombre=rs.getString("nombreCategoria");
              int borrado=rs.getByte("borrado");
              if(borrado==0){
-        categorias.add(new Categoria(id,nombre));                
+        categorias.add(new Categoria(id,nombre,false));                
+             }else{
+            categorias.add(new Categoria(id,nombre,true));         
              }
 
             
@@ -123,7 +125,10 @@ public static List<Categoria> categorias=new ArrayList<>();
             sql="UPDATE bdpatrones.categoria SET nombreCategoria='"+
                     nuevoNombre+
                     "' WHERE idCategoria="+t.getCodCategoria();
+            
+    
             stmt.executeUpdate(sql);
+            
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -171,13 +176,13 @@ public static List<Categoria> categorias=new ArrayList<>();
           }
       }
       
-      Categoria catAux=new Categoria();
+      
       for(Categoria cat:categorias){
           if(cat.getCodCategoria()==t.getCodCategoria()){
-              catAux=cat;
+              cat.setBorrado(true);
           }
       }
-      categorias.remove(catAux);
+ 
       
     }
     
