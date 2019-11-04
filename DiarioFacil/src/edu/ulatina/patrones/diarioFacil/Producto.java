@@ -26,11 +26,11 @@ public class Producto{
 int Promocion;
 
     public int getPromocion() {
-        return promocion;
+        return Promocion;
     }
 
-    public void setPromocion(int promocion) {
-        this.promocion = promocion;
+    public void setPromocion(int promocion){
+        this.Promocion=promocion;
     }
    
 
