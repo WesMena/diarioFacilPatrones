@@ -63,6 +63,7 @@ public class MenuProducto {
                     newProducto.setPrecio(Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio del nuevo producto.")));
                     newProducto.setNombreCategoria(JOptionPane.showInputDialog("Ingrese el nombre de la categoria."));
                     newProducto.setNombreProveedor((JOptionPane.showInputDialog("Ingrese el nombre de la proveedor.")));
+                    newProducto.setPromocion(parseInt(JOptionPane.showInputDialog("Indique si el producto esta en promocion")));
                     productoDao.save(newProducto);
                     break; 
                 case 4:

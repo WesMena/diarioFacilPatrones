@@ -23,7 +23,15 @@ public class Producto{
  boolean borrado= false;
  String nombreProveedor="";
  String nombreCategoria="";
+int Promocion;
 
+    public int getPromocion() {
+        return promocion;
+    }
+
+    public void setPromocion(int promocion) {
+        this.promocion = promocion;
+    }
    
 
   
