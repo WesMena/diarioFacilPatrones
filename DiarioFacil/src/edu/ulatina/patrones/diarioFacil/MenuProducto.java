@@ -72,6 +72,7 @@ public class MenuProducto {
                     updateProducto.setId(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el Id del producto a buscar.")));
                     updateProducto.setNombreProd(JOptionPane.showInputDialog("Ingrese el nombre del producto a actualizar."));
                     updateProducto.setPrecio(Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio del producto a actualizar.")));
+                    updateProducto.setStockActual(parseInt(JOptionPane.showInputDialog("Ingrese el numero de stock actual")));
                     productoDao.update(updateProducto, args);
                     break;   
                 case 5:
