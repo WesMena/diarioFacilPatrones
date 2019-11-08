@@ -6,6 +6,7 @@
 package edu.ulatina.patrones.diarioFacil;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,5 +173,4 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
           }
       }
     }
-    
 }

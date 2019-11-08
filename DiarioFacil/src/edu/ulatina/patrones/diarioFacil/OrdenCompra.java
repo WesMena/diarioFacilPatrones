@@ -5,15 +5,16 @@
  */
 package edu.ulatina.patrones.diarioFacil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
- * @author josem
+ * @author Nvidi
  */
-public abstract class Menu {
+public abstract class OrdenCompra {
     
-    protected IMenu menu;
-    
-    public void DesplegarMenu(){
-     menu.mostrarMenu();
-    }
+    public abstract double costo();
+
 }
+

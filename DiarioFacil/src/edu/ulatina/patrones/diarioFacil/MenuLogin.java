@@ -113,6 +113,8 @@ public class MenuLogin {
                     //Login correcto
                     JOptionPane.showMessageDialog(null, "Login correcto", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png"));
                     dialog.setVisible(false);
+                    //Cliente logueado
+                    Constantes.USUARIOLOGUEADO = ((ClienteDao)userDao).getByPassAndUser(txtUserNam.getText(), txtPassword.getText());
                     //Abrir el menu de cliente
                     Menu cliente = new ClienteLogin();
                     dialog.setVisible(false);
@@ -133,6 +135,9 @@ public class MenuLogin {
             if(!txtPassword.getText().isEmpty() && !txtUserNam.getText().isEmpty()){
                 if(((AdminDao)userDao).login(txtUserNam.getText(), txtPassword.getText())){
                     JOptionPane.showMessageDialog(null, "Login correcto", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png"));
+                    //Admin Logueado
+                    
+                    
                     //Abrir menu de admin
                     Menu admin = new AdminLogin();
                     dialog.setVisible(false);
