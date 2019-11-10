@@ -5,6 +5,7 @@
  */
 package edu.ulatina.patrones.diarioFacil;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import javax.swing.JOptionPane;
 
@@ -16,7 +17,7 @@ public class Tester {
 
   
     
-   public static void main(String[] args) {
+   public static void main(String[] args) throws SQLException {
        MenuProducto menuProducto= new MenuProducto();
        menuProducto.menu();
 
