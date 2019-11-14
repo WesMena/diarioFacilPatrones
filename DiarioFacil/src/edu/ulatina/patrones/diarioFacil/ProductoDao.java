@@ -136,7 +136,7 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             String sql;
             sql="UPDATE bdpatrones.producto SET NombreProducto='"+
                     producto.getNombreProd()+"',PrecioProducto='"+producto.getPrecio()+
-                    "',StockActualProducto='"+producto.getStockActual()+
+                    "',stockActual='"+producto.getStockActual()+
                     "' WHERE idProducto="+producto.getId();
             stmt.executeUpdate(sql);
         }catch(Exception e){
@@ -159,8 +159,8 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
           this.conectar();
           stmt=conn.createStatement();
           String sql;
-            sql="UPDATE bdpatrones.producto SET borrado='"+
-                    t.isBorrado()+"' WHERE idProducto="+t.getId();
+            sql="UPDATE bdpatrones.producto SET borrado="+
+                    "1 WHERE idProducto="+t.getId();
           stmt.executeUpdate(sql);
       }catch(Exception e){
           e.printStackTrace();
