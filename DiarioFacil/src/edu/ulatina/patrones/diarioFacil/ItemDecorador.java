@@ -7,13 +7,8 @@ package edu.ulatina.patrones.diarioFacil;
 
 /**
  *
- * @author josem
+ * @author Nvidi
  */
-public abstract class Menu {
-    
-    protected IMenu menu;
-    
-    public void DesplegarMenu(){
-     menu.mostrarMenu();
-    }
+public abstract class ItemDecorador extends OrdenCompra {
+
 }
