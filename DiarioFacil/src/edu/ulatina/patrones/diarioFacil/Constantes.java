@@ -7,13 +7,9 @@ package edu.ulatina.patrones.diarioFacil;
 
 /**
  *
- * @author josem
+ * @author Nvidi
  */
-public abstract class Menu {
-    
-    protected IMenu menu;
-    
-    public void DesplegarMenu(){
-     menu.mostrarMenu();
-    }
+public final class Constantes {
+       public static  Cliente USUARIOLOGUEADO = new Cliente(); 
+       public static  Administrador ADMINLOGUEADO = new Administrador(); 
 }

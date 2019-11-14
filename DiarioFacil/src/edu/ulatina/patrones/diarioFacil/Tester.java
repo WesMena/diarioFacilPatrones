@@ -17,33 +17,14 @@ public class Tester {
 
   
     
-
-   public static void main(String[] args) throws SQLException {
-  
-  
-
+   public static void main(String[] args) {  
+       Cliente cli=new Cliente();
+       cli.setId(1);
+       boolean freq;
+       EsFrecuente frecuente=new EsFrecuente();
+       freq=frecuente.clienteFrecuente(cli);
+       System.out.println(freq?"Frecuente":"no frecuente");
        
-      // MenuCombos combo=new MenuCombos();
-       //combo.menu();
-       
-        // MenuProducto menuProducto= new MenuProducto();
-      // menuProducto.menu();
-       
-      // MenuCategorias categorias=new MenuCategorias();
-      // categorias.menu();
-       
-
-      /*MenuProveedores proveedores=new MenuProveedores();
-     proveedores.menu();*/
-
-//      MenuProveedores proveedores=new MenuProveedores();
-//     proveedores.menu();
-
-
-       //MenuCategorias categorias=new MenuCategorias();
-       //categorias.menu();
-      ClienteDao dao  = new ClienteDao();
-      dao.save( new Cliente("XXXX","XXXXXXPASS","CDF",false,false));
        try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
@@ -56,11 +37,10 @@ public class Tester {
         }
        MenuLogin log = new MenuLogin();
        log.loginUI();
-     // MenuProveedores proveedores=new MenuProveedores();
-     // proveedores.menu();
 
-    }
-   // 
+       
+   }
+   
 }
     
     
