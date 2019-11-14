@@ -110,9 +110,9 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             this.conectar();
             stmt=conn.createStatement();
             String sql; 
-            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`nombreCategoria`,`NombreProveedor` )VALUES('"+
+            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`nombreCategoria`,`NombreProveedor` , `Promocion`,`stockActual`)VALUES('"+
                     producto.getNombreProd()+"','"+producto.getPrecio()+"','"+producto.getNombreCategoria()+"','"+producto.getNombreProveedor()
-                    +"')";
+                    +"','"+producto.getPromocion()+"','"+producto.getStockActual();
             stmt.executeUpdate(sql);
         }catch(Exception e){
             e.printStackTrace();
@@ -136,6 +136,7 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             String sql;
             sql="UPDATE bdpatrones.producto SET NombreProducto='"+
                     producto.getNombreProd()+"',PrecioProducto='"+producto.getPrecio()+
+                    "',StockActualProducto='"+producto.getStockActual()+
                     "' WHERE idProducto="+producto.getId();
             stmt.executeUpdate(sql);
         }catch(Exception e){
