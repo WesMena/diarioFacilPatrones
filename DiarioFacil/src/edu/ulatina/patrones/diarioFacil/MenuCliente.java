@@ -24,10 +24,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -59,7 +64,7 @@ public class MenuCliente implements IMenu {
     
     boolean compraRealizada;
     
-    JButton btnActualizar = new JButton("Actualizar");
+   
     
     
     @Override
@@ -119,9 +124,10 @@ public class MenuCliente implements IMenu {
             JTable tblProductos = new JTable();
             JLabel lblSearch = new JLabel("Buscar : ");
             JTextField txtBuscar = new JTextField();
-            
+            JButton btnActualizar = new JButton("Actualizar");
             JButton btnAdd = new JButton("Agregar al carrito");
             JButton btnSeeSc = new JButton("Ver mi carrito");
+            JButton btnCombos  = new JButton("Combos");
             //Modelo base
             DefaultTableModel model = new DefaultTableModel(){
             @Override
@@ -146,7 +152,7 @@ public class MenuCliente implements IMenu {
             btnActualizar.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
             btnAdd.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-add-16.png"));
             btnSeeSc.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-shopping-cart-16.png"));
-            
+            btnCombos.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-package-16.png"));
             
             
             //Panel de busqueda
@@ -156,9 +162,10 @@ public class MenuCliente implements IMenu {
             pnlSearchBar.add(btnActualizar,BorderLayout.EAST);
             
             //Panel de acciones
-            pnlActionbar = new JPanel(new GridLayout(1,2));
+            pnlActionbar = new JPanel(new GridLayout(1,3));
             pnlActionbar.add(btnAdd);
             pnlActionbar.add(btnSeeSc);
+            pnlActionbar.add(btnCombos);
             
             pnlBack = new JPanel(new BorderLayout());
             pnlBack.add(pnlSearchBar,BorderLayout.NORTH);
@@ -183,6 +190,15 @@ public class MenuCliente implements IMenu {
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Logica">
+            btnCombos.addActionListener((ActionEvent e) -> {
+                dao = new ComboDao();
+                if(!((ComboDao)dao).getAll().isEmpty()){
+                    dialog.setVisible(false);
+                    menuClienteVerCombos();
+                    dialog.setVisible(true);   
+                }
+            });
+        
             btnAdd.addActionListener((ActionEvent e) -> {
                 if(tblProductos.getRowCount()>0){
                     if(tblProductos.getSelectedRow()!=-1){
@@ -192,13 +208,13 @@ public class MenuCliente implements IMenu {
                         JSpinner spin  = new JSpinner(model1);
                         //Deshabilitando la escritura en el spinner
                         ((JSpinner.DefaultEditor) spin.getEditor()).getTextField().setEditable(false);
-                        JLabel cantidad= new JLabel("Cantidad :");
+                        JLabel cantidadIn= new JLabel("Cantidad :");
                         JButton btnAceptar = new JButton();
                         btnAceptar.setText("Aceptar");
                         
                         //Coleccion de controles
                         JComponent[]   componentes  = new JComponent[]{
-                            cantidad,
+                            cantidadIn,
                             spin
                         } ;
                         int idProducto;
@@ -259,9 +275,6 @@ public class MenuCliente implements IMenu {
             dialog.addWindowListener( new WindowListener() {
                 @Override
                 public void windowOpened(WindowEvent e) {
-                  if(compraRealizada){
-                      btnActualizar.doClick();
-                  }
                 }
 
                 @Override
@@ -298,7 +311,7 @@ public class MenuCliente implements IMenu {
            
             
             btnSeeSc.addActionListener((ActionEvent e) -> {
-                if(lstCarrito.size()>0){
+                if((((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id).size()>0)){
                     compraRealizada  = false;
                     dialog.setVisible(false);
                     this.menuClienteVerCarrito(carrito.costo(),lstCarrito);
@@ -335,15 +348,20 @@ public class MenuCliente implements IMenu {
             
             
 
-            //Cargar en un patron decorador el carrito 
+            //Cargar en un patron decorador el carrito  de productos
            
             lstCarrito =  new ArrayList<>();
             this.carrito = new CarritoCompra();
             
+            
             for(Properties prop : ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.getId())){
                 this.lstCarrito.add(prop);
-                this.carrito = new Item(carrito,Integer.parseInt(prop.getProperty(cantidad)),prop.getProperty(producto),Double.parseDouble(prop.getProperty(precio_unitario)));
+                if(Integer.parseInt(prop.getProperty("isCombo"))==0){
+                    this.carrito = new Item(carrito,Integer.parseInt(prop.getProperty(cantidad)),prop.getProperty(producto),Double.parseDouble(prop.getProperty(precio_unitario)));
+                }   
             }
+            this.carrito = new Item(carrito,1,"",((ClienteDao)dao).costo_combos(((ClienteDao)dao).Orden_actual(Constantes.USUARIOLOGUEADO.Id)));
+            
             
             System.out.println("Costo de carrito : "+carrito.costo());
 
@@ -354,10 +372,14 @@ public class MenuCliente implements IMenu {
         
     }
     
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+    
     public void menuClienteVerCarrito(double subTotal,List<Properties> carrito){
         
         //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
-            List<Properties> inventario = new ArrayList<>();
             JPanel pnlBack,pnlSearchBar,pnlActionbar,pnlActionContent,pnlSubtotal,pnlTotal;
             JTable tblProductos = new JTable();
             JLabel lblSearch = new JLabel("Buscar : ");
@@ -370,6 +392,11 @@ public class MenuCliente implements IMenu {
             JButton btnBuy = new JButton("Comprar");
             txtSubTotal.setEditable(false);
             txtTotal.setEditable(false);
+            JPanel pnlTblMods;
+            JPanel pnlBtnMod;
+            JButton btnDelete = new JButton("Eliminar");
+            JButton btnUpdate = new JButton("Modificar");
+            JButton btnCombo = new JButton("Ver contenido");
             //Modelo base
             DefaultTableModel model = new DefaultTableModel(){
             @Override
@@ -379,13 +406,16 @@ public class MenuCliente implements IMenu {
             };
             
             btnActualizar.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
+                        
+            
+            carrito = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
             
             //Cargando modelo 
             for(String col: carrito.get(0).stringPropertyNames())
                 model.addColumn(col);
             
             carrito.stream().forEach((Properties prop)->{
-                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty(cantidad),prop.getProperty(monto)});
+                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty(cantidad),prop.getProperty(monto),((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
             });
             
             tblProductos.setModel(model);
@@ -417,9 +447,21 @@ public class MenuCliente implements IMenu {
             pnlActionbar.add(pnlActionContent,BorderLayout.NORTH);
             pnlActionbar.add(btnBuy,BorderLayout.SOUTH);
             
+            //Panel de los botones
+            pnlBtnMod = new JPanel(new BorderLayout());
+            pnlBtnMod.add(btnDelete,BorderLayout.WEST);
+            pnlBtnMod.add(btnUpdate,BorderLayout.CENTER);
+            pnlBtnMod.add(btnCombo,BorderLayout.EAST);
+            
+            
+            //Panel de la tabla y los botones de modificacion
+            pnlTblMods  = new JPanel(new BorderLayout());
+            pnlTblMods.add(new JScrollPane(tblProductos,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),BorderLayout.CENTER);
+            pnlTblMods.add(pnlBtnMod,BorderLayout.SOUTH);
+            
             pnlBack = new JPanel(new BorderLayout());
             pnlBack.add(pnlSearchBar,BorderLayout.NORTH);
-            pnlBack.add(new JScrollPane(tblProductos,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),BorderLayout.CENTER);
+            pnlBack.add(pnlTblMods,BorderLayout.CENTER);
             pnlBack.add(pnlActionbar,BorderLayout.SOUTH);
             
             //Ventana principal
@@ -473,11 +515,158 @@ public class MenuCliente implements IMenu {
                    }
                }
             });
+            
+            btnUpdate.addActionListener((ActionEvent e) -> {
+                if(tblProductos.getSelectedRow()!=-1){
+                    //Llamar spinner que actualice la cantidad del producto
+                    //Desplegar un JSpinner para pedirle al cliente la cantidad del producto
+                    JPanel pnlUpdatde  = new JPanel(new BorderLayout());
+                    SpinnerNumberModel model1 = new SpinnerNumberModel(1.0, 1.0, 100.0, 1.0);
+                    JSpinner spin  = new JSpinner(model1);
+                    //Deshabilitando la escritura en el spinner
+                    ((JSpinner.DefaultEditor) spin.getEditor()).getTextField().setEditable(false);
+                    String prod = tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 1).toString();
+                    Double actualValue  =Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString());
+                    spin.setValue(actualValue.intValue());
+                    
+                    JLabel cantidad= new JLabel("Cantidad :");
+                    JButton btnAceptar = new JButton();
+                    btnAceptar.setText("Aceptar");
+
+                    //Coleccion de controles
+                    JComponent[]   componentes  = new JComponent[]{
+                        cantidad,
+                        spin
+                   } ;
+                   int result = JOptionPane.showConfirmDialog(null, componentes,prod,JOptionPane.YES_NO_OPTION);
+                }
+
+            });
         //</editor-fold>
         
         //Arranque
         dialog.setVisible(true);
          
+    }
+    
+    public void menuClienteVerCombos(){
+        //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
+            List<Properties> inventario = new ArrayList<>();
+            JPanel pnlBack,pnlSearchBar,pnlActionbar;
+            JTable tblCombos = new JTable();
+            JLabel lblSearch = new JLabel("Buscar : ");
+            JTextField txtBuscar = new JTextField();
+            JButton btnActualizar = new JButton("Actualizar");
+            JButton btnAdd = new JButton("Agregar al carrito");
+            JButton btnSeeSc = new JButton("Ver detalle");
+            //Modelo base
+            DefaultTableModel model = new DefaultTableModel(){
+            @Override
+                public boolean isCellEditable(int row,int column){
+                    return false;
+                }
+            };
+            
+            //Cargando Columnas al modelo
+            dao = new ComboDao();
+            List<ArmaCombos> lstCombosArm = ((ComboDao)dao).getAll();
+            for (Field f : lstCombosArm.get(0).getClass().getDeclaredFields()) {
+                model.addColumn(f.getName());
+            }
+            //Cargando filas al modelo
+            for(ArmaCombos arm  : lstCombosArm){
+                model.addRow(new Object[]{arm.getId(),arm.getNombre(),arm.getPrecio(),arm.activado,arm.borrado});
+            }
+            
+             
+            tblCombos.setModel(model);
+            TableColumnModel tcm = tblCombos.getColumnModel();
+            tcm.removeColumn( tcm.getColumn(4) );
+            tcm.removeColumn( tcm.getColumn(3) );
+            tcm.removeColumn( tcm.getColumn(0) );
+            
+            //Iconos para los botones
+            btnActualizar.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
+            btnAdd.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-add-16.png"));
+            btnSeeSc.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-shopping-cart-16.png"));
+
+            
+            
+            //Panel de busqueda
+            pnlSearchBar  = new JPanel(new BorderLayout());
+            pnlSearchBar.add(lblSearch,BorderLayout.WEST);
+            pnlSearchBar.add(txtBuscar,BorderLayout.CENTER);
+            pnlSearchBar.add(btnActualizar,BorderLayout.EAST);
+            
+            //Panel de acciones
+            pnlActionbar = new JPanel(new GridLayout(1,3));
+            pnlActionbar.add(btnAdd);
+            pnlActionbar.add(btnSeeSc);
+
+            
+            pnlBack = new JPanel(new BorderLayout());
+            pnlBack.add(pnlSearchBar,BorderLayout.NORTH);
+            pnlBack.add(new JScrollPane(tblCombos,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),BorderLayout.CENTER);
+            pnlBack.add(pnlActionbar,BorderLayout.SOUTH);
+            
+            //Ventana principal
+            JComponent[] component = new JComponent[]{pnlBack};
+        
+            JOptionPane opt = new JOptionPane();
+            opt.setMessage(component);
+            opt.setName("DiarioFacil-Combos");
+            opt.setVisible(true);
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image icon = kit.getImage("src/edu/ulatina/patrones/diarioFacil/imagenes/cliente.png");
+
+            JDialog dialog = opt.createDialog(null, opt.getName());
+            dialog.setIconImage(icon);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setSize(600, 400);
+            dialog.setResizable(true);
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Logica" >
+            btnAdd.addActionListener((ActionEvent e) -> {
+                if(tblCombos.getSelectedRow()!=-1){
+                        int idCombo;
+                        //Desplegar un JSpinner para pedirle al cliente la cantidad de combos
+                        SpinnerNumberModel model1 = new SpinnerNumberModel(1.0, 1.0, 100.0, 1.0);
+                        JSpinner spin  = new JSpinner(model1);
+                        //Deshabilitando la escritura en el spinner
+                        ((JSpinner.DefaultEditor) spin.getEditor()).getTextField().setEditable(false);
+                        JLabel cantidad= new JLabel("Cantidad :");
+                        JButton btnAceptar = new JButton();
+                        btnAceptar.setText("Aceptar");
+                        
+                        //Coleccion de controles
+                        JComponent[]   componentes  = new JComponent[]{
+                            cantidad,
+                            spin
+                        } ;
+                        int idProducto;
+                        
+                        //Double idProdTemp= Double.parseDouble(tblCombos.getModel().getValueAt(tblCombos.getSelectedRow(),3).toString());
+                        
+                        //idProducto = idProdTemp.intValue();
+                        
+                        int idUser  = Constantes.USUARIOLOGUEADO.getId();
+                        int result = JOptionPane.showConfirmDialog(null, componentes,"Seleccione una cantidad" ,JOptionPane.YES_NO_OPTION);
+                        
+                        if(result == JOptionPane.YES_OPTION){
+                            //Procedo a revisar el stock de eso que desea agregar
+                            dao = new ClienteDao();
+                            Double idComboIn = Double.parseDouble(tblCombos.getModel().getValueAt(tblCombos.getSelectedRow(),0).toString());
+                            ((ClienteDao)dao).insertar_Combo_Carrito(Constantes.USUARIOLOGUEADO.getId(),idComboIn.intValue() , (int)Math.round(Double.parseDouble(spin.getValue().toString())));
+                          this.carrito = new Item(this.carrito,1,"",((ClienteDao)dao).precioCombo_byID(idComboIn.intValue()));
+                        }
+                }
+                        
+            });
+        //</editor-fold>
+        
+        //Arranque
+        dialog.setVisible(true);
     }
     
 }
