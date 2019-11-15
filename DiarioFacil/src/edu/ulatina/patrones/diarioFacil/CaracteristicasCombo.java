@@ -13,7 +13,7 @@ import java.util.List;
  * @author USER
  */
 public abstract class CaracteristicasCombo {
-       int id; 
+    int id; 
     String nombre; 
     double precio; 
 
