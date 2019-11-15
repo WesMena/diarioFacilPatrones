@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author USER
  */
-public class ComboDao extends Conexion implements Dao<ArmaCombos > {
+public class ComboDao implements Dao<ArmaCombos > {
  public static List<ArmaCombos> combos;
 
     public ComboDao() {
@@ -29,8 +29,9 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
     
        
        try{
-           this.conectar();
-           stmt=conn.createStatement();
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           stmt= conexion.conn.createStatement();
            String sql; 
            sql="SELECT idCombo,NombreCombo,activado,borrado,precio FROM combos";
            rs=stmt.executeQuery(sql);
@@ -81,15 +82,16 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
            }
        }catch(Exception e){
            e.printStackTrace();
-       }finally{
-           try{
-               rs.close();
-               stmt.close();
-               this.desconectar();
-           }catch(Exception e){
-               e.printStackTrace();
-           }
        }
+//       finally{
+//           try{
+//               rs.close();
+//               stmt.close();
+//               this.desconectar();
+//           }catch(Exception e){
+//               e.printStackTrace();
+//           }
+//       }
         
         
     }
@@ -118,8 +120,9 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
         boolean fallido=false; 
 
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt= conexion.conn.createStatement();
             String sql;
             
             
@@ -134,15 +137,16 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
             }
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
         
         if(fallido){
             JOptionPane.showMessageDialog(null,"El id ingresado pertenece a un "
@@ -185,8 +189,9 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
        
        
        try{
-           this.conectar();
-           stmt=conn.createStatement();
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           stmt= conexion.conn.createStatement();
            String sql; 
           sql="UPDATE bdpatrones.combos SET NombreCombo='"+nuevoNombre+
                   "',activado="+activado+",precio="+nuevoPrecio+"WHERE"
@@ -195,14 +200,15 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
            
        }catch(Exception e){
            e.printStackTrace();
-       }finally{
-           try{
-               stmt.close();
-               this.desconectar();
-           }catch(Exception e){
-               e.printStackTrace();
-           }
        }
+//       finally{
+//           try{
+//               stmt.close();
+//               this.desconectar();
+//           }catch(Exception e){
+//               e.printStackTrace();
+//           }
+//       }
       for(ArmaCombos com:combos){
           if(com.getId()==combo.getId()){
                 com=combo;
@@ -218,8 +224,9 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
     public void delete(ArmaCombos combo) {
       Statement stmt=null; 
       try{
-          this.conectar();
-          stmt=conn.createStatement();
+          Conexion conexion = Conexion.getInstance();
+          conexion.conectar();
+          stmt = conexion.conn.createStatement();
           String sql; 
           sql="UPDATE bdpatrones.combos SET borrado=1 WHERE idCombo="+
                   combo.getId();
@@ -228,15 +235,16 @@ public class ComboDao extends Conexion implements Dao<ArmaCombos > {
           
       }catch(Exception e){
           e.printStackTrace();
-      }finally{
-          try{
-              stmt.close();
-              this.desconectar();
-              
-          }catch(Exception e){
-              e.printStackTrace();
-          }
       }
+//      finally{
+//          try{
+//              stmt.close();
+//              this.desconectar();
+//              
+//          }catch(Exception e){
+//              e.printStackTrace();
+//          }
+//      }
 
  
  for(ArmaCombos c:combos){

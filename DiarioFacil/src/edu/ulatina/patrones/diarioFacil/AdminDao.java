@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  * @author Nvidi
  */
-public class AdminDao extends Conexion implements Dao<Administrador>{
+public class AdminDao implements Dao<Administrador>{
 
     ResultSet rset;
     Statement stm;
@@ -25,22 +25,24 @@ public class AdminDao extends Conexion implements Dao<Administrador>{
     public boolean login(String user,String password){
         boolean ok = false;
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select*from admin where NombreAdmin = '%s' and passAdmin = '%s' and borrado != 1", user,password));
             while(rset.next())
                 ok =true;
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                stm.close();
-                rset.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                stm.close();
+//                rset.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
         return ok;
     }
     

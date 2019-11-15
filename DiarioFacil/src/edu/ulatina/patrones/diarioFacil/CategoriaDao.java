@@ -17,14 +17,15 @@ import javax.swing.JOptionPane;
  *
  * @author USER
  */
-public class CategoriaDao extends Conexion implements Dao<Categoria> {
+public class CategoriaDao implements Dao<Categoria> {
 public static List<Categoria> categorias=new ArrayList<>();
     public CategoriaDao() {
            ResultSet rs=null;
        Statement stmt=null; 
        try{
-           this.conectar();
-           stmt=conn.createStatement();
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           stmt = conexion.conn.createStatement();
            String sql; 
            sql="SELECT idCategoria,nombreCategoria,borrado FROM categoria";
            rs=stmt.executeQuery(sql);
@@ -43,15 +44,16 @@ public static List<Categoria> categorias=new ArrayList<>();
            }
        }catch(Exception e){
            e.printStackTrace();
-       }finally{
-           try{
-               rs.close();
-               stmt.close();
-               this.desconectar();
-           }catch(Exception e){
-               e.printStackTrace();
-           }
        }
+//       finally{
+//           try{
+//               rs.close();
+//               stmt.close();
+//               this.desconectar();
+//           }catch(Exception e){
+//               e.printStackTrace();
+//           }
+//       }
     }
 
     
@@ -76,8 +78,9 @@ public static List<Categoria> categorias=new ArrayList<>();
          Statement stmt=null; 
          boolean fallido=false;
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt = conexion.conn.createStatement();
             String sql; 
             sql="INSERT INTO bdpatrones.categoria VALUES("+
                     t.getCodCategoria()+",'"+t.getNombreCategoria()
@@ -90,15 +93,16 @@ public static List<Categoria> categorias=new ArrayList<>();
            
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
         if(fallido){
           JOptionPane.showMessageDialog(null,"El id ingresado pertenece a una "
                   + "categoría que ya no forma parte del sistema ");   
@@ -119,8 +123,9 @@ public static List<Categoria> categorias=new ArrayList<>();
         String nuevoNombre=params[0];
       
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt = conexion.conn.createStatement();
             String sql;
             sql="UPDATE bdpatrones.categoria SET nombreCategoria='"+
                     nuevoNombre+
@@ -131,15 +136,16 @@ public static List<Categoria> categorias=new ArrayList<>();
             
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
         
      for(Categoria cate:categorias){
          if(cate.getCodCategoria()==t.getCodCategoria()){
@@ -156,8 +162,9 @@ public static List<Categoria> categorias=new ArrayList<>();
     public void delete(Categoria t) {
        Statement stmt=null; 
       try{
-          this.conectar();
-          stmt=conn.createStatement();
+          Conexion conexion = Conexion.getInstance();
+          conexion.conectar();
+          stmt = conexion.conn.createStatement();
           String sql;
           sql="UPDATE bdpatrones.categoria SET borrado=1 WHERE idCategoria="+t.getCodCategoria();
           
@@ -166,15 +173,16 @@ public static List<Categoria> categorias=new ArrayList<>();
            JOptionPane.showMessageDialog(null,"Categoría borrada exitosamente");
       }catch(Exception e){
           e.printStackTrace();
-      }finally{
-          try{
-              stmt.close();
-              this.desconectar();
-              
-          }catch(Exception e){
-              e.printStackTrace();
-          }
       }
+//      finally{
+//          try{
+//              stmt.close();
+//              this.desconectar();
+//              
+//          }catch(Exception e){
+//              e.printStackTrace();
+//          }
+//      }
       
       
       for(Categoria cat:categorias){
