@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  */
 
 
-public class ProductoComboDao extends Conexion implements Dao<ProductosCombo> {
+public class ProductoComboDao implements Dao<ProductosCombo> {
 public static List<ProductosCombo> prodCombo;
 
     public ProductoComboDao() {
@@ -28,8 +28,9 @@ public static List<ProductosCombo> prodCombo;
         ResultSet rs=null;
         Statement stmt=null;
          try{
-             this.conectar();
-             stmt=conn.createStatement();
+             Conexion conexion = Conexion.getInstance();
+             conexion.conectar();
+             stmt= conexion.conn.createStatement();
              String sql; 
              sql="SELECT combo,producto,cantidad,borrado FROM productoscombo";
              rs=stmt.executeQuery(sql);
@@ -62,15 +63,16 @@ public static List<ProductosCombo> prodCombo;
              }
          }catch(Exception e){
              e.printStackTrace();
-         }finally{
-             try{
-                 rs.close();
-                 stmt.close();
-                 this.desconectar();
-             }catch(Exception e){
-                 e.printStackTrace();
-             }
          }
+//         finally{
+//             try{
+//                 rs.close();
+//                 stmt.close();
+//                 this.desconectar();
+//             }catch(Exception e){
+//                 e.printStackTrace();
+//             }
+//         }
         
         
     }
@@ -121,8 +123,9 @@ public static List<ProductosCombo> prodCombo;
         //detectar que falla
         
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt= conexion.conn.createStatement();
             String sql;
             sql="INSERT INTO bdpatrones.productoscombo VALUES("+t.getIdCombo()+
                     ","+t.getProd().getId()+","+t.getCantidad()+",0)";
@@ -134,14 +137,15 @@ public static List<ProductosCombo> prodCombo;
             //combo,producto,cantidad,borrado
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
            if(fallido){
           
                
@@ -198,23 +202,25 @@ public static List<ProductosCombo> prodCombo;
       t.setCantidad(cantidad);
       Statement stmt=null; 
       try{
-          this.conectar();
-          stmt=conn.createStatement();
+          Conexion conexion = Conexion.getInstance();
+          conexion.conectar();
+          stmt= conexion.conn.createStatement();
           String sql="UPDATE bdpatrones.productoscombo SET cantidad="
                   +cantidad+" WHERE combo="+t.getIdCombo()+" AND producto="+
                   t.getProd().getId();
           stmt.executeUpdate(sql);
       }catch(Exception e){
           e.printStackTrace();
-      }finally{
-          try{
-              stmt.close();
-              this.desconectar();
-              
-          }catch(Exception e){
-              e.printStackTrace();
-          }
       }
+//      finally{
+//          try{
+//              stmt.close();
+//              this.desconectar();
+//              
+//          }catch(Exception e){
+//              e.printStackTrace();
+//          }
+//      }
       for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&
                            prod.getProd().getId()==t.getProd().getId()){
@@ -229,8 +235,9 @@ public static List<ProductosCombo> prodCombo;
     public void delete(ProductosCombo t) {
      Statement stmt=null; 
      try{ 
-         this.conectar();
-         stmt=conn.createStatement(); 
+         Conexion conexion = Conexion.getInstance();
+         conexion.conectar();
+         stmt= conexion.conn.createStatement(); 
           String sql="UPDATE bdpatrones.productoscombo SET borrado=1"
                   +" WHERE combo="+t.getIdCombo()+" AND producto="+
                   t.getProd().getId();
@@ -238,14 +245,15 @@ public static List<ProductosCombo> prodCombo;
           
      }catch(Exception e){
          e.printStackTrace();
-     }finally{
-         try{
-             stmt.close();
-             this.desconectar();
-         }catch(Exception e){
-             e.printStackTrace();
-         }
      }
+//     finally{
+//         try{
+//             stmt.close();
+//             this.desconectar();
+//         }catch(Exception e){
+//             e.printStackTrace();
+//         }
+//     }
      
         for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&

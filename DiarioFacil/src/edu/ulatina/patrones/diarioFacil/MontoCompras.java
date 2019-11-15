@@ -14,7 +14,7 @@ import java.sql.Statement;
  *
  * @author wesli
  */
-public class MontoCompras extends Conexion {
+public class MontoCompras {
     boolean comprasSonSuficientes(Cliente c){
       int idCliente=c.getId();
       boolean elegible=false;
@@ -23,8 +23,9 @@ public class MontoCompras extends Conexion {
         ResultSet rs=null;
         Statement stmt=null;
         try{
-        this.conectar();
-        stmt=conn.createStatement();
+        Conexion conexion = Conexion.getInstance();
+        conexion.conectar();
+        stmt = conexion.conn.createStatement();
         String sql;
         
         sql=String.format("Select sum(subtotal) as total from bdpatrones.item, bdpatrones.orden"+
@@ -37,9 +38,10 @@ public class MontoCompras extends Conexion {
                }
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            this.desconectar();
         }
+//        finally{
+//            this.desconectar();
+//        }
         
         
         //Condiciones para ser frecuente

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.swing.JOptionPane;
 
-public class MenuProducto  extends Conexion{
+public class MenuProducto{
 
     List<Producto> lstProductos = new ArrayList();
     ProductoDao productoDao = new ProductoDao();
@@ -76,8 +76,9 @@ public class MenuProducto  extends Conexion{
                         
                          ResultSet rs=null;  
                          Statement stmt=null;
-                        productoDao.conectar();
-                        stmt = conn.createStatement();
+                         
+//                        productoDao.conectar();
+//                        stmt = conn.createStatement();
                         String sql;
                                
                         sql = "SELECT FROM * producto WHERE NombreProducto like '%"+newProducto.getNombreProd()+"%'";

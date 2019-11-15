@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Nvidi
  */
-public class ClienteDao extends Conexion implements Dao<Cliente>{
+public class ClienteDao implements Dao<Cliente>{
     
     ResultSet rset;
     Statement stm;
@@ -30,8 +30,9 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public List<Producto> getOrdenCoompra(int idCliente){
         List<Producto> orden = new ArrayList<>();
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("",idCliente));
             while(rset.next()){
                 orden.add(new Producto());
@@ -46,23 +47,25 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public boolean login(String nombreUsuario,String password){
         boolean ok = false;
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select * from cliente where NombreCliente =\"%s\" and PassCliente=\"%s\" and borrado != 1",nombreUsuario,password));
             while(rset.next())
                 ok=true;
             
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                stm.close();
-                rset.close();
-            }catch(SQLException e){
-                System.out.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                stm.close();
+//                rset.close();
+//            }catch(SQLException e){
+//                System.out.println(""+e.getMessage());
+//            }
+//        }
         
         return ok;
     }
@@ -73,8 +76,9 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
         Optional<Cliente> opRe = Optional.empty();
         try{
             Cliente client = null;
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select idCliente,CorreoCliente,PassCliente,NombreCliente,borrado,ClientePref from cliente where idCliente = %o", id));
             while(rset.next()){
                 client = new Cliente(rset.getInt("idCliente"), rset.getString("CorreoCliente"), rset.getString("PassCliente"), rset.getString("NombreCliente"), rset.getBoolean("borrado"), rset.getBoolean("ClientePref"));
@@ -82,15 +86,16 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
             opRe = Optional.ofNullable(client);
         }catch(SQLException e){
             System.out.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                stm.close();
-                rset.close();
-            }catch(SQLException e){
-                System.out.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                stm.close();
+//                rset.close();
+//            }catch(SQLException e){
+//                System.out.println(""+e.getMessage());
+//            }
+//        }
         return opRe;
     }
     
@@ -99,24 +104,26 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public List<Cliente> getAll() {
         List<Cliente> clientes = new ArrayList();
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery("select * from cliente");
             while(rset.next()){
                 clientes.add(new Cliente(rset.getInt("idCliente"),rset.getString("CorreoCliente"),rset.getString("PassCliente"),rset.getString("NombreCliente"),rset.getBoolean("borrado"),rset.getBoolean("ClientePref")));
             }
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try {
-                stm.close();
-                rset.close();
-            } catch (SQLException ex) {
-                System.err.println(""+ex.getMessage());
-            }
-            
         }
+//        finally{
+//            super.desconectar();
+//            try {
+//                stm.close();
+//                rset.close();
+//            } catch (SQLException ex) {
+//                System.err.println(""+ex.getMessage());
+//            }
+//            
+//        }
         
         return clientes;
     }
@@ -124,29 +131,32 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     @Override
     public void save(Cliente t) {
         try{
-            super.conectar();
-            proc = conn.prepareCall("{Call insert_user(?,?,?)}");
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            proc = conexion.conn.prepareCall("{Call insert_user(?,?,?)}");
             proc.setString("nombre", t.getNombreUsuario());
             proc.setString("email", t.getEmailUsuario());
             proc.setString("userPassword", t.getPassword());
             proc.execute();
         }catch(SQLException e ){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                proc.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                proc.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
     }
 
     @Override
     public void update(Cliente t, String[] params) {
         try{
-            super.conectar();
-            proc = conn.prepareCall("{Call update_user(?,?,?,?,?,?)}");
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            proc = conexion.conn.prepareCall("{Call update_user(?,?,?,?,?,?)}");
             proc.setString("nombre", t.getNombreUsuario());
             proc.setString("email", t.getEmailUsuario());
             proc.setString("userPassword", t.getPassword());
@@ -156,14 +166,15 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
             proc.execute();
         }catch(SQLException e ){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                proc.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                proc.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
     }
 
     @Override
@@ -175,8 +186,9 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public List<Properties> getInventarioCliente(){
         List<Properties> returned = new ArrayList<>();
         try{
-           super.conectar();
-           stm= conn.createStatement();
+           Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+           stm= conexion.conn.createStatement();
            rset = stm.executeQuery(String.format("select producto.idProducto,producto.NombreProducto,producto.MarcaProducto,producto.PrecioProducto,producto.stockActual,categoria.nombreCategoria from producto \n" +
             "inner join categoria on producto.categoria = categoria.idCategoria\n" +
             "where producto.borrado!=1;",0));
@@ -192,15 +204,16 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
            }
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try {
-                stm.close();
-                rset.close();
-            } catch (SQLException ex) {
-                System.err.println(""+ex.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try {
+//                stm.close();
+//                rset.close();
+//            } catch (SQLException ex) {
+//                System.err.println(""+ex.getMessage());
+//            }
+//        }
         return returned;
     }
     
@@ -209,8 +222,9 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public int getDiferenciaStock(int idProducto,int cantidadSolicitada){
         int diferencia=0;
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             
             String query =String.format("select  (producto.stockActual-%2$o) as Faltante  from producto \n" +
             "where producto.idProducto = %1$o;",idProducto,cantidadSolicitada);
@@ -223,15 +237,16 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
             diferencia =-999999999;
-        }finally{
-            super.desconectar();
-            try {
-                stm.close();
-                rset.close();
-            } catch (SQLException ex) {
-                System.err.println(""+ex.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try {
+//                stm.close();
+//                rset.close();
+//            } catch (SQLException ex) {
+//                System.err.println(""+ex.getMessage());
+//            }
+//        }
         
         return diferencia;
     }
@@ -239,8 +254,9 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public Cliente getByPassAndUser(String user,String pass){
         Cliente returned = new Cliente();
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select cliente.idCliente,cliente.NombreCliente,cliente.ClientePref from cliente \n" +
             "where cliente.PassCliente = '%s'\n" +
             "and cliente.NombreCliente='%s'", pass,user));
@@ -252,36 +268,39 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
                 
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try {
-                stm.close();
-                rset.close();
-            } catch (SQLException ex) {
-                System.err.println(""+ex.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try {
+//                stm.close();
+//                rset.close();
+//            } catch (SQLException ex) {
+//                System.err.println(""+ex.getMessage());
+//            }
+//        }
         return returned;
     }
     
     public void addItemCarrito(int solicitado,int idProducto,int idCliente){
         try{
-            super.conectar();
-            proc  = conn.prepareCall("{Call insert_Carrito(?,?,?)}");
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            proc  = conexion.conn.prepareCall("{Call insert_Carrito(?,?,?)}");
             proc.setInt("solicitado", solicitado);
             proc.setInt("idProductoIn", idProducto);
             proc.setInt("idCliente", idCliente);
             proc.execute();
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                proc.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                proc.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
     }
     
     public StockManager comprar(int idUser){
@@ -289,8 +308,9 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
         int outValue=-1;
         String errors = "";
         try{
-            super.conectar();
-            proc = conn.prepareCall("Call finalizar_compra(?,?,?)");
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            proc = conexion.conn.prepareCall("Call finalizar_compra(?,?,?)");
             proc.setInt(1, idUser);
             proc.registerOutParameter(2,Types.VARCHAR);
             proc.registerOutParameter(3, Types.INTEGER);
@@ -302,14 +322,15 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
             
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                proc.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                proc.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
         return returned;
     }
     
@@ -334,7 +355,8 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
         List<Properties>  returned  = new ArrayList<>();
         try{
             String producto="Producto",precio_unitario="Precio_unitario",cantidad="Cantidad",monto="Monto",isCombo="Combo";
-            super.conectar();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
             String query;
             query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario,\n" +
             "item.cantidad as Cantidad,\n" +
@@ -345,7 +367,7 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
             "inner join producto on producto.idProducto = item.producto\n" +
             "where orden.cliente = %o \n" +
             "and orden.finalizada = 0", idCliente);
-            stm  = conn.createStatement();
+            stm  = conexion.conn.createStatement();
             rset =  stm.executeQuery(query);
             while(rset.next()){
                 Properties prop = new Properties();
@@ -358,23 +380,25 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
             }
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                rset.close();
-                stm.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                rset.close();
+//                stm.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
         return returned;
     }
     
     public void insertar_Combo_Carrito(int idCliente,int idCombo,int solicitud){
         
         try{
-            super.conectar();
-            proc = conn.prepareCall("Call insertar_ComboCarrito(?,?,?,?)");
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            proc = conexion.conn.prepareCall("Call insertar_ComboCarrito(?,?,?,?)");
             proc.setInt(1, idCliente);
             proc.setInt(2, idCombo);
             proc.setInt(3, solicitud);
@@ -383,58 +407,63 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
             
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                proc.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                proc.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
     }
     
     public String getComboByID(int idCombo){
         String returned ="";
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select combos.NombreCombo from combos where combos.idCombo = %o", idCombo));
             while(rset.next()){
                 returned = rset.getString(1);
             }
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                stm.close();
-                rset.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                stm.close();
+//                rset.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
         return returned;
     }
     
     public double costo_combos(int idOrden){
        double returned =0.0;
        try{
-           super.conectar();
-           proc = conn.prepareCall("Call costo_Combos(?,?)");
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           proc = conexion.conn.prepareCall("Call costo_Combos(?,?)");
            proc.setInt(1, idOrden);
            proc.registerOutParameter(2, Types.DECIMAL);
            proc.execute();
            returned = proc.getDouble(2);
        }catch(SQLException e){
            System.err.println(" "+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-               proc.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//       finally{
+//            super.desconectar();
+//            try{
+//               proc.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
        
        
        return returned;
@@ -443,22 +472,24 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public int Orden_actual(int idCliente){
         int returned =0;
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select orden.idOrden from orden where orden.cliente = %o and orden.finalizada = 0;", idCliente));
             while(rset.next())
                 returned = rset.getInt(1);
         }catch(SQLException e){
             
-        }finally{
-            super.desconectar();
-            try{
-                stm.close();
-                rset.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                stm.close();
+//                rset.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
         
         return returned;
     }
@@ -466,23 +497,25 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public double precioCombo_byID(int idCombo){
         double returned=0.0;
         try{
-            super.conectar();
-            stm = conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stm = conexion.conn.createStatement();
             rset = stm.executeQuery(String.format("select combos.precio from combos where combos.idCombo = %o", idCombo));
             while(rset.next()){
                 returned = rset.getDouble(1);
             }
         }catch(SQLException e){
             System.err.println(" "+e.getMessage());
-        }finally{
-            super.desconectar();
-            try{
-                rset.close();
-                stm.close();
-            }catch(SQLException e){
-                System.err.println(""+e.getMessage());
-            }
         }
+//        finally{
+//            super.desconectar();
+//            try{
+//                rset.close();
+//                stm.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
         
         return returned;
     }

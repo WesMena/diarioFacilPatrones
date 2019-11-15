@@ -23,8 +23,28 @@ String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
      //Aquí van las credenciales, recordar cambiarlas según las de su pc.
     
     String USER = "root";
-    String PASS = "wvjjk611";
+    String PASS = "Leiasuri85";
     Connection conn = null;
+    
+private static Conexion INSTANCE = null;
+   
+private Conexion(){}
+
+private synchronized static void createInstance(){
+    if(INSTANCE == null) {
+        INSTANCE = new Conexion();
+    }
+} 
+
+
+public static Conexion getInstance(){
+   
+       if(INSTANCE == null){
+       INSTANCE = new Conexion();
+       }
+       return INSTANCE;
+   }
+    
     
    public void conectar() {
         try {
@@ -35,13 +55,15 @@ String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
             e.printStackTrace();
         }
    }
+   
+   
     public void desconectar(){
         try {
             if (!conn.isClosed()) {
                 conn.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+        //   e.printStackTrace();
         } 
     }
     

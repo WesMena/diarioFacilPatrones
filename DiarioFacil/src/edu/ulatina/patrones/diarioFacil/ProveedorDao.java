@@ -19,15 +19,16 @@ import javax.swing.JOptionPane;
  *
  * @author USER
  */
-public class ProveedorDao extends Conexion implements Dao<Proveedor> {
+public class ProveedorDao implements Dao<Proveedor> {
 public static List<Proveedor> proveedores=new ArrayList<>();
 
     public ProveedorDao() {
        ResultSet rs=null;
        Statement stmt=null; 
        try{
-           this.conectar();
-           stmt=conn.createStatement();
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           stmt = conexion.conn.createStatement();
            String sql; 
            sql="SELECT idProveedor,CorreoProveedor, NombreProveedor,borrado FROM proveedor";
            rs=stmt.executeQuery(sql);
@@ -46,15 +47,16 @@ public static List<Proveedor> proveedores=new ArrayList<>();
            }
        }catch(Exception e){
            e.printStackTrace();
-       }finally{
-           try{
-               rs.close();
-               stmt.close();
-               this.desconectar();
-           }catch(Exception e){
-               e.printStackTrace();
-           }
        }
+//       finally{
+//           try{
+//               rs.close();
+//               stmt.close();
+//               this.desconectar();
+//           }catch(Exception e){
+//               e.printStackTrace();
+//           }
+//       }
     }
 
     
@@ -82,8 +84,9 @@ public static List<Proveedor> proveedores=new ArrayList<>();
         Statement stmt=null; 
         boolean fallido=false; 
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt = conexion.conn.createStatement();
             String sql; 
             sql="INSERT INTO bdpatrones.proveedor VALUES("+
                     proveedor.getCodigo()+",'"+proveedor.getCorreo()
@@ -96,15 +99,16 @@ public static List<Proveedor> proveedores=new ArrayList<>();
            
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
         if(fallido){
             JOptionPane.showMessageDialog(null,"El id ingresado pertenece a un "
                   + "proveedor que ya no forma parte del sistema ");
@@ -127,8 +131,9 @@ public static List<Proveedor> proveedores=new ArrayList<>();
         String nuevoNombre=params[0];
         String nuevoCorreo=params[1];
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt = conexion.conn.createStatement();
             String sql;
             sql="UPDATE bdpatrones.proveedor SET CorreoProveedor='"+
                     nuevoCorreo+"',NombreProveedor='"+nuevoNombre+
@@ -136,15 +141,16 @@ public static List<Proveedor> proveedores=new ArrayList<>();
             stmt.executeUpdate(sql);
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
         
      for(Proveedor prov:proveedores){
          if(prov.getCodigo()==proveedor.getCodigo()){
@@ -160,8 +166,9 @@ public static List<Proveedor> proveedores=new ArrayList<>();
     public void delete(Proveedor p) {
       Statement stmt=null; 
       try{
-          this.conectar();
-          stmt=conn.createStatement();
+          Conexion conexion = Conexion.getInstance();
+          conexion.conectar();
+          stmt = conexion.conn.createStatement();
        
           
           
@@ -176,15 +183,16 @@ public static List<Proveedor> proveedores=new ArrayList<>();
            JOptionPane.showMessageDialog(null,"Proveedor borrado exitosamente");
       }catch(Exception e){
           e.printStackTrace();
-      }finally{
-          try{
-              stmt.close();
-              this.desconectar();
-              
-          }catch(Exception e){
-              e.printStackTrace();
-          }
       }
+//      finally{
+//          try{
+//              stmt.close();
+//              this.desconectar();
+//              
+//          }catch(Exception e){
+//              e.printStackTrace();
+//          }
+//      }
       
   
       for(Proveedor proveedor:proveedores){

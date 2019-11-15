@@ -102,8 +102,23 @@ public class MenuLogin {
         JDialog dialog = opt.createDialog(null, "DiarioFacil-Login");
         dialog.setIconImage(icon);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(350, 150);
+        dialog.setSize(400, 200);
         dialog.setResizable(true);
+        JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+        btCerrar.setLabel("Salir de Aplicación");
+        
+        btCerrar.addActionListener((ActionEvent e) -> {
+            
+            Conexion close = Conexion.getInstance();
+            try{
+            close.desconectar();
+            }catch(NullPointerException a){
+            } finally {
+            System.exit(0);
+            }
+            
+            
+        });
         
         //<editor-fold defaultstate="collapsed" desc="Loguearse como cliente">
         btnLogCliente.addActionListener((ActionEvent e) -> {

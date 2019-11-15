@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  *
  * @author USER
  */
-public class ProductoDao extends Conexion implements Dao<Producto> {
+public class ProductoDao implements Dao<Producto> {
     public static List<Producto> productos=new ArrayList<>();
 
     public ProductoDao() {
@@ -54,8 +54,9 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
         ResultSet rs=null;
        Statement stmt=null; 
        try{
-           this.conectar();
-           stmt=conn.createStatement();
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           stmt= conexion.conn.createStatement();
            String sql; 
            
            
@@ -90,15 +91,16 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
            }
        }catch(Exception e){
            e.printStackTrace();
-       }finally{
-           try{
-               rs.close();
-               stmt.close();
-               this.desconectar();
-           }catch(Exception e){
-               e.printStackTrace();
-           }
        }
+//       finally{
+//           try{
+//               rs.close();
+//               stmt.close();
+//               this.desconectar();
+//           }catch(Exception e){
+//               e.printStackTrace();
+//           }
+//       }
         
         return productos;
     }
@@ -107,8 +109,9 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
     public void save(Producto producto) {
        Statement stmt=null; 
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt= conexion.conn.createStatement();
             String sql; 
             sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`nombreCategoria`,`NombreProveedor` , `Promocion`,`stockActual`)VALUES('"+
                     producto.getNombreProd()+"','"+producto.getPrecio()+"','"+producto.getNombreCategoria()+"','"+producto.getNombreProveedor()
@@ -116,23 +119,25 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             stmt.executeUpdate(sql);
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
     public void update(Producto producto, String[] params) {
        Statement stmt=null;
         try{
-            this.conectar();
-            stmt=conn.createStatement();
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            stmt= conexion.conn.createStatement();
             String sql;
             sql="UPDATE bdpatrones.producto SET NombreProducto='"+
                     producto.getNombreProd()+"',PrecioProducto='"+producto.getPrecio()+
@@ -141,37 +146,40 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             stmt.executeUpdate(sql);
         }catch(Exception e){
             e.printStackTrace();
-        }finally{
-            try{
-                stmt.close();
-                this.desconectar();
-                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
         }
+//        finally{
+//            try{
+//                stmt.close();
+//                this.desconectar();
+//                
+//            }catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
     public void delete(Producto t) {
         Statement stmt=null; 
       try{
-          this.conectar();
-          stmt=conn.createStatement();
+          Conexion conexion = Conexion.getInstance();
+          conexion.conectar();
+          stmt= conexion.conn.createStatement();
           String sql;
             sql="UPDATE bdpatrones.producto SET borrado="+
                     "1 WHERE idProducto="+t.getId();
           stmt.executeUpdate(sql);
       }catch(Exception e){
           e.printStackTrace();
-      }finally{
-          try{
-              stmt.close();
-              this.desconectar();
-              
-          }catch(Exception e){
-              e.printStackTrace();
-          }
       }
+//      finally{
+//          try{
+//              stmt.close();
+//              this.desconectar();
+//              
+//          }catch(Exception e){
+//              e.printStackTrace();
+//          }
+//      }
     }
 }

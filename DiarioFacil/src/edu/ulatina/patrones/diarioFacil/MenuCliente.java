@@ -99,6 +99,8 @@ public class MenuCliente implements IMenu {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(350, 400);
         dialog.setResizable(true);
+        JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+        btCerrar.setLabel("Cerrar");
         //</editor-fold>
         
          //<editor-fold defaultstate="collapsed" desc="Logica">
@@ -187,6 +189,8 @@ public class MenuCliente implements IMenu {
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setSize(600, 400);
             dialog.setResizable(true);
+            JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+            btCerrar.setLabel("Cerrar");
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Logica">
