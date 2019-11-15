@@ -333,12 +333,13 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
     public List<Properties> getCarritoCliente(int idCliente){
         List<Properties>  returned  = new ArrayList<>();
         try{
-            String producto="Producto",precio_unitario="Precio_unitario",cantidad="Cantidad",monto="Monto";
+            String producto="Producto",precio_unitario="Precio_unitario",cantidad="Cantidad",monto="Monto",isCombo="Combo";
             super.conectar();
             String query;
             query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario,\n" +
             "item.cantidad as Cantidad,\n" +
-            "item.subtotal as Monto\n" +
+            "item.subtotal as Monto\n," +
+            "item.isCombo\n"+
             "from Item\n" +
             "inner join orden on orden.idOrden = item.orden\n" +
             "inner join producto on producto.idProducto = item.producto\n" +
@@ -352,6 +353,7 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
                 prop.setProperty(precio_unitario, String.valueOf(rset.getDouble(precio_unitario)));
                 prop.setProperty(cantidad, String.valueOf(rset.getInt(cantidad)));
                 prop.setProperty(monto, String.valueOf(rset.getDouble(monto)));
+                prop.setProperty("isCombo", String.valueOf(rset.getInt("isCombo")));
                 returned.add(prop);
             }
         }catch(SQLException e){
@@ -365,6 +367,123 @@ public class ClienteDao extends Conexion implements Dao<Cliente>{
                 System.err.println(""+e.getMessage());
             }
         }
+        return returned;
+    }
+    
+    public void insertar_Combo_Carrito(int idCliente,int idCombo,int solicitud){
+        
+        try{
+            super.conectar();
+            proc = conn.prepareCall("Call insertar_ComboCarrito(?,?,?,?)");
+            proc.setInt(1, idCliente);
+            proc.setInt(2, idCombo);
+            proc.setInt(3, solicitud);
+            proc.registerOutParameter(4,Types.VARCHAR);
+            proc.execute();
+            
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }finally{
+            super.desconectar();
+            try{
+                proc.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
+    }
+    
+    public String getComboByID(int idCombo){
+        String returned ="";
+        try{
+            super.conectar();
+            stm = conn.createStatement();
+            rset = stm.executeQuery(String.format("select combos.NombreCombo from combos where combos.idCombo = %o", idCombo));
+            while(rset.next()){
+                returned = rset.getString(1);
+            }
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }finally{
+            super.desconectar();
+            try{
+                stm.close();
+                rset.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
+        return returned;
+    }
+    
+    public double costo_combos(int idOrden){
+       double returned =0.0;
+       try{
+           super.conectar();
+           proc = conn.prepareCall("Call costo_Combos(?,?)");
+           proc.setInt(1, idOrden);
+           proc.registerOutParameter(2, Types.DECIMAL);
+           proc.execute();
+           returned = proc.getDouble(2);
+       }catch(SQLException e){
+           System.err.println(" "+e.getMessage());
+        }finally{
+            super.desconectar();
+            try{
+               proc.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
+       
+       
+       return returned;
+    }
+    
+    public int Orden_actual(int idCliente){
+        int returned =0;
+        try{
+            super.conectar();
+            stm = conn.createStatement();
+            rset = stm.executeQuery(String.format("select orden.idOrden from orden where orden.cliente = %o and orden.finalizada = 0;", idCliente));
+            while(rset.next())
+                returned = rset.getInt(1);
+        }catch(SQLException e){
+            
+        }finally{
+            super.desconectar();
+            try{
+                stm.close();
+                rset.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
+        
+        return returned;
+    }
+
+    public double precioCombo_byID(int idCombo){
+        double returned=0.0;
+        try{
+            super.conectar();
+            stm = conn.createStatement();
+            rset = stm.executeQuery(String.format("select combos.precio from combos where combos.idCombo = %o", idCombo));
+            while(rset.next()){
+                returned = rset.getDouble(1);
+            }
+        }catch(SQLException e){
+            System.err.println(" "+e.getMessage());
+        }finally{
+            super.desconectar();
+            try{
+                rset.close();
+                stm.close();
+            }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
+        
         return returned;
     }
     
