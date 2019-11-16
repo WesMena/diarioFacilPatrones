@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author USER
  */
 public class Producto{
-    int id;
+   
    int codProveedor=0;
    int codProducto=0;
    String nombreProd="";
@@ -21,17 +21,26 @@ public class Producto{
    double precio=0;
    int codCategoria=0;
  boolean borrado= false;
- String nombreProveedor="";
- String nombreCategoria="";
-int Promocion;
+String marca="";
+boolean Promocion;
 
-    public int getPromocion() {
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public boolean isPromocion() {
         return Promocion;
     }
 
-    public void setPromocion(int promocion){
-        this.Promocion=promocion;
+    public void setPromocion(boolean Promocion) {
+        this.Promocion = Promocion;
     }
+
+   
    
 
   
@@ -46,22 +55,9 @@ int Promocion;
     public Producto() {
         
     }
-    public Producto(int id){
-        
-        codProducto=id;
-    }
-   public Producto(int id, int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria){
-       this.codProducto=codProd;
-       this.codProveedor=codProveedor;
-       this.nombreProd=nom;
-       this.stockActual=stockActual;
-       this.stockMinimo=stockMin;
-       this.codCategoria=categoria;
-       this.precio=precio;
-       this.id=id;
-       
-   }
-   public Producto(int id, int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria,
+  
+ 
+   public Producto(int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria,
            boolean borrado){
        this.codProducto=codProd;
        this.codProveedor=codProveedor;
@@ -70,12 +66,36 @@ int Promocion;
        this.stockMinimo=stockMin;
        this.codCategoria=categoria;
        this.precio=precio;
-       this.id=id;
+      
        this.borrado=borrado;
        
    }
-   
-
+     public Producto(int codProveedor, int codProd,String nom, int stockMin, int stockActual,double precio,int categoria,
+           boolean borrado,boolean promo,String marca){
+       this.codProducto=codProd;
+       this.codProveedor=codProveedor;
+       this.nombreProd=nom;
+       this.stockActual=stockActual;
+       this.stockMinimo=stockMin;
+       this.codCategoria=categoria;
+       this.precio=precio;
+      this.marca=marca;
+      this.Promocion=promo;
+       this.borrado=borrado;
+       
+   }
+   public Producto(int idProducto,String nombre,double precio,int stockActual,boolean promo,int stockMin){
+       this.codProducto=idProducto;
+       this.nombreProd=nombre;
+       this.precio=precio;
+       this.stockActual=stockActual;
+       this.Promocion=promo;
+       this.stockMinimo=stockMin;
+       
+   }
+public Producto(int idProducto){
+    this.codProducto=idProducto;
+}
     public int getCodProveedor() {
         return codProveedor;
     }
@@ -88,21 +108,7 @@ int Promocion;
         return codProducto;
     }
 
-    public String getNombreProveedor() {
-        return nombreProveedor;
-    }
-
-    public void setNombreProveedor(String nombreProveedor) {
-        this.nombreProveedor = nombreProveedor;
-    }
-
-    public String getNombreCategoria() {
-        return nombreCategoria;
-    }
-
-    public void setNombreCategoria(String nombreCategoria) {
-        this.nombreCategoria = nombreCategoria;
-    }
+   
     
     
     public void setCodProducto(int codProducto) {
@@ -152,13 +158,7 @@ int Promocion;
 
   
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+   
     
   
 }

@@ -65,7 +65,7 @@ Dao prodCombo=new ProductoComboDao();
                   for(Producto produ:lst){
                      
                        
-                      if(produ.getId()==idProd && produ.isBorrado()==false){
+                      if(produ.getCodProducto()==idProd && produ.isBorrado()==false){
                           existe=true;
                           //Poner que esto tenga en consideración 
                           //si está borrado
@@ -115,7 +115,7 @@ Dao prodCombo=new ProductoComboDao();
             
                  for(ProductosCombo prodCmb:listaProductos){
                      
-                    if(prodCmb.getProd().getId()==idProd &&
+                    if(prodCmb.getProd().getCodProducto()==idProd &&
                             prodCmb.getIdCombo()==idCombo){
                     opProd=Optional.of(prodCmb);
                     
@@ -178,7 +178,7 @@ Dao prodCombo=new ProductoComboDao();
                 Optional<ProductosCombo> opProd=Optional.empty();
                  for(ProductosCombo prodCmb:listaProductos){
                      
-                    if(prodCmb.getProd().getId()==idProd &&
+                    if(prodCmb.getProd().getCodProducto()==idProd &&
                             prodCmb.getIdCombo()
                             ==idCombo){
                     opProd=Optional.of(prodCmb);
@@ -230,7 +230,7 @@ Dao prodCombo=new ProductoComboDao();
                   
                    String productos="Lista de productos \n";
                    for(ProductosCombo prodEnLista:listaAux){
-                       productos=productos+"Código: "+prodEnLista.getProd().getId()+
+                       productos=productos+"Código: "+prodEnLista.getProd().getCodProducto()+
                                " Nombre: "+prodEnLista.getProd().getNombreProd()+
                                " Cantidad:"+prodEnLista.getCantidad()+"\n";
                    }

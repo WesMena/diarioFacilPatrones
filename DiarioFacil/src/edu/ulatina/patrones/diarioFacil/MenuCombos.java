@@ -408,7 +408,7 @@ public class MenuCombos {
                    
                    String productos="Lista de productos \n";
                    for(ProductosCombo prodEnLista:listaAux){
-                       productos=productos+"Código: "+prodEnLista.getProd().getId()+
+                       productos=productos+"Código: "+prodEnLista.getProd().getCodProducto()+
                                " Nombre: "+prodEnLista.getProd().getNombreProd()+
                                " Cantidad:"+prodEnLista.getCantidad()+"\n";
                    }
