@@ -44,7 +44,7 @@ public static List<ProductosCombo> prodCombo;
                 
                  for(Producto produ:daoAux.getAll()){
                    
-                     if(produ.getId()==idProd){
+                     if(produ.getCodProducto()==idProd){
                         prodAux=produ;
                       
                      }
@@ -82,7 +82,7 @@ public static List<ProductosCombo> prodCombo;
     public Optional<ProductosCombo> get(long id) {
    Optional<ProductosCombo> opProd=Optional.empty();
    for(ProductosCombo prodCmb:prodCombo){
-       if(prodCmb.getProd().getId()==id){
+       if(prodCmb.getProd().getCodProducto()==id){
            opProd=Optional.of(prodCmb);
        }
    }
@@ -98,7 +98,7 @@ public static List<ProductosCombo> prodCombo;
     public Optional<ProductosCombo> getProducto(long idCombo, long idProd){
       Optional<ProductosCombo> opProd=Optional.empty();
    for(ProductosCombo prodCmb:prodCombo){
-       if(prodCmb.getProd().getId()==idProd && prodCmb.getIdCombo()==idCombo){
+       if(prodCmb.getProd().getCodProducto()==idProd && prodCmb.getIdCombo()==idCombo){
            opProd=Optional.of(prodCmb);
        }
    }
@@ -128,7 +128,7 @@ public static List<ProductosCombo> prodCombo;
             stmt= conexion.conn.createStatement();
             String sql;
             sql="INSERT INTO bdpatrones.productoscombo VALUES("+t.getIdCombo()+
-                    ","+t.getProd().getId()+","+t.getCantidad()+",0)";
+                    ","+t.getProd().getCodProducto()+","+t.getCantidad()+",0)";
             try{
                 stmt.executeUpdate(sql);
             }catch(SQLException sqlE){
@@ -151,7 +151,7 @@ public static List<ProductosCombo> prodCombo;
                
                for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&
-                           prod.getProd().getId()==t.getProd().getId()){
+                           prod.getProd().getCodProducto()==t.getProd().getCodProducto()){
                        if(prod.isBorrado()){
                            String cant;
                            cant=String.valueOf(t.getCantidad());
@@ -159,7 +159,7 @@ public static List<ProductosCombo> prodCombo;
                            this.update(t, reemplazo);
                            for(ProductosCombo prodCmb:prodCombo)
                            {
-                               if(prodCmb.getProd().getId()==t.getProd().getId()){
+                               if(prodCmb.getProd().getCodProducto()==t.getProd().getCodProducto()){
                                    prodCmb.setCantidad(t.getCantidad());
                                }
                            }
@@ -176,7 +176,7 @@ public static List<ProductosCombo> prodCombo;
                       
                            for(ProductosCombo prodCmb:prodCombo)
                            {
-                               if(prodCmb.getProd().getId()==t.getProd().getId()){
+                               if(prodCmb.getProd().getCodProducto()==t.getProd().getCodProducto()){
                                    prodCmb.setCantidad(sumaCant);
                                }
                            }
@@ -207,7 +207,7 @@ public static List<ProductosCombo> prodCombo;
           stmt= conexion.conn.createStatement();
           String sql="UPDATE bdpatrones.productoscombo SET cantidad="
                   +cantidad+" WHERE combo="+t.getIdCombo()+" AND producto="+
-                  t.getProd().getId();
+                  t.getProd().getCodProducto();
           stmt.executeUpdate(sql);
       }catch(Exception e){
           e.printStackTrace();
@@ -223,7 +223,7 @@ public static List<ProductosCombo> prodCombo;
 //      }
       for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&
-                           prod.getProd().getId()==t.getProd().getId()){
+                           prod.getProd().getCodProducto()==t.getProd().getCodProducto()){
                        
                            prod.setCantidad(cantidad);
                    }
@@ -240,7 +240,7 @@ public static List<ProductosCombo> prodCombo;
          stmt= conexion.conn.createStatement(); 
           String sql="UPDATE bdpatrones.productoscombo SET borrado=1"
                   +" WHERE combo="+t.getIdCombo()+" AND producto="+
-                  t.getProd().getId();
+                  t.getProd().getCodProducto();
           stmt.executeUpdate(sql);
           
      }catch(Exception e){
@@ -257,7 +257,7 @@ public static List<ProductosCombo> prodCombo;
      
         for(ProductosCombo prod:prodCombo){
                    if(prod.getIdCombo()==t.getIdCombo() &&
-                           prod.getProd().getId()==t.getProd().getId()){
+                           prod.getProd().getCodProducto()==t.getProd().getCodProducto()){
                            prod.setBorrado(true);
                    }
         }
