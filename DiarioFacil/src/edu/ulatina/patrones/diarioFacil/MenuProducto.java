@@ -81,7 +81,7 @@ public class MenuProducto{
                   ProveedorDao proveedores=new ProveedorDao();
                   List<Proveedor> lstProve=proveedores.getAll();
                   for(Proveedor prove:lstProve){
-                      if(prove.getCodigo()==idProveedor){
+                      if(prove.getCodigo()==idProveedor && prove.isBorrado()==false){
                           provExiste=true;
                       }
                   }
@@ -106,7 +106,7 @@ public class MenuProducto{
                          CategoriaDao cate=new CategoriaDao();
                         List<Categoria> lstCat=cate.getAll();
                         for(Categoria cat:lstCat){
-                            if(cat.getCodCategoria()==idCat){
+                            if(cat.getCodCategoria()==idCat && cat.isBorrado()==false){
                                 catExiste=true;
                             }
                         }
