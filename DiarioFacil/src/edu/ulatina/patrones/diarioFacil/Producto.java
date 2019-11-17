@@ -21,15 +21,15 @@ public class Producto{
    double precio=0;
    int codCategoria=0;
  boolean borrado= false;
- String nombreProveedor="";
- String nombreCategoria="";
-int Promocion;
+ int idProveedor;
+ int idCategoria;
+  String Promocion;
 
-    public int getPromocion() {
+    public String getPromocion() {
         return Promocion;
     }
 
-    public void setPromocion(int promocion){
+    public void setPromocion(String promocion){
         this.Promocion=promocion;
     }
    
@@ -88,20 +88,20 @@ int Promocion;
         return codProducto;
     }
 
-    public String getNombreProveedor() {
-        return nombreProveedor;
+    public int getIdProveedor() {
+        return idProveedor;
     }
 
-    public void setNombreProveedor(String nombreProveedor) {
-        this.nombreProveedor = nombreProveedor;
+    public void setIdProveedor(int idProveedor) {
+        this.idProveedor = idProveedor;
     }
 
-    public String getNombreCategoria() {
-        return nombreCategoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setNombreCategoria(String nombreCategoria) {
-        this.nombreCategoria = nombreCategoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
     
     

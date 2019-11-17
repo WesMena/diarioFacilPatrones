@@ -62,35 +62,29 @@ public class MenuProducto  extends Conexion{
                     break;
                 case 3:
                     //Aqui creo un nuevo producto en la base de datos
-                    Optional<Producto> producto = Optional.empty();
-                     List<Producto> lstProductos = new ArrayList<>();
-                        String nombreProducto= "";
 
-                       
+                        String auxBool="";
                         Producto newProducto = new Producto();
                         newProducto.setNombreProd(JOptionPane.showInputDialog("Ingrese el nombre del nuevo producto."));
                         newProducto.setPrecio(Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio del nuevo producto.")));
-                        newProducto.setNombreCategoria(JOptionPane.showInputDialog("Ingrese el nombre de la categoria."));
-                        newProducto.setNombreProveedor((JOptionPane.showInputDialog("Ingrese el nombre de la proveedor.")));
-                        newProducto.setPromocion(parseInt(JOptionPane.showInputDialog("Indique si el producto esta en promocion")));
+                        newProducto.setIdCategoria(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id de la categoria.")));
+                        newProducto.setIdProveedor(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id de la proveedor.")));
+                        auxBool=JOptionPane.showInputDialog("Indique si el producto esta en promocion(S/N)");
+                        if(auxBool.equals("S")||auxBool.equals("s")){
+                            newProducto.setPromocion("True");
+                        }else{
+                            newProducto.setPromocion("False");
+                        }
                         
-                         ResultSet rs=null;  
-                         Statement stmt=null;
-                        productoDao.conectar();
-                        stmt = conn.createStatement();
-                        String sql;
-                               
-                        sql = "SELECT FROM * producto WHERE NombreProducto like '%"+newProducto.getNombreProd()+"%'";
-                        rs = stmt.executeQuery(sql);
-                       nombreProducto = rs.getString("NombreProducto");
+                        String nombreProducto;
+                        lstProductos = productoDao.getAll();
                         for (Producto p : lstProductos) {
-
                             nombreProducto = p.getNombreProd();
                             
-                            if (nombreProducto == newProducto.getNombreProd()) {
+                            if (nombreProducto.equals(newProducto.getNombreProd())) {
                                 System.out.println("El producto ya existe, inserte uno diferente");
-
                             }else{
+                                System.out.println(newProducto.getPromocion());
                                 productoDao.save(newProducto);
                             }
 

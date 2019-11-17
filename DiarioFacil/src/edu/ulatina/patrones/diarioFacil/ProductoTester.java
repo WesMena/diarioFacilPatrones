@@ -4,6 +4,7 @@
 package edu.ulatina.patrones.diarioFacil;
 
 import static java.lang.System.in;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,18 +14,12 @@ public class ProductoTester  {
      
     
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Scanner scanner=new Scanner(in);
        ProductoDao productodao = new ProductoDao();
         List<Producto> lstProductos = new ArrayList<>();
-        
-        
-       
-        lstProductos = productodao.getAll();
-        
-        for (int i = 0; i < lstProductos.size(); i++) {
-            System.out.println(lstProductos.get(i).getId()+" "+lstProductos.get(i).getNombreProd()+" "+lstProductos.get(i).getPrecio());
-        }
+        MenuProducto menuProducto=new MenuProducto();
+        menuProducto.menu();
         
             //System.out.println(productodao.get(2).get().getId()+productodao.get(2).get().getNombreProd());   
             
@@ -43,22 +38,22 @@ public class ProductoTester  {
             productodao.delete(deleteProducto);*/
             
             //Aqui eligo el id del producto a cambiar para despues mandar sql statement y cambiarle los cambios asignados en producto dao
-            Producto updateProducto= new Producto();
+            /*Producto updateProducto= new Producto();
             System.out.println("Ingrese el id del producto a actualizar");
             updateProducto.setId(scanner.nextInt());
             System.out.println("Ingrese el nombre del producto a actualizar");
             updateProducto.setNombreProd(scanner.next());
             System.out.println("Ingrese el precio del producto a actualizar");
             updateProducto.setPrecio(scanner.nextDouble());
-            productodao.update(updateProducto, args);
+            productodao.update(updateProducto, args);*/
             
             
             //Aqui me traigo la lista nuevamente para ver el cambio de modificar
-            lstProductos = productodao.getAll();
+         /*   lstProductos = productodao.getAll();
         //Recorro la lista
         for (int i = 0; i < lstProductos.size(); i++) {
             System.out.println(lstProductos.get(i).getId()+" "+lstProductos.get(i).getNombreProd()+" "+lstProductos.get(i).getPrecio());
-        }
+        }*/
     }
     
     

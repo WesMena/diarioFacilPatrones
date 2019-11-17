@@ -110,9 +110,9 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
             this.conectar();
             stmt=conn.createStatement();
             String sql; 
-            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`nombreCategoria`,`NombreProveedor` , `Promocion`,`stockActual`)VALUES('"+
-                    producto.getNombreProd()+"','"+producto.getPrecio()+"','"+producto.getNombreCategoria()+"','"+producto.getNombreProveedor()
-                    +"','"+producto.getPromocion()+"','"+producto.getStockActual();
+            sql="INSERT INTO bdpatrones.producto (`NombreProducto`,`PrecioProducto`,`categoria`,`proveedor` , `promo`,`stockActual`)VALUES('"+
+                    producto.getNombreProd()+"','"+producto.getPrecio()+"','"+producto.getIdCategoria()+"','"+producto.getIdProveedor()
+                    +"',"+producto.getPromocion()+",'"+producto.getStockActual()+"')";
             stmt.executeUpdate(sql);
         }catch(Exception e){
             e.printStackTrace();
@@ -160,7 +160,7 @@ public class ProductoDao extends Conexion implements Dao<Producto> {
           stmt=conn.createStatement();
           String sql;
             sql="UPDATE bdpatrones.producto SET borrado="+
-                    "1 WHERE idProducto="+t.getId();
+                    "True WHERE idProducto="+t.getId();
           stmt.executeUpdate(sql);
       }catch(Exception e){
           e.printStackTrace();
