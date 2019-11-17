@@ -526,16 +526,14 @@ public class ClienteDao implements Dao<Cliente>{
     
     public void update_or_delete_Item(int idProducto,int idCliente,int nuevacantidad){
         try{
-            super.conectar();
-            proc = conn.prepareCall("Call updateProductoCarrito(?,?,?)");
+            Conexion conexion = Conexion.getInstance();
+            proc = conexion.conn.prepareCall("Call updateProductoCarrito(?,?,?)");
             proc.setInt(1, idProducto);
             proc.setInt(2, idCliente);
             proc.setInt(3, nuevacantidad);
             proc.execute();
         }catch(SQLException e){
             System.err.println(""+e.getMessage());
-        }finally{
-            super.desconectar();
         }
     }
     
