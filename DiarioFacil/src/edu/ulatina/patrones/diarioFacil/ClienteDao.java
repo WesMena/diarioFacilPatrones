@@ -361,7 +361,9 @@ public class ClienteDao implements Dao<Cliente>{
             query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario,\n" +
             "item.cantidad as Cantidad,\n" +
             "item.subtotal as Monto\n," +
-            "item.isCombo\n"+
+            "item.isCombo\n,"+
+            "item.producto as productID \n,"+
+            "item.isCombo as isComboID\n"+
             "from Item\n" +
             "inner join orden on orden.idOrden = item.orden\n" +
             "inner join producto on producto.idProducto = item.producto\n" +
@@ -376,6 +378,8 @@ public class ClienteDao implements Dao<Cliente>{
                 prop.setProperty(cantidad, String.valueOf(rset.getInt(cantidad)));
                 prop.setProperty(monto, String.valueOf(rset.getDouble(monto)));
                 prop.setProperty("isCombo", String.valueOf(rset.getInt("isCombo")));
+                prop.setProperty("ProductoID", String.valueOf(rset.getInt("productID")));
+                prop.setProperty("isComboID", String.valueOf(rset.getInt("isComboID")));
                 returned.add(prop);
             }
         }catch(SQLException e){
@@ -518,6 +522,21 @@ public class ClienteDao implements Dao<Cliente>{
 //        }
         
         return returned;
+    }
+    
+    public void update_or_delete_Item(int idProducto,int idCliente,int nuevacantidad){
+        try{
+            super.conectar();
+            proc = conn.prepareCall("Call updateProductoCarrito(?,?,?)");
+            proc.setInt(1, idProducto);
+            proc.setInt(2, idCliente);
+            proc.setInt(3, nuevacantidad);
+            proc.execute();
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }finally{
+            super.desconectar();
+        }
     }
     
 }
