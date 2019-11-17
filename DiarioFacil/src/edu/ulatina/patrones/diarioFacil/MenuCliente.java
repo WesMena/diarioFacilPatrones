@@ -315,6 +315,7 @@ public class MenuCliente implements IMenu {
            
             
             btnSeeSc.addActionListener((ActionEvent e) -> {
+                dao = new ClienteDao();
                 if((((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id).size()>0)){
                     compraRealizada  = false;
                     dialog.setVisible(false);
