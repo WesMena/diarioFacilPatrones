@@ -70,18 +70,28 @@ public class MenuProducto{
                   
                   nombre=JOptionPane.showInputDialog("Ingrese el nombre del producto");
                   marca=JOptionPane.showInputDialog("Ingrese la marca del producto");
-                  
+                  ProveedorDao proveedores=new ProveedorDao();
+                  List<Proveedor> lstProve=proveedores.getAll();
+                  String listaProveedor="Proveedores disponibles \n";
+                  for(Proveedor prove1:lstProve){
+                      listaProveedor=listaProveedor+"Codigo: "+prove1.getCodigo()+" Nombre: "+prove1.getNombre()+"\n";
+                  }
+                  listaProveedor=listaProveedor+"Ingrese el código del proveedor";
                   do{
                       invalido=false;
                  
                      try{
                       provExiste=false;
-                  idProveedor=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el código "
-                             + "del proveedor")); 
-                  ProveedorDao proveedores=new ProveedorDao();
-                  List<Proveedor> lstProve=proveedores.getAll();
+                  idProveedor=Integer.parseInt(JOptionPane.showInputDialog(listaProveedor)); 
+                 
+                  int idActual;
+                  boolean borrado;
                   for(Proveedor prove:lstProve){
+                      idActual=prove.getCodigo();
+                      borrado=prove.isBorrado();
+                      
                       if(prove.getCodigo()==idProveedor && prove.isBorrado()==false){
+                  
                           provExiste=true;
                       }
                   }
@@ -95,16 +105,22 @@ public class MenuProducto{
                   }  
                   }while(invalido);
                  
-                 
-                  
+                   CategoriaDao cate=new CategoriaDao();
+                   List<Categoria> lstCat=cate.getAll();
+                   String listaCat="Categorías disponibles \n";
+                   for(Categoria cat1:lstCat){
+                       listaCat=listaCat+"Código: "+cat1.getCodCategoria()+ " Nombre: "+cat1.getNombreCategoria()+"\n";
+                               
+                               
+                   }
+                  listaCat=listaCat+"Ingrese el código de la categoría";
                   do{
                       invalido=false;
                       try{
                          catExiste=false;
-                         idCat=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el código "
-                             + "de la categoría"));
-                         CategoriaDao cate=new CategoriaDao();
-                        List<Categoria> lstCat=cate.getAll();
+                         
+                         idCat=Integer.parseInt(JOptionPane.showInputDialog(listaCat));
+                       
                         for(Categoria cat:lstCat){
                             if(cat.getCodCategoria()==idCat && cat.isBorrado()==false){
                                 catExiste=true;
