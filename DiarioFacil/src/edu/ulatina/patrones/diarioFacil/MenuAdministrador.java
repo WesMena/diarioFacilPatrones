@@ -111,6 +111,22 @@ public class MenuAdministrador implements IMenu {
             dialog.setVisible(true);
         });
         
+        btnAdminProd.addActionListener((ActionEvent e) -> {
+            dialog.setVisible(false);
+            //Llamar la ui de administracion de Producto
+            MenuProducto producto=new MenuProducto();
+            producto.menu();
+            dialog.setVisible(true);
+        });
+        
+        btnAdminCombo.addActionListener((ActionEvent e) -> {
+            dialog.setVisible(false);
+            //Llamar la ui de administracion de Producto
+            MenuCombos combos=new MenuCombos();
+            combos.menu();
+            dialog.setVisible(true);
+        });
+        
         
         //</editor-fold>
         //Arranque
@@ -144,7 +160,8 @@ public class MenuAdministrador implements IMenu {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(350, 300);
         dialog.setResizable(true);
-        
+        JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+        btCerrar.setLabel("Cerrar");
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Logica">
