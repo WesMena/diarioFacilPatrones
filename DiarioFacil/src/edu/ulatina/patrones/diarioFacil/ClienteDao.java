@@ -575,7 +575,7 @@ public class ClienteDao implements Dao<Cliente>{
         return returned;
     }
     
-        public List<Properties> getUltimaOrden(int idCliente,Optional idFactura){
+    public List<Properties> getUltimaOrden(int idCliente,Optional idFactura){
         List<Properties>  returned  = new ArrayList<>();
         try{
             String producto="Producto",precio_unitario="Precio_unitario",cantidad="Cantidad",monto="Monto",isCombo="Combo";
@@ -636,6 +636,20 @@ public class ClienteDao implements Dao<Cliente>{
 //            }
 //        }
         return returned;
+    }
+    
+    public void update_or_delete_Combo(int idProducto,int  idCliente, int idCombo,int nuevaCantidad){
+        try{
+            Conexion conexion = Conexion.getInstance();
+            proc  = conexion.conn.prepareCall("Call update_or_delete_Combo(?,?,?,?)");
+            proc.setInt(1, idProducto);
+            proc.setInt(2, idCliente);
+            proc.setInt(3, idCombo);
+            proc.setInt(4, nuevaCantidad);
+            proc.execute();
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
     }
     
     
