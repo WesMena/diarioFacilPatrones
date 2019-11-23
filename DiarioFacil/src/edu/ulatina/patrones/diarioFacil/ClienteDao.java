@@ -583,8 +583,8 @@ public class ClienteDao implements Dao<Cliente>{
             conexion.conectar();
             String query="";
             if(idFactura.isPresent()){
-                Double idFact = Double.parseDouble(idFactura.get().toString());
-                query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
+                int idFact =Integer.parseInt(idFactura.get().toString());
+                query = "select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
                 "            item.cantidad as Cantidad, \n" +
                 "            item.subtotal as Monto, \n" +
                 "            item.isCombo,\n" +
@@ -593,8 +593,8 @@ public class ClienteDao implements Dao<Cliente>{
                 "            from Item\n" +
                 "            inner join orden on orden.idOrden = item.orden\n" +
                 "            inner join producto on producto.idProducto = item.producto \n" +
-                "            where orden.cliente = %1$o\n" +
-                "            and orden.idOrden = %2$o", idCliente,idFact.intValue());
+                "            where orden.cliente = "+idCliente+" \n" +
+                "            and orden.idOrden =  "+idFact;
             }else{
                 query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
                 "            item.cantidad as Cantidad, \n" +

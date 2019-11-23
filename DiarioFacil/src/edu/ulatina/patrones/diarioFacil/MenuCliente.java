@@ -527,7 +527,8 @@ public class MenuCliente implements IMenu {
                         this.carrito = new CarritoCompra();
                         JOptionPane.showMessageDialog(null, "La compra se ha relizado con exito", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
                         this.compraRealizada = true;
-                        clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId());
+                        Optional op = Optional.empty();
+                        clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
                    }else if(!returned.errors().equals("")){
                        //Enviarle un mensaje  de compra no  realizada debido a que x peticiones exceden stock
                        
@@ -862,18 +863,15 @@ public class MenuCliente implements IMenu {
     }
     
     
-     public  void clienteVerUltimaOrden(int idCliente){
-          List<Properties> carrito = new ArrayList<>();
+     public  void clienteVerUltimaOrden(int idCliente,Optional op){
+        List<Properties> carritoVer = new ArrayList<>();
         //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
             JPanel pnlBack,pnlSearchBar,pnlActionbar,pnlActionContent,pnlSubtotal,pnlTotal;
             JTable tblProductos = new JTable();
-            JLabel lblSearch = new JLabel("Buscar : ");
             JLabel lblSubTotal  = new JLabel("Subtotal : ");
             JLabel lblTotal = new JLabel("Total : ");
             JTextField txtSubTotal= new JTextField();
             JTextField txtTotal = new JTextField();
-            JTextField txtBuscar = new JTextField();
-            JButton btnActualizar = new JButton("Actualizar");
             txtSubTotal.setEditable(false);
             txtTotal.setEditable(false);
             JPanel pnlTblMods;
@@ -889,20 +887,20 @@ public class MenuCliente implements IMenu {
                 }
             };
             
-            btnActualizar.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
+
             btnUpdate.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/expediente.png"));
             btnDelete.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/borrar.png"));
             
-            Optional op = Optional.empty();
-            carrito = ((ClienteDao)dao).getUltimaOrden(Constantes.USUARIOLOGUEADO.Id,op);
+            
+            carritoVer = ((ClienteDao)dao).getUltimaOrden(Constantes.USUARIOLOGUEADO.Id,op);
             
             //Cargando modelo 
-            for(String col: carrito.get(0).stringPropertyNames())
+            for(String col: carritoVer.get(0).stringPropertyNames())
                 model.addColumn(col);
 
 
             
-            carrito.stream().forEach((Properties prop)->{
+            carritoVer.stream().forEach((Properties prop)->{
                 model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
             });
             
@@ -913,11 +911,7 @@ public class MenuCliente implements IMenu {
             tcminternal.removeColumn( tcminternal.getColumn(2));
             tcminternal.removeColumn( tcminternal.getColumn(2) );
            
-             //Panel de busqueda
-            pnlSearchBar  = new JPanel(new BorderLayout());
-            pnlSearchBar.add(lblSearch,BorderLayout.WEST);
-            pnlSearchBar.add(txtBuscar,BorderLayout.CENTER);
-            pnlSearchBar.add(btnActualizar,BorderLayout.EAST);
+
             
             //Panel de subtotal
             pnlSubtotal = new JPanel(new BorderLayout());
@@ -950,7 +944,6 @@ public class MenuCliente implements IMenu {
             pnlTblMods.add(pnlBtnMod,BorderLayout.SOUTH);
             
             pnlBack = new JPanel(new BorderLayout());
-            pnlBack.add(pnlSearchBar,BorderLayout.NORTH);
             pnlBack.add(pnlTblMods,BorderLayout.CENTER);
             pnlBack.add(pnlActionbar,BorderLayout.SOUTH);
             
@@ -959,7 +952,7 @@ public class MenuCliente implements IMenu {
         
             JOptionPane opt = new JOptionPane();
             opt.setMessage(component);
-            opt.setName("DiarioFacil-Productos");
+            opt.setName("DiarioFacil-Ordenes");
             opt.setVisible(true);
             Toolkit kit = Toolkit.getDefaultToolkit();
             Image icon = kit.getImage("src/edu/ulatina/patrones/diarioFacil/imagenes/cliente.png");
@@ -972,9 +965,16 @@ public class MenuCliente implements IMenu {
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Logica">
-            //subtotal y total
-//            txtTotal.setText(String.valueOf(subtotal + (subtotal * 0.13)));
-//            txtSubTotal.setText(String.valueOf(subtotal));
+        //subtotal y total
+        Double subtotal =0.0;
+        dao = new OrdenDao();
+        if(op.isPresent())            
+            subtotal = ((OrdenDao)dao).geTotalOrden(Integer.parseInt(op.get().toString()));
+        else
+            subtotal = ((OrdenDao)dao).getTotalUltimaOrden( idCliente); 
+        
+        txtTotal.setText(String.format( "%,.2f", subtotal + (subtotal * 0.13)));
+        txtSubTotal.setText(String.format("%,.2f", subtotal)); 
             
             //<editor-fold defaultstate="collapsed" desc="Salir">
             JButton btCerrar = opt.getRootPane().getDefaultButton(); 
