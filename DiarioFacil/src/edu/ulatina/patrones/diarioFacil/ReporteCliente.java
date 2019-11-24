@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
  */
 public class ReporteCliente {
     void verHistorial(int idCliente){
+        boolean haComprado=false;
        ResultSet rs=null; 
         Statement stmt=null; 
         String listaOrdenes="                   "
@@ -36,6 +37,7 @@ public class ReporteCliente {
             rs=stmt.executeQuery(sql);
             
             while(rs.next()){
+                haComprado=true;
               idOrdenActual=rs.getInt("idOrden");
               
               fechaActual=rs.getString("fechaOrden");
@@ -46,7 +48,12 @@ public class ReporteCliente {
                " Fecha: "+fecha+" Hora: "+hora+" Monto:₡ "+montoActual+"\n";
             }
             
-            JOptionPane.showMessageDialog(null,listaOrdenes);
+            if(haComprado){
+                JOptionPane.showMessageDialog(null,listaOrdenes);
+            }else{
+                    JOptionPane.showMessageDialog(null,"Usted no ha realizado ninguna compra aún");
+            }
+        
         }catch(Exception e){
             e.printStackTrace();
         } 
