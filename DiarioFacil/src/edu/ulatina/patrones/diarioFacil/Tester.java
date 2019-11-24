@@ -18,11 +18,11 @@ public class Tester {
   
     
    public static void main(String[] args) throws SQLException {  
-       Cliente cli=new Cliente();
-       cli.setId(1);
-       boolean freq;
-     //  MenuProducto menu=new MenuProducto();
-     //  menu.menu();
+//       Cliente cli=new Cliente();
+//       cli.setId(1);
+//       boolean freq;
+//       MenuProducto menu=new MenuProducto();
+//       menu.menu();
        /*EsFrecuente frecuente=new EsFrecuente();
        freq=frecuente.clienteFrecuente(cli);
        System.out.println(freq?"Frecuente":"no frecuente");
