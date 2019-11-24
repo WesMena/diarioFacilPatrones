@@ -131,6 +131,7 @@ public class MenuLogin {
                     //Cliente logueado
                     Constantes.USUARIOLOGUEADO = ((ClienteDao)userDao).getByPassAndUser(txtUserNam.getText(), txtPassword.getText());
                     //Abrir el menu de cliente
+                    
                     Menu cliente = new ClienteLogin();
                     dialog.setVisible(false);
                     cliente.DesplegarMenu();
