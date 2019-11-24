@@ -38,9 +38,9 @@ public static List<Proveedor> proveedores=new ArrayList<>();
              String correo=rs.getString("CorreoProveedor");
              int borrado=rs.getByte("borrado");
              if(borrado==0){
-             proveedores.add(new Proveedor(id,nombre,correo,true));     
+             proveedores.add(new Proveedor(id,nombre,correo,false));     
              }else{
-             proveedores.add(new Proveedor(id,nombre,correo,false));      
+             proveedores.add(new Proveedor(id,nombre,correo,true));      
              }
             
              
