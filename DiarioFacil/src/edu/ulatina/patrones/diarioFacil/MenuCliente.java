@@ -57,20 +57,22 @@ public class MenuCliente implements IMenu {
     @Override
     public void mostrarMenu() {
         //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
-        JPanel pnlBack = new JPanel( new GridLayout(3,1));
+        JPanel pnlBack = new JPanel( new GridLayout(4,1));
         JButton btnUltimaOrden = new JButton("Ver última orden Realizada");
         JButton btnCrearOrden = new JButton("Crear Orden");
         JButton btnVerReporte = new JButton("Ver Reporte");
+        JButton btnCambiarPass = new JButton("Cambiar Contraseña");
 
         
         btnUltimaOrden.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/buscarOrden.png"));
         btnCrearOrden.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/orden.png"));
         btnVerReporte.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/Reporte.png"));
-
+        btnCambiarPass.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/passcambio.png"));
         
         pnlBack.add(btnUltimaOrden);
         pnlBack.add(btnCrearOrden);
         pnlBack.add(btnVerReporte);
+        pnlBack.add(btnCambiarPass);
        
         JComponent[] component = new JComponent[]{pnlBack};
         
@@ -98,6 +100,16 @@ public class MenuCliente implements IMenu {
               dialog.setVisible(true);
           })
                   ;
+          
+          btnCambiarPass.addActionListener((ActionEvent e) -> {
+              //Abrir Cambio de Contraseña
+              dialog.setVisible(false);
+             menuClientePass();
+              dialog.setVisible(true);
+          })
+                  ;
+          
+          
          //</editor-fold>
          
         //Arranque
@@ -1080,4 +1092,65 @@ public class MenuCliente implements IMenu {
         dialog.setVisible(true);
          
     }
+    public void menuClientePass(){
+    //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
+    JTextField txtPassword = new JTextField();
+    JLabel lblPassword = new JLabel("Contraseña : ");
+    JButton btnPassAceptar = new JButton("Guardar");
+    JPanel panlBack = new JPanel();
+    JPanel pnlButtons = new JPanel();
+    JPanel pnlPassword = new JPanel();
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="UI">
+    pnlButtons.setSize(10,25);
+    pnlButtons.setLayout(new BorderLayout());
+    pnlButtons.add(btnPassAceptar,BorderLayout.CENTER);
+    
+    pnlPassword.setSize(10,25);
+    pnlPassword.setLayout(new BorderLayout());
+    pnlPassword.add(lblPassword,BorderLayout.BEFORE_FIRST_LINE);
+    pnlPassword.add(txtPassword,BorderLayout.AFTER_LAST_LINE);
+    
+    panlBack.setLayout(new BorderLayout());
+    panlBack.setSize(200, 150);
+    panlBack.add(pnlPassword,BorderLayout.PAGE_START);
+    panlBack.add(pnlButtons,BorderLayout.AFTER_LAST_LINE);
+    JComponent[] component = new JComponent[]{panlBack};
+    
+    JOptionPane opt = new JOptionPane();
+    opt.setMessage(component);
+    opt.setName("Cambio de Contraseña");
+    opt.setVisible(true);
+    Toolkit kit = Toolkit.getDefaultToolkit();
+    Image icon = kit.getImage("src/edu/ulatina/patrones/diarioFacil/imagenes/passcambio.png");
+    JDialog dialog = opt.createDialog(null, "Cambio de Contraseña");
+    dialog.setIconImage(icon);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    dialog.setSize(200, 150);
+    dialog.setResizable(false);
+    JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+    btCerrar.setLabel("Cerrar");
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Logica" >
+    int idUser  = Constantes.USUARIOLOGUEADO.getId();
+    btnPassAceptar.addActionListener((ActionEvent e) -> {
+      //Guardar Contraseña Nueva
+    if(txtPassword.getText().length()==0){
+    JOptionPane.showMessageDialog(null, "Por favor ingrese nueva contraseña");
+    }else{
+    dao = new ClienteDao();
+    ((ClienteDao)dao).cambiarPassword(txtPassword.getText(), idUser);
+    JOptionPane.showMessageDialog(null, "Contraseña Actualizada");
+    } 
+     
+    });
+    //</editor-fold>
+    
+    //Arranque
+    dialog.setVisible(true);
+    }
+    
 }

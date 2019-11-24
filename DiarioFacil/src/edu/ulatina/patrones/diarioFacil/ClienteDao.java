@@ -653,4 +653,16 @@ public class ClienteDao implements Dao<Cliente>{
     }
     
     
+
+       public void cambiarPassword(String pass,int idCliente){
+        try{
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            String sql = "UPDATE cliente SET PassCliente = '" + pass + "' WHERE idCliente = " + idCliente;
+            stm = conexion.conn.prepareStatement(sql);
+            stm.executeUpdate(sql);
+            }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+        }
 }
