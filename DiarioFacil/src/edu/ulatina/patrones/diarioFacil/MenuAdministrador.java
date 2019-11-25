@@ -127,7 +127,12 @@ public class MenuAdministrador implements IMenu {
             dialog.setVisible(true);
         });
         
-        
+        btnAdminReporte.addActionListener((ActionEvent e)->{
+            dialog.setVisible(false);
+            ReporteGeneral reporte=new ReporteGeneral();
+            reporte.verOrdenes();
+            dialog.setVisible(true);
+    });
         //</editor-fold>
         //Arranque
         dialog.setVisible(true);

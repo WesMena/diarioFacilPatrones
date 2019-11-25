@@ -109,7 +109,12 @@ public class MenuCliente implements IMenu {
           })
                   ;
           
-          
+        btnVerReporte.addActionListener((ActionEvent e)->{
+            dialog.setVisible(false);
+            ReporteCliente reporte=new ReporteCliente();
+            reporte.verHistorial(Constantes.USUARIOLOGUEADO.getId());
+            dialog.setVisible(true);
+        });
          //</editor-fold>
          
         //Arranque
