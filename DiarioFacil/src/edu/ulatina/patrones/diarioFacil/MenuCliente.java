@@ -5,25 +5,13 @@
  */
 package edu.ulatina.patrones.diarioFacil;
 
-import static edu.ulatina.patrones.diarioFacil.MenuAdministrador.dao;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +23,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -207,11 +194,17 @@ public class MenuCliente implements IMenu {
             dialog.setSize(600, 400);
             dialog.setResizable(true);
             JButton btCerrar = opt.getRootPane().getDefaultButton(); 
-            btCerrar.setLabel("Cerrar");
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Logica">
-            btnCombos.addActionListener((ActionEvent e) -> {
+        //<editor-fold defaultstate="collapsed" desc="Salir">
+            btCerrar.setText("Salir");
+            
+            btCerrar.addActionListener((ActionEvent e) -> {
+                dialog.dispose();
+            });
+            //</editor-fold>   
+        btnCombos.addActionListener((ActionEvent e) -> {
                 dao = new ComboDao();
                 if(!((ComboDao)dao).getAll().isEmpty()){
                     dialog.setVisible(false);
@@ -321,6 +314,7 @@ public class MenuCliente implements IMenu {
                 @Override
                 public void windowActivated(WindowEvent e) {
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    btnActualizar.doClick();
                 }
 
                 @Override
@@ -332,6 +326,7 @@ public class MenuCliente implements IMenu {
            
             
             btnSeeSc.addActionListener((ActionEvent e) -> {
+                dao = new ClienteDao();
                 if((((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id).size()>0)){
                     compraRealizada  = false;
                     dialog.setVisible(false);
@@ -427,21 +422,29 @@ public class MenuCliente implements IMenu {
             };
             
             btnActualizar.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
-                        
+            btnUpdate.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/expediente.png"));
+            btnDelete.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/borrar.png"));
             
             carrito = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
             
             //Cargando modelo 
             for(String col: carrito.get(0).stringPropertyNames())
                 model.addColumn(col);
+
+
             
             carrito.stream().forEach((Properties prop)->{
-                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty(cantidad),prop.getProperty(monto),((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
             });
             
-            tblProductos.setModel(model);
+
             
-            //Panel de busqueda
+            tblProductos.setModel(model);
+            TableColumnModel tcminternal = tblProductos.getColumnModel();
+            tcminternal.removeColumn( tcminternal.getColumn(2));
+            tcminternal.removeColumn( tcminternal.getColumn(2) );
+           
+             //Panel de busqueda
             pnlSearchBar  = new JPanel(new BorderLayout());
             pnlSearchBar.add(lblSearch,BorderLayout.WEST);
             pnlSearchBar.add(txtBuscar,BorderLayout.CENTER);
@@ -507,7 +510,7 @@ public class MenuCliente implements IMenu {
             txtSubTotal.setText(String.valueOf(subTotal));
             txtTotal.setText(String.valueOf(subTotal+(subTotal * 0.13 )));
             
-            
+            //<editor-fold defaultstate="collapsed" desc="Comprar">
             btnBuy.addActionListener((ActionEvent e) -> {
              //Comprar uwu   
                if(tblProductos.getModel().getRowCount()>0){
@@ -528,6 +531,8 @@ public class MenuCliente implements IMenu {
                         this.carrito = new CarritoCompra();
                         JOptionPane.showMessageDialog(null, "La compra se ha relizado con exito", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
                         this.compraRealizada = true;
+                        Optional op = Optional.empty();
+                        clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
                    }else if(!returned.errors().equals("")){
                        //Enviarle un mensaje  de compra no  realizada debido a que x peticiones exceden stock
                        
@@ -536,9 +541,13 @@ public class MenuCliente implements IMenu {
                    }
                }
             });
+            //</editor-fold>
             
+            //<editor-fold defaultstate="collapsed" desc="Modificar">
             btnUpdate.addActionListener((ActionEvent e) -> {
                 if(tblProductos.getSelectedRow()!=-1){
+                    Double isCombo = 0.0;
+                    isCombo = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 3).toString());
                     //Llamar spinner que actualice la cantidad del producto
                     //Desplegar un JSpinner para pedirle al cliente la cantidad del producto
                     JPanel pnlUpdatde  = new JPanel(new BorderLayout());
@@ -547,22 +556,252 @@ public class MenuCliente implements IMenu {
                     //Deshabilitando la escritura en el spinner
                     ((JSpinner.DefaultEditor) spin.getEditor()).getTextField().setEditable(false);
                     String prod = tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 1).toString();
-                    Double actualValue  =Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString());
+                    Double actualValue  = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString());
                     spin.setValue(actualValue.intValue());
                     
-                    JLabel cantidad= new JLabel("Cantidad :");
+                    JLabel cantidadCarrito= new JLabel("Cantidad :");
                     JButton btnAceptar = new JButton();
                     btnAceptar.setText("Aceptar");
 
                     //Coleccion de controles
                     JComponent[]   componentes  = new JComponent[]{
-                        cantidad,
+                        cantidadCarrito,
                         spin
-                   } ;
-                   int result = JOptionPane.showConfirmDialog(null, componentes,prod,JOptionPane.YES_NO_OPTION);
-                }
+                    } ;
+                    Double idProductoIn = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString());
+                    Double precioProducto = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 0).toString());
+                    Double viejaCantidad = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 4).toString());
+                    Double precioCombo  = ((ClienteDao)dao).precioCombo_byID(isCombo.intValue());
+                    if(isCombo.intValue()==0){
+                        //Modificacion de un producto
+                        int result = JOptionPane.showConfirmDialog(null, componentes,prod,JOptionPane.YES_NO_OPTION);
+                        if(result == JOptionPane.YES_OPTION){
+                            //llamar procedimiento de actualizacion
+                            int diff;
+                            dao = new ClienteDao();
+                            ((ClienteDao)dao).update_or_delete_Item(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.Id,(int)Math.round(Double.parseDouble(spin.getValue().toString())));
+                            //Mensaje de exito
+                            JOptionPane.showMessageDialog(null, "Su modificacion se ha realizado exitosamente", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
+                            //Actualizar table y el fucking decorador del carrito
+                               List<Properties> carritoIn = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
+                               DefaultTableModel modelUpdate = new DefaultTableModel(){
+                                @Override
+                                    public boolean isCellEditable(int row,int column){
+                                        return false;
+                                    }
+                                };
+                                //Cargando modelo 
+                                for(String col: carritoIn.get(0).stringPropertyNames())
+                                    modelUpdate.addColumn(col);
 
+
+
+                                carritoIn.stream().forEach((Properties prop)->{
+                                    modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                                });
+
+
+
+                                tblProductos.setModel(modelUpdate);
+                                TableColumnModel tcminternalUpdate = tblProductos.getColumnModel();
+                                tcminternal.removeColumn( tcminternalUpdate.getColumn(2));
+                                tcminternal.removeColumn( tcminternalUpdate.getColumn(2) );
+                                
+                                //Decorando
+                                diff = viejaCantidad.intValue() - (int)Math.round(Double.parseDouble(spin.getValue().toString()));
+                                if(diff>0){
+                                    this.carrito = new Item(this.carrito,diff,"",(-1*precioProducto));
+                                }else if(diff<0){
+                                    this.carrito = new Item(this.carrito,(diff*-1),"",precioProducto);
+                                }else{
+                                    this.carrito = new Item(this.carrito,viejaCantidad.intValue(),"",(-1*precioProducto));
+                                }
+                                
+                               txtSubTotal.setText(String.valueOf(this.carrito.costo()));
+                               txtTotal.setText(String.valueOf(this.carrito.costo()+(this.carrito.costo()*0.13)));
+                        }
+                    }else{
+                        //Modificacion de un combo
+                        int result = JOptionPane.showConfirmDialog(null, componentes,prod,JOptionPane.YES_NO_OPTION);
+                            dao = new ClienteDao();
+                            viejaCantidad = Double.parseDouble(String.valueOf(((ClienteDao)dao).get_cantidad_Combo(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.getId(), isCombo.intValue()))) ;
+                        if(result == JOptionPane.YES_OPTION){
+                            ((ClienteDao)dao).update_or_delete_Combo(idProductoIn.intValue(),Constantes.USUARIOLOGUEADO.getId(), isCombo.intValue(),(int)Math.round(Double.parseDouble(spin.getValue().toString())));
+                            //Mensaje de exito
+                            JOptionPane.showMessageDialog(null, "Su modificacion se ha realizado exitosamente", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
+                            //Actualizar table y el fucking decorador del carrito
+                               List<Properties> carritoIn = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
+                               DefaultTableModel modelUpdate = new DefaultTableModel(){
+                                @Override
+                                    public boolean isCellEditable(int row,int column){
+                                        return false;
+                                    }
+                                };
+                                //Cargando modelo 
+                                for(String col: carritoIn.get(0).stringPropertyNames())
+                                    modelUpdate.addColumn(col);
+
+
+
+                                carritoIn.stream().forEach((Properties prop)->{
+                                    modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                                });
+
+
+
+                                tblProductos.setModel(modelUpdate);
+                                TableColumnModel tcminternalUpdate = tblProductos.getColumnModel();
+                                tcminternal.removeColumn( tcminternalUpdate.getColumn(2));
+                                tcminternal.removeColumn( tcminternalUpdate.getColumn(2) );
+                                
+                                int diff;
+                                //Decorando
+                                diff = viejaCantidad.intValue() - (int)Math.round(Double.parseDouble(spin.getValue().toString()));
+                                if(diff>0){
+                                    this.carrito = new Item(this.carrito,diff,"",(-1*precioCombo));
+                                }else if(diff<0){
+                                    this.carrito = new Item(this.carrito,(diff*-1),"",precioCombo);
+                                }else{
+                                    this.carrito = new Item(this.carrito,viejaCantidad.intValue(),"",(-1*precioCombo));
+                                }
+                                
+                               txtSubTotal.setText(String.valueOf(this.carrito.costo()));
+                               txtTotal.setText(String.valueOf(this.carrito.costo()+(this.carrito.costo()*0.13)));
+                                
+                        }
+                    }
+
+                   
+                }
             });
+           //</editor-fold>
+           
+            //<editor-fold defaultstate="collapsed" desc="Eliminar">
+            btnDelete.addActionListener((ActionEvent e) -> {
+                if(tblProductos.getSelectedRow()!=-1){
+                    Double idProductoIn = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString()); 
+                    Double idCombo  = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 3).toString());
+                    Double Del = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 4).toString());
+                    Double viejaCantidad = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 4).toString());
+                    int diff;
+                    if(idCombo==0){
+                        //Eliminar producto
+                       int result = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar este producto del carrito?", "Sys", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,new ImageIcon(""));
+                       if(result == JOptionPane.YES_OPTION){
+                           //Eliminar item del carrito
+                           dao = new ClienteDao();
+                           ((ClienteDao)dao).update_or_delete_Item(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.Id, Del.intValue());
+                           JOptionPane.showMessageDialog(null, "Se ha eliminado el item del carrito exitosamente", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
+                            
+                            //Decorando
+                            Double precioProducto = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 0).toString());
+                            
+                            this.carrito = new Item(this.carrito,viejaCantidad.intValue(),"",(-1*precioProducto));
+                            
+                            txtSubTotal.setText(String.valueOf(this.carrito.costo()));
+                            txtTotal.setText(String.valueOf(this.carrito.costo()+(this.carrito.costo()*0.13)));                           
+                            
+                            //Actualizar la tabla
+                            //Actualizar table y el fucking decorador del carrito
+                            List<Properties> carritoIn = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
+                            DefaultTableModel modelUpdate = new DefaultTableModel(){
+                               @Override
+                                public boolean isCellEditable(int row,int column){
+                                    return false;
+                                }
+                            };
+                            //Cargando modelo 
+                            for(String col: carritoIn.get(0).stringPropertyNames())
+                                modelUpdate.addColumn(col);
+
+
+
+                            carritoIn.stream().forEach((Properties prop)->{
+                                modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                            });
+
+
+
+                            tblProductos.setModel(modelUpdate);
+                            TableColumnModel tcminternalUpdate = tblProductos.getColumnModel();
+                            tcminternal.removeColumn( tcminternalUpdate.getColumn(2));
+                            tcminternal.removeColumn( tcminternalUpdate.getColumn(2) );
+                            
+
+                       }
+                    }else{
+                      //Eliminar combo   
+                       int result = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar este combo del carrito?", "Sys", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,new ImageIcon(""));
+                       if(result == JOptionPane.YES_OPTION){
+                           //Eliminar item del carrito
+                           dao = new ClienteDao();
+                           viejaCantidad = Double.parseDouble(String.valueOf(((ClienteDao)dao).get_cantidad_Combo(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.getId(), idCombo.intValue())));
+                           ((ClienteDao)dao).update_or_delete_Combo(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.Id, idCombo.intValue(),viejaCantidad.intValue());
+                           JOptionPane.showMessageDialog(null, "Se ha eliminado el item del carrito exitosamente", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
+                           Double precioCombo = ((ClienteDao)dao).precioCombo_byID(idCombo.intValue());
+                            //Decorando
+                            Double precioProducto = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 0).toString());
+                            
+                            this.carrito = new Item(this.carrito,viejaCantidad.intValue(),"",(-1*precioCombo));
+                            
+                            txtSubTotal.setText(String.valueOf(this.carrito.costo()));
+                            txtTotal.setText(String.valueOf(this.carrito.costo()+(this.carrito.costo()*0.13)));                           
+                            
+                            //Actualizar la tabla
+                            //Actualizar table y el fucking decorador del carrito
+                            List<Properties> carritoIn = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
+                            DefaultTableModel modelUpdate = new DefaultTableModel(){
+                               @Override
+                                public boolean isCellEditable(int row,int column){
+                                    return false;
+                                }
+                            };
+                            //Cargando modelo 
+                            for(String col: carritoIn.get(0).stringPropertyNames())
+                                modelUpdate.addColumn(col);
+
+
+
+                            carritoIn.stream().forEach((Properties prop)->{
+                                modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                            });
+
+
+
+                            tblProductos.setModel(modelUpdate);
+                            TableColumnModel tcminternalUpdate = tblProductos.getColumnModel();
+                            tcminternal.removeColumn( tcminternalUpdate.getColumn(2));
+                            tcminternal.removeColumn( tcminternalUpdate.getColumn(2) );
+                        }
+                    }
+                }
+            });
+           //</editor-fold>
+           
+            //<editor-fold defaultstate="collapsed" desc="Salir">
+            JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+            btCerrar.setText("Salir");
+            
+            btCerrar.addActionListener((ActionEvent e) -> {
+                dialog.dispose();
+            });
+            //</editor-fold>
+            
+            //<editor-fold defaultstate="collapsed" desc="Ver detalle">
+                btnCombo.addActionListener((ActionEvent e) -> {
+                    if(tblProductos.getSelectedRow()!=-1){
+                        Double idProductoIn = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString()); 
+                        Double idCombo  = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 3).toString());
+                        if(idCombo.intValue()!=0){
+                            dao = new ClienteDao();
+                            String message = ((ClienteDao)dao).get_combo_contenido(idCombo.intValue());
+                            String append  = "Cantidad : "+String.valueOf(((ClienteDao)dao).get_cantidad_Combo(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.getId(), idCombo.intValue()));
+                            JOptionPane.showMessageDialog(null, message+"\n"+append, "Contenido", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-more-details-24.png"));
+                        }
+                    }
+                });
+            //</editor-fold>
+           
         //</editor-fold>
         
         //Arranque
@@ -648,6 +887,7 @@ public class MenuCliente implements IMenu {
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="Logica" >
+            //<editor-fold defaultstate="collapsed" desc="Agregar al carrito">
             btnAdd.addActionListener((ActionEvent e) -> {
                 if(tblCombos.getSelectedRow()!=-1){
                         int idCombo;
@@ -679,17 +919,184 @@ public class MenuCliente implements IMenu {
                             dao = new ClienteDao();
                             Double idComboIn = Double.parseDouble(tblCombos.getModel().getValueAt(tblCombos.getSelectedRow(),0).toString());
                             ((ClienteDao)dao).insertar_Combo_Carrito(Constantes.USUARIOLOGUEADO.getId(),idComboIn.intValue() , (int)Math.round(Double.parseDouble(spin.getValue().toString())));
-                          this.carrito = new Item(this.carrito,1,"",((ClienteDao)dao).precioCombo_byID(idComboIn.intValue()));
+                          this.carrito = new Item(this.carrito,(int)Math.round(Double.parseDouble(spin.getValue().toString())),"",((ClienteDao)dao).precioCombo_byID(idComboIn.intValue()));
                         }
                 }
                         
             });
+            //</editor-fold>
+                      
+            //<editor-fold defaultstate="collapsed" desc="Ver contenido">
+            btnSeeSc.addActionListener((ActionEvent e) -> {
+                if(tblCombos.getSelectedRow()!=-1){
+                    //Abrir JOptionPane con icono y el contenido 
+                    dao = new ClienteDao();
+                     Double idComboInCon = Double.parseDouble(tblCombos.getModel().getValueAt(tblCombos.getSelectedRow(),0).toString());
+                    String message =  ((ClienteDao)dao).get_combo_contenido(idComboInCon.intValue());
+                    JOptionPane.showMessageDialog(null, message,"Contenido",JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-more-details-24.png"));
+                }
+            });
+            
+            //</editor-fold>
+            
+            //<editor-fold defaultstate="collapsed" desc="Salir">
+            JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+            btCerrar.setText("Salir");
+            
+            btCerrar.addActionListener((ActionEvent e) -> {
+                dialog.dispose();
+            });
+            //</editor-fold>
         //</editor-fold>
         
         //Arranque
         dialog.setVisible(true);
     }
     
+    
+     public  void clienteVerUltimaOrden(int idCliente,Optional op){
+        List<Properties> carritoVer = new ArrayList<>();
+        //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
+            JPanel pnlBack,pnlSearchBar,pnlActionbar,pnlActionContent,pnlSubtotal,pnlTotal;
+            JTable tblProductos = new JTable();
+            JLabel lblSubTotal  = new JLabel("Subtotal : ");
+            JLabel lblTotal = new JLabel("Total : ");
+            JTextField txtSubTotal= new JTextField();
+            JTextField txtTotal = new JTextField();
+            txtSubTotal.setEditable(false);
+            txtTotal.setEditable(false);
+            JPanel pnlTblMods;
+            JPanel pnlBtnMod;
+            JButton btnDelete = new JButton("Eliminar");
+            JButton btnUpdate = new JButton("Modificar");
+            JButton btnCombo = new JButton("Ver contenido");
+            //Modelo base
+            DefaultTableModel model = new DefaultTableModel(){
+            @Override
+                public boolean isCellEditable(int row,int column){
+                    return false;
+                }
+            };
+            
+
+            btnUpdate.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/expediente.png"));
+            btnDelete.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/borrar.png"));
+            
+            
+            carritoVer = ((ClienteDao)dao).getUltimaOrden(Constantes.USUARIOLOGUEADO.Id,op);
+            
+            //Cargando modelo 
+            for(String col: carritoVer.get(0).stringPropertyNames())
+                model.addColumn(col);
+
+
+            
+            carritoVer.stream().forEach((Properties prop)->{
+                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+            });
+            
+
+            
+            tblProductos.setModel(model);
+            TableColumnModel tcminternal = tblProductos.getColumnModel();
+            tcminternal.removeColumn( tcminternal.getColumn(2));
+            tcminternal.removeColumn( tcminternal.getColumn(2) );
+           
+
+            
+            //Panel de subtotal
+            pnlSubtotal = new JPanel(new BorderLayout());
+            pnlSubtotal.add(lblSubTotal,BorderLayout.WEST);
+            pnlSubtotal.add(txtSubTotal,BorderLayout.CENTER);
+            
+            //Panel de total 
+            pnlTotal = new JPanel(new BorderLayout());
+            pnlTotal.add(lblTotal,BorderLayout.WEST);
+            pnlTotal.add(txtTotal,BorderLayout.CENTER);
+            
+            //Juntando el total y el subtotal en una  panel
+            pnlActionContent = new JPanel(new  GridLayout(1,2,2,1));
+            pnlActionContent.add(pnlSubtotal);
+            pnlActionContent.add(pnlTotal);
+
+            
+            //Panel de resumen
+            pnlActionbar = new JPanel(new BorderLayout(5,5));
+            pnlActionbar.add(pnlActionContent,BorderLayout.NORTH);
+            
+            //Panel de los botones
+            pnlBtnMod = new JPanel(new BorderLayout());
+            pnlBtnMod.add(btnCombo,BorderLayout.CENTER);
+            
+            
+            //Panel de la tabla y los botones de modificacion
+            pnlTblMods  = new JPanel(new BorderLayout());
+            pnlTblMods.add(new JScrollPane(tblProductos,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),BorderLayout.CENTER);
+            pnlTblMods.add(pnlBtnMod,BorderLayout.SOUTH);
+            
+            pnlBack = new JPanel(new BorderLayout());
+            pnlBack.add(pnlTblMods,BorderLayout.CENTER);
+            pnlBack.add(pnlActionbar,BorderLayout.SOUTH);
+            
+            //Ventana principal
+            JComponent[] component = new JComponent[]{pnlBack};
+        
+            JOptionPane opt = new JOptionPane();
+            opt.setMessage(component);
+            opt.setName("DiarioFacil-Ordenes");
+            opt.setVisible(true);
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image icon = kit.getImage("src/edu/ulatina/patrones/diarioFacil/imagenes/cliente.png");
+
+            JDialog dialog = opt.createDialog(null, opt.getName());
+            dialog.setIconImage(icon);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setSize(600, 400);
+            dialog.setResizable(true);
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Logica">
+        //subtotal y total
+        Double subtotal =0.0;
+        dao = new OrdenDao();
+        if(op.isPresent())            
+            subtotal = ((OrdenDao)dao).geTotalOrden(Integer.parseInt(op.get().toString()));
+        else
+            subtotal = ((OrdenDao)dao).getTotalUltimaOrden( idCliente); 
+        
+        txtTotal.setText(String.format( "%,.2f", subtotal + (subtotal * 0.13)));
+        txtSubTotal.setText(String.format("%,.2f", subtotal)); 
+            
+            //<editor-fold defaultstate="collapsed" desc="Salir">
+            JButton btCerrar = opt.getRootPane().getDefaultButton(); 
+            btCerrar.setText("Salir");
+            
+            btCerrar.addActionListener((ActionEvent e) -> {
+                dialog.dispose();
+            });
+            //</editor-fold>
+            
+            //<editor-fold defaultstate="collapsed" desc="Ver detalle">
+                btnCombo.addActionListener((ActionEvent e) -> {
+                    if(tblProductos.getSelectedRow()!=-1){
+                        Double idProductoIn = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 2).toString()); 
+                        Double idCombo  = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 3).toString());
+                        if(idCombo.intValue()!=0){
+                            dao = new ClienteDao();
+                            String message = ((ClienteDao)dao).get_combo_contenido(idCombo.intValue());
+                            String append  = "Cantidad : "+String.valueOf(((ClienteDao)dao).get_cantidad_Combo(idProductoIn.intValue(), Constantes.USUARIOLOGUEADO.getId(), idCombo.intValue()));
+                            JOptionPane.showMessageDialog(null, message+"\n"+append, "Contenido", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-more-details-24.png"));
+                        }
+                    }
+                });
+            //</editor-fold>
+           
+        //</editor-fold>
+        
+        //Arranque
+        dialog.setVisible(true);
+         
+    }
     public void menuClientePass(){
     //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
     JTextField txtPassword = new JTextField();

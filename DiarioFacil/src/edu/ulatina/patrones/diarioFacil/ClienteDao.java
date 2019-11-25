@@ -361,7 +361,9 @@ public class ClienteDao implements Dao<Cliente>{
             query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario,\n" +
             "item.cantidad as Cantidad,\n" +
             "item.subtotal as Monto\n," +
-            "item.isCombo\n"+
+            "item.isCombo\n,"+
+            "item.producto as productID \n,"+
+            "item.isCombo as isComboID\n"+
             "from Item\n" +
             "inner join orden on orden.idOrden = item.orden\n" +
             "inner join producto on producto.idProducto = item.producto\n" +
@@ -376,6 +378,8 @@ public class ClienteDao implements Dao<Cliente>{
                 prop.setProperty(cantidad, String.valueOf(rset.getInt(cantidad)));
                 prop.setProperty(monto, String.valueOf(rset.getDouble(monto)));
                 prop.setProperty("isCombo", String.valueOf(rset.getInt("isCombo")));
+                prop.setProperty("ProductoID", String.valueOf(rset.getInt("productID")));
+                prop.setProperty("isComboID", String.valueOf(rset.getInt("isComboID")));
                 returned.add(prop);
             }
         }catch(SQLException e){
@@ -519,6 +523,136 @@ public class ClienteDao implements Dao<Cliente>{
         
         return returned;
     }
+    
+    public void update_or_delete_Item(int idProducto,int idCliente,int nuevacantidad){
+        try{
+            Conexion conexion = Conexion.getInstance();
+            proc = conexion.conn.prepareCall("Call updateProductoCarrito(?,?,?)");
+            proc.setInt(1, idProducto);
+            proc.setInt(2, idCliente);
+            proc.setInt(3, nuevacantidad);
+            proc.execute();
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+    }
+    
+    public String get_combo_contenido(int idCombo){
+        String returned = "";
+        try{
+            Conexion conexion = Conexion.getInstance();
+            stm = conexion.conn.createStatement();
+            rset = stm.executeQuery(String.format("select producto.NombreProducto,convert(productoscombo.cantidad,nchar) as cantidad from combos \n" +
+            "inner join productoscombo on productoscombo.combo = combos.idCombo \n" +
+            "inner join producto on producto.idProducto = productoscombo.producto\n" +
+            "where combos.idCombo =%o", idCombo));
+            while(rset.next()){
+                returned = returned +rset.getInt(2) +"->"+rset.getString(1)+"\n";
+            }
+            
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+        return returned;
+    }
+    
+    public int get_cantidad_Combo(int idProducto,int idCliente,int idCombo){
+        int returned = 0;
+        try{
+            Conexion conexion = Conexion.getInstance();
+            proc = conexion.conn.prepareCall("Call cantidad_combos(?,?,?,?)");
+            proc.setInt(1, idCliente);
+            proc.setInt(2, idProducto);
+            proc.setInt(3, idCombo);
+            proc.registerOutParameter(4, Types.INTEGER);
+            proc.execute();
+            
+            returned = proc.getInt(4);
+            
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+        return returned;
+    }
+    
+    public List<Properties> getUltimaOrden(int idCliente,Optional idFactura){
+        List<Properties>  returned  = new ArrayList<>();
+        try{
+            String producto="Producto",precio_unitario="Precio_unitario",cantidad="Cantidad",monto="Monto",isCombo="Combo";
+            Conexion conexion = Conexion.getInstance();
+            conexion.conectar();
+            String query="";
+            if(idFactura.isPresent()){
+                int idFact =Integer.parseInt(idFactura.get().toString());
+                query = "select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
+                "            item.cantidad as Cantidad, \n" +
+                "            item.subtotal as Monto, \n" +
+                "            item.isCombo,\n" +
+                "            item.producto as productID ,\n" +
+                "            item.isCombo as isComboID\n" +
+                "            from Item\n" +
+                "            inner join orden on orden.idOrden = item.orden\n" +
+                "            inner join producto on producto.idProducto = item.producto \n" +
+                "            where orden.cliente = "+idCliente+" \n" +
+                "            and orden.idOrden =  "+idFact;
+            }else{
+                query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
+                "            item.cantidad as Cantidad, \n" +
+                "            item.subtotal as Monto, \n" +
+                "            item.isCombo,\n" +
+                "		 item.producto as productID ,\n" +
+                "            item.isCombo as isComboID\n" +
+                "            from Item\n" +
+                "            inner join orden on orden.idOrden = item.orden\n" +
+                "            inner join producto on producto.idProducto = item.producto \n" +
+                "            where orden.cliente = %1$o\n" +
+                "            and orden.finalizada = 1\n" +
+                "            and orden.fechaOrden =(select max(o.fechaOrden) from orden as o \n" +
+                "            where o.cliente = %1$o and o.finalizada = 1);", idCliente);
+            }
+            stm  = conexion.conn.createStatement();
+            rset =  stm.executeQuery(query);
+            while(rset.next()){
+                Properties prop = new Properties();
+                prop.setProperty(producto, rset.getString(producto));
+                prop.setProperty(precio_unitario, String.valueOf(rset.getDouble(precio_unitario)));
+                prop.setProperty(cantidad, String.valueOf(rset.getInt(cantidad)));
+                prop.setProperty(monto, String.valueOf(rset.getDouble(monto)));
+                prop.setProperty("isCombo", String.valueOf(rset.getInt("isCombo")));
+                prop.setProperty("ProductoID", String.valueOf(rset.getInt("productID")));
+                prop.setProperty("isComboID", String.valueOf(rset.getInt("isComboID")));
+                returned.add(prop);
+            }
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+//        finally{
+//            super.desconectar();
+//            try{
+//                rset.close();
+//                stm.close();
+//            }catch(SQLException e){
+//                System.err.println(""+e.getMessage());
+//            }
+//        }
+        return returned;
+    }
+    
+    public void update_or_delete_Combo(int idProducto,int  idCliente, int idCombo,int nuevaCantidad){
+        try{
+            Conexion conexion = Conexion.getInstance();
+            proc  = conexion.conn.prepareCall("Call update_or_delete_Combo(?,?,?,?)");
+            proc.setInt(1, idProducto);
+            proc.setInt(2, idCliente);
+            proc.setInt(3, idCombo);
+            proc.setInt(4, nuevaCantidad);
+            proc.execute();
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+    }
+    
+    
 
        public void cambiarPassword(String pass,int idCliente){
         try{
