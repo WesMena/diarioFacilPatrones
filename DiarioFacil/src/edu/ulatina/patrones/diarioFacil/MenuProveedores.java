@@ -27,24 +27,42 @@ public class MenuProveedores {
         s.append("4.Modificar proveedor \n");
         s.append("5.Borrar proveedor \n");
         s.append("6.Volver");
-        
+       
+        Boolean cancela1=false;
+        String strOp;
         do{
             do{
                 invalido=false;
                 try{
-                     opcion=Integer.parseInt(JOptionPane.showInputDialog(s));
+                    strOp=JOptionPane.showInputDialog(s);
+                    if(strOp==null){
+                        cancela1=true;
+                        break;
+                    }
+                    opcion=Integer.parseInt(strOp);
+                    
                 }catch(NumberFormatException nfe){
                     invalido=true;
                 }
                       
             }while(invalido==true);
-           
+           if(cancela1){
+               break;
+           }
+            
+         
+           String strId;
             switch(opcion){
                 case 1: 
                    boolean repetido=false; 
                    try{
-                     id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id "
-                             + "del proveedor")); 
+                       strId=JOptionPane.showInputDialog("Ingrese el id "
+                             + "del proveedor");
+                       if(strId==null){
+                           break;
+                       }
+                       id=Integer.parseInt(strId);
+             
                 List<Proveedor> lst=proveedor.getAll();   
                 for(Proveedor prov: lst){
                     if(prov.getCodigo()==id){
@@ -59,7 +77,13 @@ public class MenuProveedores {
                        break; 
                    }
                     nombre=JOptionPane.showInputDialog("Ingrese el nombre");
+                    if(nombre==null){
+                        break;
+                    }
                     correo=JOptionPane.showInputDialog("Ingrese el correo");
+                    if(correo==null){
+                        break;
+                    }
                     Proveedor p=new Proveedor(id,nombre,correo,false);
                     proveedor.save(p);
                     break; 
@@ -85,8 +109,14 @@ public class MenuProveedores {
                     JOptionPane.showMessageDialog(null,proveedores);
                     break;
                 case 3:
+                    String strIdBusca;
                     try{
-                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id")); 
+                        strIdBusca=JOptionPane.showInputDialog("Ingrese el id");
+                        if(strIdBusca==null){
+                            break;
+                        }
+                        id=Integer.parseInt(strIdBusca);
+                      
                        Optional<Proveedor> opProv=proveedor.get(id);
                        if(opProv.isPresent()==false || opProv.get().isBorrado()==true){
                        JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún proveedor");    
@@ -106,9 +136,15 @@ public class MenuProveedores {
                     }
                     break;
                 case 4:
+                    String strIdMod;
                     try{
-                      id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                              + " del proveedor a modificar"));    
+                        strIdMod=JOptionPane.showInputDialog("Ingrese el id"
+                              + " del proveedor a modificar");
+                        if(strIdMod==null){
+                            break;
+                        }
+                        id=Integer.parseInt(strIdMod);
+                   
                       Optional<Proveedor> opProve=proveedor.get(id);
                       if(opProve.isPresent()==false || opProve.get().isBorrado()==true){
                        JOptionPane.showMessageDialog(null,"El id ingresado no corresponde"
@@ -120,9 +156,15 @@ public class MenuProveedores {
                           nom=JOptionPane.showInputDialog("Ingrese el nuevo nombre"
                                   + " del proveedor \n (Si deja el espacio en blanco, se"
                                   + " mantendrá el actual)");
+                          if(nom==null){
+                              break;
+                          }
                           email=JOptionPane.showInputDialog("Ingrese el nuevo"
                                   + " correo del proveedor \n(Si deja el espacio en "
                                   + "blanco, se mantendrá el actual)");
+                          if(email==null){
+                              break;
+                          }
                          if(nom.equalsIgnoreCase("")){
                              nom=opProve.get().getNombre();
                          }
@@ -141,9 +183,15 @@ public class MenuProveedores {
                     break;
                     
                 case 5:
+                    String strIdBorra;
                     try{
-                    id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                            + " del proveedor a borrar"));        
+                        strIdBorra=JOptionPane.showInputDialog("Ingrese el id"
+                            + " del proveedor a borrar");
+                        if(strIdBorra==null){
+                            break;
+                        }
+                        id=Integer.parseInt(strIdBorra);
+                         
                     Optional<Proveedor> opProveedor=proveedor.get(id);
                     if(opProveedor.isPresent()==false || opProveedor.get().isBorrado()==true){
                      JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ningún proveedor");

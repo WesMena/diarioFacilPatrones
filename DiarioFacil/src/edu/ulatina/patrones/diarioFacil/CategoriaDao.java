@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 public class CategoriaDao implements Dao<Categoria> {
 public static List<Categoria> categorias=new ArrayList<>();
     public CategoriaDao() {
+        categorias=new ArrayList<>();
            ResultSet rs=null;
        Statement stmt=null; 
        try{

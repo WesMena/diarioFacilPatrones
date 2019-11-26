@@ -22,9 +22,10 @@ public class MenuProducto{
       int idCat=0;
       int stockMinimo=0;
       int stockActual=0;
+      String strOp;
       double precio=0;
-      String marca=""; 
-      String nombre=""; 
+      String marca; 
+      String nombre; 
       boolean invalido=false;
       StringBuffer s=new StringBuffer();
       s.append("Ingrese una opción:\n");
@@ -38,12 +39,23 @@ public class MenuProducto{
           do{
               invalido=false;
               try{
-                  opcion=Integer.parseInt(JOptionPane.showInputDialog(s));
+                  strOp=JOptionPane.showInputDialog(s);
+                  if(strOp==null){
+                      opcion=6;
+                     break;
+                     
+                  }
+                  
+                  opcion=Integer.parseInt(strOp);
+                 System.out.println(opcion);
               }catch(NumberFormatException nfe){
+        
+                 
                   invalido=true;
               }
           }while(invalido==true);
           
+          String strId;
           switch(opcion){
               case 1:
               
@@ -51,9 +63,13 @@ public class MenuProducto{
                boolean provExiste=false;
                boolean catExiste=false; 
                   try{
-              
-                 id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el código "
-                             + "del producto")); 
+                      strId=JOptionPane.showInputDialog("Ingrese el código "
+                             + "del producto");
+                      if(strId==null){
+                          break;
+                      }
+                      id=Integer.parseInt(strId);
+            
                  List<Producto> lst=producto.getAll();
                  for(Producto prod:lst){
                      if(prod.getCodProducto()==id){
@@ -69,20 +85,35 @@ public class MenuProducto{
                   }
                   
                   nombre=JOptionPane.showInputDialog("Ingrese el nombre del producto");
+                  if(nombre==null){
+                      break;
+                  }
                   marca=JOptionPane.showInputDialog("Ingrese la marca del producto");
+                  if(marca==null){
+                      break;
+                  }
                   ProveedorDao proveedores=new ProveedorDao();
                   List<Proveedor> lstProve=proveedores.getAll();
                   String listaProveedor="Proveedores disponibles \n";
                   for(Proveedor prove1:lstProve){
                       listaProveedor=listaProveedor+"Codigo: "+prove1.getCodigo()+" Nombre: "+prove1.getNombre()+"\n";
                   }
+                  boolean cancelo=false;
                   listaProveedor=listaProveedor+"Ingrese el código del proveedor";
                   do{
                       invalido=false;
                  
                      try{
                       provExiste=false;
-                  idProveedor=Integer.parseInt(JOptionPane.showInputDialog(listaProveedor)); 
+                      String strProve; 
+                      strProve=JOptionPane.showInputDialog(listaProveedor);
+                      if(strProve==null){
+                          cancelo=true;
+                          break;
+     
+                      }
+                      idProveedor=Integer.parseInt(strProve);
+                      
                  
                   int idActual;
                   boolean borrado;
@@ -104,7 +135,10 @@ public class MenuProducto{
                       invalido=true;
                   }  
                   }while(invalido);
-                 
+                 if(cancelo==true){
+                     break;
+                 }
+                  
                    CategoriaDao cate=new CategoriaDao();
                    List<Categoria> lstCat=cate.getAll();
                    String listaCat="Categorías disponibles \n";
@@ -114,12 +148,19 @@ public class MenuProducto{
                                
                    }
                   listaCat=listaCat+"Ingrese el código de la categoría";
+                  boolean cancelo2=false;
                   do{
                       invalido=false;
                       try{
                          catExiste=false;
-                         
-                         idCat=Integer.parseInt(JOptionPane.showInputDialog(listaCat));
+                         String strCat;
+                         strCat=JOptionPane.showInputDialog(listaCat);
+                         if(strCat==null){
+                             cancelo2=true;
+                             break;
+                         }
+                         idCat=Integer.parseInt(strCat);
+                        
                        
                         for(Categoria cat:lstCat){
                             if(cat.getCodCategoria()==idCat && cat.isBorrado()==false){
@@ -136,34 +177,71 @@ public class MenuProducto{
                       }
                   }while(invalido);
                   
+                  if(cancelo2){
+                      break;
+                  }
+                  
+                  
+                  boolean cancelo3=false;
                   
                   do{
                       invalido=false;
                       try{
-                        precio=Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio "
-                             + "del producto"));
+                         String strPrecio;
+                         strPrecio=JOptionPane.showInputDialog("Ingrese el precio "
+                             + "del producto");
+                         
+                         if(strPrecio==null){
+                             cancelo3=true;
+                             break;
+                         }
+                         precio=Double.parseDouble(strPrecio);
+                      
                       }catch(NumberFormatException nfe){
                           invalido=true;
                       }
                       
                   }while(invalido);
+                  if(cancelo3){
+                      break;
+                  }
+                  
+                  boolean cancelo4=false;
                   
                   do{
                       invalido=false;
                       try{
-                          stockMinimo=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el stock "
-                             + "minimo del producto"));
+                          String strStockMin;
+                          strStockMin=JOptionPane.showInputDialog("Ingrese el stock "
+                             + "minimo del producto");
+                          if(strStockMin==null){
+                              cancelo4=true;
+                              break;
+                          }
+                          stockMinimo=Integer.parseInt(strStockMin);
+                     
                       }catch(NumberFormatException nfe){
                           invalido=true;
                       }
                   }while(invalido);
                   
+                  if(cancelo4){
+                      break;
+                  }
+                  
+                  boolean cancelo5=false;
                     do{
                       invalido=false;
                       try{
-                          stockActual=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el stock"
-                             + " actual del producto"));
-                          
+                          String strStockAct;
+                          strStockAct=JOptionPane.showInputDialog("Ingrese el stock"
+                             + " actual del producto");
+                          if(strStockAct==null){
+                              cancelo5=true;
+                              break;
+                          }
+                          stockActual=Integer.parseInt(strStockAct);
+                        
                           
                       }catch(NumberFormatException nfe){
                           invalido=true;
@@ -176,6 +254,9 @@ public class MenuProducto{
                       }
                   }while(invalido);
                     
+                    if(cancelo5){
+                        break;
+                    }
                    Producto produ=new Producto(idProveedor,id,nombre,stockMinimo,
                     stockActual,precio,idCat,false,false,marca);
                     producto.save(produ);
@@ -224,8 +305,14 @@ public class MenuProducto{
                   
               case 3:
                   try{
-                     id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el código"
-                              + " del producto a modificar"));  
+                      String strIdModifica;
+                      strIdModifica=JOptionPane.showInputDialog("Ingrese el código"
+                              + " del producto a modificar");
+                      if(strIdModifica==null){
+                          break;
+                      }
+                      id=Integer.parseInt(strIdModifica);
+               
                      Optional<Producto> opProd=producto.get(id);
                      
                      if(opProd.isPresent()==false || opProd.get().isBorrado()==true){
@@ -240,12 +327,23 @@ public class MenuProducto{
                          nom=JOptionPane.showInputDialog("Ingrese el nuevo nombre"
                                   + " del producto \n (Si deja el espacio en blanco, se"
                                   + " mantendrá el actual)");
+                         if(nom==null){
+                             break;
+                         }
+                         boolean cancelo6=false;
                          do{
                              incorrecto=false;
                              try{
-                             nuevoPrecio=Double.parseDouble(JOptionPane.showInputDialog("Ingrese "
+                                 String strNPrecio;
+                                 strNPrecio=JOptionPane.showInputDialog("Ingrese "
                                      + "el nuevo precio \n (Si escribe un 0 "
-                                  + "se mantendrá el actual)"));    
+                                  + "se mantendrá el actual)");
+                                 if(strNPrecio==null){
+                                     cancelo6=true;
+                                     break;
+                                 }
+                                  nuevoPrecio=Double.parseDouble(strNPrecio);
+                            
                              }catch(NumberFormatException nfe){
                                  incorrecto=true;
                              }
@@ -253,16 +351,31 @@ public class MenuProducto{
                              
                          }while(incorrecto);
                          
+                         if(cancelo6){
+                             break;
+                         }
+                         
+                         boolean cancelo7=false;
                          do{
                              incorrecto=false;
                              try{
-                                 stockMin=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el "
+                                 String strNStockMin;
+                                 strNStockMin=JOptionPane.showInputDialog("Ingrese el "
                                          + " nuevo stock mínimo \n (si escribe un 0"
-                                         + " se mantendrá el actual"));
+                                         + " se mantendrá el actual");
+                                 if(strNStockMin==null){
+                                     cancelo7=true;
+                                     break;
+                                 }
+                                 stockMin=Integer.parseInt(strNStockMin);
+                               
                              }catch(NumberFormatException nfe){
                                  incorrecto=true;
                              }
                          }while(incorrecto);
+                         if(cancelo7){
+                             break;
+                         }
                          if(nom.equalsIgnoreCase("")){
                              nom=opProd.get().getNombreProd();
                          }
@@ -290,8 +403,14 @@ public class MenuProducto{
                   
               case 4:
                   try{
-                      id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el código"
-                            + " del producto a borrar"));    
+                      String strIdBorra;
+                      strIdBorra=JOptionPane.showInputDialog("Ingrese el código"
+                            + " del producto a borrar");
+                      if(strIdBorra==null){
+                          break;
+                      }
+                      id=Integer.parseInt(strIdBorra);
+               
                       Optional<Producto> opProduct=producto.get(id);
                       if(opProduct.isPresent()==false ||opProduct.get().isBorrado()==true){
                           JOptionPane.showMessageDialog(null,"El código ingresado no corresponde con ningún producto");
@@ -313,8 +432,14 @@ public class MenuProducto{
                   //Pide id, si existe, abre mini-menu con 2 opciones
                   //Poner en promoción, Quitar de promoción
                   try{
-                      id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el código"
-                            + " del producto al que le quiere cambiar su estado"));    
+                      String strIdPromo;
+                      strIdPromo=JOptionPane.showInputDialog("Ingrese el código"
+                            + " del producto al que le quiere cambiar su estado");
+                      if(strIdPromo==null){
+                          break;
+                      }
+                      id=Integer.parseInt(strIdPromo);
+                       
                       Optional<Producto> opProduct=producto.get(id);
                       if(opProduct.isPresent()==false ||opProduct.get().isBorrado()==true){
                           JOptionPane.showMessageDialog(null,"El código ingresado no corresponde con ningún producto");
@@ -331,18 +456,31 @@ public class MenuProducto{
                           mini.append("1.Cambiar estado de promoción(Actual:"+estadoPromo+")\n");
                           
                           mini.append("2.Volver");
+                          boolean cancelo7=false;
                           do{
                           
                           do{
                               
                               incorrecto=false;
                               try{
-                              op=Integer.parseInt(JOptionPane.showInputDialog(mini));    
+                               String strMiniOp;
+                               strMiniOp=JOptionPane.showInputDialog(mini);
+                               
+                               if(strMiniOp==null){
+                                   cancelo7=true;
+                                 break;  
+                               }
+                               
+                               op=Integer.parseInt(strMiniOp);
+                             
                               }catch(NumberFormatException nfe){
                                   incorrecto=true;
                               }
                           }while(incorrecto);    
                               
+                            if(cancelo7){
+                                break;
+                            }
                           if(op==1){
                               String nom=opProduct.get().getNombreProd();
                               double nuevoPrecio=opProduct.get().getPrecio();

@@ -28,23 +28,41 @@ public class MenuCategorias {
         s.append("5.Modificar categoría \n");
         s.append("6.Borrar categoría \n");
         s.append("7.Volver");
+        String strOp;
+        boolean cancelo1=false;
         do{
             do{
                 invalido=false;
                 try{
-                     opcion=Integer.parseInt(JOptionPane.showInputDialog(s));
+                    strOp=JOptionPane.showInputDialog(s);
+                    if(strOp==null){
+                        cancelo1=true;
+                        break;
+                    }
+                    opcion=Integer.parseInt(strOp);
+                     
+                     
                 }catch(NumberFormatException nfe){
                     invalido=true;
                 }
                       
             }while(invalido==true);
             
+            if(cancelo1){
+                break;
+            }
             switch(opcion){
                 case 1: 
+                    String strId;
                     boolean repetido=false;
                     try{
-                      id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id "
-                             + "de la categoría"));   
+                        strId=JOptionPane.showInputDialog("Ingrese el id "
+                             + "de la categoría");
+                        if(strId==null){
+                            break;
+                        }
+                        id=Integer.parseInt(strId);
+                   
                       List<Categoria> lst=categoria.getAll();
                       for(Categoria cat:lst){
                           if(cat.getCodCategoria()==id){
@@ -60,6 +78,9 @@ public class MenuCategorias {
                     }
                    nombre=JOptionPane.showInputDialog("Ingrese el nombre de "
                            + "la categoría");
+                   if(nombre==null){
+                       break;
+                   }
                    Categoria c=new Categoria(id,nombre,false);
                    categoria.save(c);
                    break;
@@ -81,9 +102,16 @@ public class MenuCategorias {
                     JOptionPane.showMessageDialog(null,categorias);
                     break;
                 case 3:
+                    String strIdBusca;
                     try{
-                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id de "
-                               + " la categoría que quiere ver ")); 
+                        strIdBusca=JOptionPane.showInputDialog("Ingrese el id de "
+                               + " la categoría que quiere ver ");
+                        
+                        if(strIdBusca==null){
+                            break;
+                        }
+                        id=Integer.parseInt(strIdBusca);
+                     
                        Optional<Categoria> opCat=categoria.get(id);
                        if(opCat.isPresent()==false || opCat.get().isBorrado()==true){
                            
@@ -106,10 +134,17 @@ public class MenuCategorias {
                     }
                     break; 
                 case 4: 
-                   
+                   String strBuscaProd;
                   try{
-                       id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id de "
-                               + " la categoría de la cual quiere consultar sus productos ")); 
+                      strBuscaProd=JOptionPane.showInputDialog("Ingrese el id de "
+                               + " la categoría de la cual quiere consultar sus productos ");
+                      
+                      if(strBuscaProd==null){
+                          break;
+                      }
+                      
+                      id=Integer.parseInt(strBuscaProd);
+                    
                        Optional<Categoria> opCat=categoria.get(id);
                        if(opCat.isPresent()==false || opCat.get().isBorrado()==true){
                        JOptionPane.showMessageDialog(null,"El id ingresado no corresponde con ninguna categoría");    
@@ -125,9 +160,8 @@ public class MenuCategorias {
                            for(Producto p:productos){
                                if(p.getCodCategoria()==id){
                                opProve=prove.get(p.getCodProveedor());  
-                                 if(opProve.isPresent()==true){
-                                     //Hacer que tome en cuenta si el producto
-                                     //está borrado
+                                 if(opProve.isPresent()==true && p.isBorrado()==false){
+                                    
                                      
                                    productosStr=productosStr+"Código:"+p.getCodProducto()+
                                            " Nombre: "+p.getNombreProd()+
@@ -158,9 +192,15 @@ public class MenuCategorias {
                     }
                     break;   
                 case 5:
+                    String strIdMod;
                    try{
-                      id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                              + " de la categoría a modificar"));
+                       strIdMod=JOptionPane.showInputDialog("Ingrese el id"
+                              + " de la categoría a modificar");
+                       if(strIdMod==null){
+                           break;
+                       }
+                       id=Integer.parseInt(strIdMod);
+                
                       Optional<Categoria> opCat=categoria.get(id);
                       
                     
@@ -174,7 +214,9 @@ public class MenuCategorias {
                           nom=JOptionPane.showInputDialog("Ingrese el nuevo nombre"
                                   + " de la categoría \n (Si deja el espacio en blanco, se"
                                   + " mantendrá el actual)");
-                          
+                          if(nom==null){
+                              break;
+                          }
                          if(nom.equalsIgnoreCase("")){
                              nom=opCat.get().getNombreCategoria();
                          }
@@ -192,9 +234,15 @@ public class MenuCategorias {
                     }
                     break; 
                 case 6:
+                    String strIdBorra;
                     try{
-                    id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                            + " de la categoría a borrar")); 
+                        strIdBorra=JOptionPane.showInputDialog("Ingrese el id"
+                            + " de la categoría a borrar");
+                        if(strIdBorra==null){
+                            break;
+                        }
+                        id=Integer.parseInt(strIdBorra);
+             
                     Optional <Categoria> opCat=categoria.get(id);
                     
                     if(opCat.isPresent()==false || opCat.get().isBorrado()==true){
