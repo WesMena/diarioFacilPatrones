@@ -30,22 +30,40 @@ public class MenuCombos {
         s.append("5.Borrar combo \n");
         s.append("6.Volver \n");
         
+        String strOp; 
+        boolean cancelo1=false; 
       do{
           do{
               invalido=false; 
               try{
-                opcion=Integer.parseInt(JOptionPane.showInputDialog(s));  
+                  strOp=JOptionPane.showInputDialog(s);
+                  if(strOp==null){
+                      cancelo1=true;
+                      break;
+                  }
+                  opcion=Integer.parseInt(strOp);
+               
               }catch(NumberFormatException nfe){
                   invalido=true; 
               }
                       
           }while(invalido==true);
+          if(cancelo1){
+              break;
+          }
           switch(opcion){
               case 1: 
+                 String strId; 
                  boolean repetido=false; 
                  try{
-                    id=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id "
-                             + "del combo"));    
+                     strId=JOptionPane.showInputDialog("Ingrese el id "
+                             + "del combo");
+                     if(strId==null){
+                         break;
+                     }
+                     
+                     id=Integer.parseInt(strId);
+                 
                     List<ArmaCombos> lst=combo.getAll();
                     for(ArmaCombos comboAux:lst){
                         if(comboAux.getId()==id){
@@ -62,7 +80,9 @@ public class MenuCombos {
                  
                  String nombre=JOptionPane.showInputDialog("Ingrese el nombre del "
                            + "combo ");
-                 
+                 if(nombre==null){
+                     break;
+                 }
                  ContenidosCombo caracCombo=new ContenidosCombo
                     (id,nombre,false,false);
                  
@@ -77,12 +97,19 @@ public class MenuCombos {
                  
                  boolean precioInvalido=false;
                  double precioCombo;
+                 String strPrecio;
+                 boolean cancelo2=false;
                  do{
                      precioInvalido=false; 
                      try{
-                    
-                          precioCombo=Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio "
-                             + "del combo"));
+                    strPrecio=JOptionPane.showInputDialog("Ingrese el precio "
+                             + "del combo");
+                    if(strPrecio==null){
+                        cancelo2=true;
+                        break;
+                    }
+                    precioCombo=Double.parseDouble(strPrecio);
+                          
                      
                      String precioStr=Double.toString(precioCombo);
                      String nombreAux=comboNuevo.getNombre();
@@ -102,7 +129,10 @@ public class MenuCombos {
                         
                      
                  }while(precioInvalido==true);
-              
+                 
+              if(cancelo2){
+                  break;
+              }
                
                   break;
                   
@@ -144,9 +174,15 @@ public class MenuCombos {
               case 3: 
                   MenuProductoCombo mpc=new MenuProductoCombo();
                    try{
+             String strMod;          
              int idMod;
-                       idMod=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id del "
-                               + "combo a buscar")); 
+             strMod=JOptionPane.showInputDialog("Ingrese el id del "
+                               + "combo a buscar");
+             if(strMod==null){
+                 break;
+             }
+             idMod=Integer.parseInt(strMod);
+               
                        
                        Optional<ArmaCombos> opComb=combo.get(idMod);
                        
@@ -172,9 +208,15 @@ public class MenuCombos {
                   String nuevoNombre;
                   double nuevoPrecio;
                   StringBuffer strModifica=new StringBuffer(); 
+                  String strIdMod;
                   try{
-                      idComboMod=Integer.parseInt(JOptionPane.showInputDialog
-                                    ("Ingrese el código del combo"));
+                      strIdMod=JOptionPane.showInputDialog
+                                    ("Ingrese el código del combo");
+                      if(strIdMod==null){
+                          break;
+                      }
+                      idComboMod=Integer.parseInt(strIdMod);
+        
                       List<ArmaCombos> listaModifica=combo.getAll();
                      
                      Optional<ArmaCombos> opCombo=Optional.empty();
@@ -202,21 +244,35 @@ public class MenuCombos {
                   strModifica.append("4.Activar o desactivar el combo \n");
                   strModifica.append("5.Volver");
                   
+                  boolean cancelo4=false;
+                  String opMod;
                    do{
                        do{
                         opInvalida=false; 
                         try{
-                            opModifica=Integer.parseInt(JOptionPane.showInputDialog
-                                    (strModifica));
+                            opMod=JOptionPane.showInputDialog
+                                    (strModifica);
+                            if(opMod==null){
+                                cancelo4=true;
+                                break;
+                            }
+                            opModifica=Integer.parseInt(opMod);
+                       
                             
                         }catch(NumberFormatException nfe){
                             opInvalida=true;
                         }
                        }while(opInvalida==true);
+                       if(cancelo4){
+                           break;
+                       }
                    switch(opModifica){
                        case 1:
                            nuevoNombre=JOptionPane.showInputDialog("Ingrese el nuevo nombre "
                              + "del combo");
+                           if(nuevoNombre==null){
+                               break;
+                           }
                            if(nuevoNombre.equalsIgnoreCase("")){
                                nuevoNombre=armaModifica.getNombre();
                            }
@@ -229,13 +285,20 @@ public class MenuCombos {
                            break;
                            
                        case 2:
-                      
+                    
+                           boolean cancelo5=false;
+                           String strPrecioMod;
                  do{
                      precioInvalido=false; 
                      try{
-                    
-                          nuevoPrecio=Double.parseDouble(JOptionPane.showInputDialog("Ingrese el nuevo precio "
-                             + "del combo"));
+                    strPrecioMod=JOptionPane.showInputDialog("Ingrese el nuevo precio "
+                             + "del combo");
+                    if(strPrecioMod==null){
+                        cancelo5=true;
+                        break;
+                    }
+                    nuevoPrecio=Double.parseDouble(strPrecioMod);
+                  
                           
                           String precioAux=Double.toString(nuevoPrecio);
                           if(precioAux.equalsIgnoreCase("")){
@@ -263,7 +326,9 @@ public class MenuCombos {
                         
                      
                  }while(precioInvalido==true);    
-                           
+                        if(cancelo5)   {
+                            break;
+                        }
                        
                        break;    
                        
@@ -273,6 +338,7 @@ public class MenuCombos {
                            break;
                       
                        case 4:
+                           String strEstado;
                            int estadoNuevo;
                            String estadoActual="";
                            try{
@@ -281,9 +347,13 @@ public class MenuCombos {
                                }else{
                                    estadoActual="Desactivado";
                                }
-                               
-                               estadoNuevo=Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para activar el  "
-                             + "combo o 0 para desactivarlo \n"+"Estado actual: "+estadoActual));
+                               strEstado=JOptionPane.showInputDialog("Digite 1 para activar el  "
+                             + "combo o 0 para desactivarlo \n"+"Estado actual: "+estadoActual);
+                               if(strEstado==null){
+                                   break;
+                               }
+                               estadoNuevo=Integer.parseInt(strEstado);
+                              
                              
                                
                                
@@ -331,10 +401,16 @@ public class MenuCombos {
                 break; 
                 
               case 5: 
+                  String strBorra;
                   int idComboBorra=0;
                 try{
-                      idComboBorra=Integer.parseInt(JOptionPane.showInputDialog
-                                    ("Ingrese el código del combo"));
+                    strBorra=JOptionPane.showInputDialog
+                                    ("Ingrese el código del combo");
+                    if(strBorra==null){
+                        break;
+                    }
+                    idComboBorra=Integer.parseInt(strBorra);
+                   
                       List<ArmaCombos> listaBorra=combo.getAll();
                      
                      Optional<ArmaCombos> opCombo=Optional.empty();

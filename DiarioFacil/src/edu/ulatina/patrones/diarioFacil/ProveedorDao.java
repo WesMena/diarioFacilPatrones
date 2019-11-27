@@ -23,6 +23,8 @@ public class ProveedorDao implements Dao<Proveedor> {
 public static List<Proveedor> proveedores=new ArrayList<>();
 
     public ProveedorDao() {
+        proveedores=new ArrayList<>();
+        
        ResultSet rs=null;
        Statement stmt=null; 
        try{

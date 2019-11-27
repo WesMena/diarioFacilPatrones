@@ -7,6 +7,7 @@ package edu.ulatina.patrones.diarioFacil;
 
 import java.sql.SQLException;
 import java.util.Optional;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,7 +18,11 @@ public class Tester {
 
   
     
-   public static void main(String[] args) throws SQLException {  
+   public static void main(String[] args) throws SQLException, MessagingException {  
+       MandaCorreos correo=new MandaCorreos();
+       //IdProveedor,IdProducto,CantidadPedir
+       
+     
 //       Cliente cli=new Cliente();
 //       cli.setId(1);
 //       boolean freq;
