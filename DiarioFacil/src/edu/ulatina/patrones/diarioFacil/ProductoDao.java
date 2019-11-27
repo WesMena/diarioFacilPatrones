@@ -22,6 +22,7 @@ public class ProductoDao implements Dao<Producto> {
     public static List<Producto> productos=new ArrayList<>();
 
     public ProductoDao() {
+        productos=new ArrayList<>();
         ResultSet rs=null;
        Statement stmt=null; 
        try{

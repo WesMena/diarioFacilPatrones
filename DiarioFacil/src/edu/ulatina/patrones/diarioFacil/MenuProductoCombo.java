@@ -37,27 +37,42 @@ Dao prodCombo=new ProductoComboDao();
            s.append("5.Volver \n");
        }
        
+       String strId;
+       boolean cancelo1=false;
        do{
            do{
                invalido=false;
                try{
-                opcion=Integer.parseInt(JOptionPane.showInputDialog(s));
+                   strId=JOptionPane.showInputDialog(s);
+                   if(strId==null){
+                       cancelo1=true;
+                       break;
+                   }
+                opcion=Integer.parseInt(strId);
                 
                }catch(NumberFormatException nfe){
                    invalido=true;
                }
            }while(invalido==true);
            
+           if(cancelo1){
+               break;
+           }
            switch(opcion){
                case 1:
+                   String strIdProd;
                     Producto prodAux=new Producto();
                    boolean existe=false;
                    boolean incorrecto=false;
                    int cantidad=0;
                    try{
-                     
-                    idProd=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id "
-                             + "del producto a agregar"));
+                     strIdProd=JOptionPane.showInputDialog("Ingrese el id "
+                             + "del producto a agregar");
+                     if(strIdProd==null){
+                         break;
+                     }
+                     idProd=Integer.parseInt(strIdProd);
+                   
                     
                     
                   ProductoDao prod=new ProductoDao();
@@ -85,18 +100,28 @@ Dao prodCombo=new ProductoComboDao();
                    }catch(NumberFormatException nfe){
                        break;
                    }
+                   String strCant;
+                   boolean cancelo2=false;
                    do{
                        incorrecto=false;
                        try{
-                           cantidad=Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad "
-                             + "del producto a agregar"));
+                           strCant=JOptionPane.showInputDialog("Ingrese la cantidad "
+                             + "del producto a agregar");
+                           if(strCant==null){
+                               cancelo2=true;
+                               break;
+                           }
+                           cantidad=Integer.parseInt(strCant);
+                         
                        }catch(NumberFormatException nfe){
                            incorrecto=true;
                           
                        }
                        
                    }while(incorrecto==true);
-                   
+                   if(cancelo2){
+                       break;
+                   }
                    ProductosCombo produComb=new ProductosCombo
                     (idCombo,prodAux,cantidad,false);
                    
@@ -107,9 +132,15 @@ Dao prodCombo=new ProductoComboDao();
                   this.verProductos(idCombo);
                     break;
                case 3:
+                   String strIdMod;
                    try{
-                     idProd=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                              + " del producto a modificar")); 
+                       strIdMod=JOptionPane.showInputDialog("Ingrese el id"
+                              + " del producto a modificar");
+                       if(strIdMod==null){
+                           break;
+                       }
+                       idProd=Integer.parseInt(strIdMod);
+            
                 List<ProductosCombo> listaProductos=prodCombo.getAll();
                 Optional<ProductosCombo> opProd=Optional.empty();
             
@@ -133,19 +164,29 @@ Dao prodCombo=new ProductoComboDao();
                      
                      int nuevaCant=0;
                      boolean formatoIncorrecto=false;
+                     boolean cancelo3=false;
+                     String cantMod;
                      do{
                          formatoIncorrecto=false;
                      try{
-                           nuevaCant=Integer.parseInt(JOptionPane.showInputDialog("Ingrese la nueva cantidad "
+                         cantMod=JOptionPane.showInputDialog("Ingrese la nueva cantidad "
                              + "del producto \n(Si deja el espacio en "
-                                   + "blanco, se mantendrá la actual)."));
+                                   + "blanco, se mantendrá la actual).");
+                         if(cantMod==null){
+                             cancelo3=true;
+                             break;
+                         }
+                         nuevaCant=Integer.parseInt(cantMod);
+                       
                        }catch(NumberFormatException nfe){
                            formatoIncorrecto=true;
                            break;
                        }
                          
                      }while(formatoIncorrecto==true);
-                     
+                     if(cancelo3){
+                         break;
+                     }
                      String comprobar=Integer.toString(nuevaCant);
                      if(comprobar.equalsIgnoreCase("0")){
                          nuevaCant=opProd.get().getCantidad();
@@ -171,9 +212,16 @@ Dao prodCombo=new ProductoComboDao();
                    break;
                    
                case 4:
+                   String strBorra;
                    try{
-                       idProd=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el id"
-                              + " del producto a borrar")); 
+                       strBorra=JOptionPane.showInputDialog("Ingrese el id"
+                              + " del producto a borrar");
+                       
+                       if(strBorra==null){
+                           break;
+                       }
+                       idProd=Integer.parseInt(strBorra);
+      
                 List<ProductosCombo> listaProductos=prodCombo.getAll();
                 Optional<ProductosCombo> opProd=Optional.empty();
                  for(ProductosCombo prodCmb:listaProductos){
