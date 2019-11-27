@@ -40,7 +40,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author josem
  */
-public class MenuCliente implements IMenu {
+public class MenuCliente extends Observado implements IMenu {
     public static Dao dao;
     
     OrdenCompra  carrito = new CarritoCompra();
@@ -93,7 +93,19 @@ public class MenuCliente implements IMenu {
         //</editor-fold>
         
          //<editor-fold defaultstate="collapsed" desc="Logica">
-          btnCrearOrden.addActionListener((ActionEvent e) -> {
+          
+          btnUltimaOrden.addActionListener((ActionEvent e) -> {
+              //Abrir Ver Ultima Orden
+              dialog.setVisible(false);
+              Optional op = Optional.empty();
+              clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
+              dialog.setVisible(true);
+          })
+                  ;
+         
+         
+         
+         btnCrearOrden.addActionListener((ActionEvent e) -> {
               //Abrir menu de ordenes
               dialog.setVisible(false);
               menuClienteCrearCompra();
@@ -531,6 +543,7 @@ public class MenuCliente implements IMenu {
                         this.carrito = new CarritoCompra();
                         JOptionPane.showMessageDialog(null, "La compra se ha relizado con exito", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
                         this.compraRealizada = true;
+                        notificarObservadores();
                         Optional op = Optional.empty();
                         clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
                    }else if(!returned.errors().equals("")){
@@ -982,7 +995,7 @@ public class MenuCliente implements IMenu {
             btnUpdate.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/expediente.png"));
             btnDelete.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/borrar.png"));
             
-            
+            dao = new ClienteDao();
             carritoVer = ((ClienteDao)dao).getUltimaOrden(Constantes.USUARIOLOGUEADO.Id,op);
             
             //Cargando modelo 
