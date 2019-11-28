@@ -147,12 +147,22 @@ public class MenuCliente implements IMenu {
             inventario = ((ClienteDao)dao).getInventarioCliente();
             for(String s : inventario.get(0).stringPropertyNames())
                 model.addColumn(s);
-            for(Properties p : inventario)
-                model.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),p.getProperty("Precio"),p.getProperty("Categoria")});
+            
+            dao  = new ProductoDao();
+            for(Properties p : inventario){
+                if(Constantes.USUARIOLOGUEADO.isIsPref() && ((ProductoDao)dao).isPromoDisp(Integer.parseInt(p.getProperty("IDProducto"))) ){
+                    model.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),String.valueOf(Double.parseDouble(p.getProperty("Precio"))-(Double.parseDouble(p.getProperty("Precio"))*0.10)),p.getProperty("Categoria")}); 
+                }else{
+                    model.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),p.getProperty("Precio"),p.getProperty("Categoria")}); 
+                }
+                    
+               
+            }
+               
              
             tblProductos.setModel(model);
             TableColumnModel tcm = tblProductos.getColumnModel();
-            tcm.removeColumn( tcm.getColumn(3) );
+            tcm.removeColumn( tcm.getColumn(0) );
             
             //Iconos para los botones
             btnActualizar.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-update-16.png"));
@@ -353,9 +363,15 @@ public class MenuCliente implements IMenu {
                 inventarioInterno = ((ClienteDao)dao).getInventarioCliente();
                 for(String s : inventarioInterno.get(0).stringPropertyNames())
                     internalModel.addColumn(s);
-                for(Properties p : inventarioInterno)
-                    internalModel.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),p.getProperty("Precio"),p.getProperty("Categoria")});
-
+                dao = new ProductoDao();
+                for(Properties p : inventarioInterno){
+                    if(Constantes.USUARIOLOGUEADO.isIsPref() && ((ProductoDao)dao).isPromoDisp(Integer.parseInt(p.getProperty("IDProducto"))) ){
+                        internalModel.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),String.valueOf(Double.parseDouble(p.getProperty("Precio"))-(Double.parseDouble(p.getProperty("Precio"))*0.10)),p.getProperty("Categoria")}); 
+                    }else{
+                        internalModel.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),p.getProperty("Precio"),p.getProperty("Categoria")}); 
+                    }  
+                }
+            
                 tblProductos.setModel(internalModel);
                 TableColumnModel tcminternal = tblProductos.getColumnModel();
                 tcminternal.removeColumn( tcminternal.getColumn(3) );
@@ -369,13 +385,20 @@ public class MenuCliente implements IMenu {
             lstCarrito =  new ArrayList<>();
             this.carrito = new CarritoCompra();
             
-            
+            dao  = new ClienteDao();
             for(Properties prop : ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.getId())){
+                dao = new ProductoDao();
                 this.lstCarrito.add(prop);
                 if(Integer.parseInt(prop.getProperty("isCombo"))==0){
-                    this.carrito = new Item(carrito,Integer.parseInt(prop.getProperty(cantidad)),prop.getProperty(producto),Double.parseDouble(prop.getProperty(precio_unitario)));
+                    if(Constantes.USUARIOLOGUEADO.isIsPref() && ((ProductoDao)dao).isPromoDisp(Integer.parseInt(prop.getProperty("ProductoID"))) ){
+                        //Esta en promo la wea
+                        this.carrito = new Item(carrito,Integer.parseInt(prop.getProperty(cantidad)),prop.getProperty(producto),Double.parseDouble(prop.getProperty(precio_unitario)) - Double.parseDouble(prop.getProperty(precio_unitario))*0.10);
+                    }else{
+                        this.carrito = new Item(carrito,Integer.parseInt(prop.getProperty(cantidad)),prop.getProperty(producto),Double.parseDouble(prop.getProperty(precio_unitario)));
+                    }
                 }   
             }
+            dao = new ClienteDao();
             this.carrito = new Item(carrito,1,"",((ClienteDao)dao).costo_combos(((ClienteDao)dao).Orden_actual(Constantes.USUARIOLOGUEADO.Id)));
             
             
@@ -434,7 +457,18 @@ public class MenuCliente implements IMenu {
 
             
             carrito.stream().forEach((Properties prop)->{
-                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                Integer idProd = -1;
+                idProd = Integer.parseInt(prop.getProperty("ProductoID"));
+                dao = new ProductoDao();
+                if(!((ProductoDao)dao).isPromoDisp(idProd) && !Constantes.USUARIOLOGUEADO.isIsPref()){
+                    dao = new ClienteDao();
+                    model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                }else{
+                    dao = new ClienteDao();
+                    Double precioOr = Double.parseDouble(prop.getProperty(precio_unitario));
+                    precioOr = precioOr - (precioOr*0.10);
+                    model.addRow(new Object[]{String.format("%,.2f", precioOr),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                }
             });
             
 
@@ -572,6 +606,8 @@ public class MenuCliente implements IMenu {
                     Double precioProducto = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 0).toString());
                     Double viejaCantidad = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 4).toString());
                     Double precioCombo  = ((ClienteDao)dao).precioCombo_byID(isCombo.intValue());
+
+                    
                     if(isCombo.intValue()==0){
                         //Modificacion de un producto
                         int result = JOptionPane.showConfirmDialog(null, componentes,prod,JOptionPane.YES_NO_OPTION);
@@ -597,7 +633,18 @@ public class MenuCliente implements IMenu {
 
 
                                 carritoIn.stream().forEach((Properties prop)->{
-                                    modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                                    Integer idProd = -1;
+                                    idProd = Integer.parseInt(prop.getProperty("ProductoID"));
+                                    dao = new ProductoDao();
+                                    if(!((ProductoDao)dao).isPromoDisp(idProd) && !Constantes.USUARIOLOGUEADO.isIsPref()){
+                                        dao = new ClienteDao();
+                                        modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                    }else{
+                                        dao = new ClienteDao();
+                                        Double precioOr = Double.parseDouble(prop.getProperty(precio_unitario));
+                                        precioOr = precioOr - (precioOr*0.10);
+                                        modelUpdate.addRow(new Object[]{precioOr.toString(),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                    }
                                 });
 
 
@@ -644,7 +691,18 @@ public class MenuCliente implements IMenu {
 
 
                                 carritoIn.stream().forEach((Properties prop)->{
-                                    modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                                    Integer idProd = -1;
+                                    idProd = Integer.parseInt(prop.getProperty("ProductoID"));
+                                    dao = new ProductoDao();
+                                    if(!((ProductoDao)dao).isPromoDisp(idProd) && !Constantes.USUARIOLOGUEADO.isIsPref()){
+                                        dao = new ClienteDao();
+                                        modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                    }else{
+                                        dao = new ClienteDao();
+                                        Double precioOr = Double.parseDouble(prop.getProperty(precio_unitario));
+                                        precioOr = precioOr - (precioOr*0.10);
+                                        modelUpdate.addRow(new Object[]{precioOr.toString(),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                    }
                                 });
 
 
@@ -695,7 +753,6 @@ public class MenuCliente implements IMenu {
                             
                             //Decorando
                             Double precioProducto = Double.parseDouble(tblProductos.getModel().getValueAt(tblProductos.getSelectedRow(), 0).toString());
-                            
                             this.carrito = new Item(this.carrito,viejaCantidad.intValue(),"",(-1*precioProducto));
                             
                             txtSubTotal.setText(String.valueOf(this.carrito.costo()));
@@ -703,6 +760,7 @@ public class MenuCliente implements IMenu {
                             
                             //Actualizar la tabla
                             //Actualizar table y el fucking decorador del carrito
+                            dao = new ClienteDao();
                             List<Properties> carritoIn = ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id);
                             DefaultTableModel modelUpdate = new DefaultTableModel(){
                                @Override
@@ -717,7 +775,18 @@ public class MenuCliente implements IMenu {
 
 
                             carritoIn.stream().forEach((Properties prop)->{
-                                modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                                Integer idProd = -1;
+                                idProd = Integer.parseInt(prop.getProperty("ProductoID"));
+                                dao = new ProductoDao();
+                                if(!((ProductoDao)dao).isPromoDisp(idProd) && !Constantes.USUARIOLOGUEADO.isIsPref()){
+                                    dao = new ClienteDao();
+                                    modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                }else{
+                                    dao = new ClienteDao();
+                                    Double precioOr = Double.parseDouble(prop.getProperty(precio_unitario));
+                                    precioOr = precioOr - (precioOr*0.10);
+                                    modelUpdate.addRow(new Object[]{String.format("%,.2f", precioOr),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                }
                             });
 
 
@@ -763,7 +832,18 @@ public class MenuCliente implements IMenu {
 
 
                             carritoIn.stream().forEach((Properties prop)->{
-                                modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                                Integer idProd = -1;
+                                idProd = Integer.parseInt(prop.getProperty("ProductoID"));
+                                dao = new ProductoDao();
+                                if(!((ProductoDao)dao).isPromoDisp(idProd) && !Constantes.USUARIOLOGUEADO.isIsPref()){
+                                    dao = new ClienteDao();
+                                    modelUpdate.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                }else{
+                                    dao = new ClienteDao();
+                                    Double precioOr = Double.parseDouble(prop.getProperty(precio_unitario));
+                                    precioOr = precioOr - (precioOr*0.10);
+                                    modelUpdate.addRow(new Object[]{precioOr.toString(),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                                }
                             });
 
 
