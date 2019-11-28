@@ -14,7 +14,7 @@ public class ClienteLogin extends Menu{
     public ClienteLogin(){
     
         menu = new MenuCliente();
-        
+        Observador obs = new Observador((MenuCliente)menu);
     }
     
 }

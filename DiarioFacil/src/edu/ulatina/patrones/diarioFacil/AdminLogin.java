@@ -12,8 +12,8 @@ package edu.ulatina.patrones.diarioFacil;
 public class AdminLogin extends Menu {
     
     public AdminLogin(){
-    
+
         menu = new MenuAdministrador();
-    
+        
     }
 }

@@ -205,5 +205,31 @@ public static List<Proveedor> proveedores=new ArrayList<>();
       }
    
     }
+   
+ 
+        public String getCorreoProv(int idProv) {
+        
+        String correo="";
+       ResultSet rs=null;
+       Statement stmt=null; 
+       try{
+           Conexion conexion = Conexion.getInstance();
+           conexion.conectar();
+           stmt = conexion.conn.createStatement();
+           String sql; 
+           sql="SELECT CorreoProveedor FROM proveedor WHERE idProveedor = "+idProv;
+           rs=stmt.executeQuery(sql);
+           while(rs.next()){
+
+             correo=rs.getString("CorreoProveedor");
+              
+            
+           }
+       }catch(Exception e){
+           e.printStackTrace();
+       }
+       
+       return correo;
     
+        } 
 }
