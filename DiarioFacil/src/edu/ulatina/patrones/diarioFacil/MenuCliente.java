@@ -10,10 +10,13 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -43,11 +46,11 @@ import javax.swing.table.TableColumnModel;
 public class MenuCliente implements IMenu {
     public static Dao dao;
     
-    OrdenCompra  carrito = new CarritoCompra();
+    OrdenCompra  carrito= new CarritoCompra();
     
     String producto="Producto",precio_unitario="Precio_unitario",cantidad="Cantidad",monto="Monto";
     
-    List<Properties> lstCarrito;
+    List<Properties> lstCarritoSearch;
     
     boolean compraRealizada;
     
@@ -126,6 +129,7 @@ public class MenuCliente implements IMenu {
         //<editor-fold defaultstate="collapsed" desc="Definicion de controles">
             //Paneles
             List<Properties> inventario = new ArrayList<>();
+            this.lstCarritoSearch = inventario;
             JPanel pnlBack,pnlSearchBar,pnlActionbar;
             JTable tblProductos = new JTable();
             JLabel lblSearch = new JLabel("Buscar : ");
@@ -213,7 +217,68 @@ public class MenuCliente implements IMenu {
             btCerrar.addActionListener((ActionEvent e) -> {
                 dialog.dispose();
             });
-            //</editor-fold>   
+            //</editor-fold>
+            
+            
+        //<editor-fold defaultstate="collapsed" desc="Filtrar">
+        txtBuscar.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    if(Character.isDigit(e.getKeyChar()))
+                        e.consume();   
+                }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                                //Modelo base
+            DefaultTableModel modelIni = new DefaultTableModel(){
+            @Override
+                public boolean isCellEditable(int row,int column){
+                        return false;
+                    }
+                };
+                List<Properties> inventario = new ArrayList<>();
+                List<Properties> inventarioFiltered =  inventario;
+                //Cargando Columnas al modelo
+                inventarioFiltered.clear();
+                dao = new ClienteDao();
+                inventario = ((ClienteDao)dao).getInventarioCliente();
+                for (String s : inventario.get(0).stringPropertyNames()) {
+                    modelIni.addColumn(s);
+                }
+
+                inventario.stream().filter( (Properties x ) -> x.getProperty("Producto").contains(txtBuscar.getText())).forEach( z ->{
+                    inventarioFiltered.add(z);
+                });
+                
+                
+                dao  = new ProductoDao();
+                for(Properties p : inventarioFiltered){
+                    if(Constantes.USUARIOLOGUEADO.isIsPref() && ((ProductoDao)dao).isPromoDisp(Integer.parseInt(p.getProperty("IDProducto"))) ){
+                        modelIni.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),String.valueOf(Double.parseDouble(p.getProperty("Precio"))-(Double.parseDouble(p.getProperty("Precio"))*0.10)),p.getProperty("Categoria")}); 
+                    }else{
+                        modelIni.addRow(new Object[]{p.getProperty("Disponibles"),p.getProperty("Producto"),p.getProperty("Marca"),p.getProperty("IDProducto"),p.getProperty("Precio"),p.getProperty("Categoria")}); 
+                    }
+
+
+                }
+               
+             
+                tblProductos.setModel(modelIni);
+                TableColumnModel tcm = tblProductos.getColumnModel();
+                tcm.removeColumn( tcm.getColumn(3) );
+                
+            }
+        });
+        
+        //</editor-fold>
         btnCombos.addActionListener((ActionEvent e) -> {
                 dao = new ComboDao();
                 if(!((ComboDao)dao).getAll().isEmpty()){
@@ -267,19 +332,7 @@ public class MenuCliente implements IMenu {
                                 prop.setProperty(this.cantidad,String.valueOf(cant));
                                 prop.setProperty(this.precio_unitario,String.valueOf(precioUnitario) );
                                 prop.setProperty(this.monto,String.valueOf(precioUnitario*cant));
-                                
-                                //Revisando si el producto ya ha sido agregado
-                                int ItemExists = (int)lstCarrito.stream().filter((Properties p)->p.getProperty(producto).equals(prop.getProperty(producto))).count();
-                                
-                                if(ItemExists==0){
-                                    lstCarrito.add(prop);
-                                }else{
-                                    lstCarrito.stream().filter((Properties p)->p.getProperty(producto).equals(prop.getProperty(producto))).forEach((Properties p)->{
-                                        int oldCantidad  = Integer.parseInt(p.getProperty(this.cantidad));
-                                        p.setProperty(this.cantidad, String.valueOf(cant+oldCantidad)); 
-                                        p.setProperty(this.monto, String.valueOf((oldCantidad+cant)*Double.parseDouble(p.getProperty(this.precio_unitario))));  
-                                    });
-                                }
+
                                 
                                 //Mensaje de exito
                                 JOptionPane.showMessageDialog(null, "Se ha añadido al carrito correctamente", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png"));
@@ -340,7 +393,7 @@ public class MenuCliente implements IMenu {
                 if((((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.Id).size()>0)){
                     compraRealizada  = false;
                     dialog.setVisible(false);
-                    this.menuClienteVerCarrito(carrito.costo(),lstCarrito);
+                    this.menuClienteVerCarrito(carrito.costo(),lstCarritoSearch);
                     dialog.setVisible(true);
                         
                 }else
@@ -379,16 +432,11 @@ public class MenuCliente implements IMenu {
             });
             
             
-
-            //Cargar en un patron decorador el carrito  de productos
-           
-            lstCarrito =  new ArrayList<>();
             this.carrito = new CarritoCompra();
             
             dao  = new ClienteDao();
             for(Properties prop : ((ClienteDao)dao).getCarritoCliente(Constantes.USUARIOLOGUEADO.getId())){
                 dao = new ProductoDao();
-                this.lstCarrito.add(prop);
                 if(Integer.parseInt(prop.getProperty("isCombo"))==0){
                     if(Constantes.USUARIOLOGUEADO.isIsPref() && ((ProductoDao)dao).isPromoDisp(Integer.parseInt(prop.getProperty("ProductoID"))) ){
                         //Esta en promo la wea
@@ -561,7 +609,7 @@ public class MenuCliente implements IMenu {
                         tblProductos.setModel(model);
                         txtSubTotal.setText("0.0");
                         txtTotal.setText("0.0");
-                        lstCarrito.clear();
+                        lstCarritoSearch.clear();
                         this.carrito = new CarritoCompra();
                         JOptionPane.showMessageDialog(null, "La compra se ha relizado con exito", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
                         this.compraRealizada = true;
@@ -1018,6 +1066,57 @@ public class MenuCliente implements IMenu {
             });
             
             //</editor-fold>
+            
+            txtBuscar.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    if(Character.isDigit(e.getKeyChar()))
+                        e.consume();
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    //Modelo base
+                    DefaultTableModel model = new DefaultTableModel(){
+                    @Override
+                        public boolean isCellEditable(int row,int column){
+                            return false;
+                        }
+                    };
+                    
+                    //Cargando Columnas al modelo
+                    dao = new ComboDao();
+                    List<ArmaCombos> lstCombosArm = ((ComboDao)dao).getAll();
+                    List<ArmaCombos> lstCombosArmFiltered = new ArrayList<>();
+                    
+                    
+                    lstCombosArm.stream().filter((ArmaCombos x)-> x.nombre.contains(txtBuscar.getText())).forEach((ArmaCombos z) ->{
+                        lstCombosArmFiltered.add(z);
+                    });
+                    
+                    for (Field f : lstCombosArm.get(0).getClass().getDeclaredFields()) {
+                        model.addColumn(f.getName());
+                    }
+                    //Cargando filas al modelo
+                    for(ArmaCombos arm  : lstCombosArmFiltered){
+                        model.addRow(new Object[]{arm.getId(),arm.getNombre(),arm.getPrecio(),arm.activado,arm.borrado});
+                    }
+
+
+                    tblCombos.setModel(model);
+                    TableColumnModel tcm = tblCombos.getColumnModel();
+                    tcm.removeColumn( tcm.getColumn(4) );
+                    tcm.removeColumn( tcm.getColumn(3) );
+                    tcm.removeColumn( tcm.getColumn(0) );
+                }
+            });
             
             //<editor-fold defaultstate="collapsed" desc="Salir">
             JButton btCerrar = opt.getRootPane().getDefaultButton(); 

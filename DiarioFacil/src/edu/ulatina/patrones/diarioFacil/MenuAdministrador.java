@@ -259,7 +259,7 @@ public class MenuAdministrador implements IMenu {
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                     if(!Character.isDigit(e.getKeyChar()))
                         e.consume();
-                }
+                    }
 
                 @Override
                 public void keyPressed(KeyEvent e) {
