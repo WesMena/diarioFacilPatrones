@@ -7,6 +7,7 @@ package edu.ulatina.patrones.diarioFacil;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Optional;
 import javax.swing.JOptionPane;
 
 /**
@@ -32,8 +33,33 @@ public class Observador implements IObservador{
     @Override
     public void observadoActualizado() {
         producto = new ProductoDao();
+        ClienteDao cli=new ClienteDao();
+       
         List<Producto> lstprod=producto.getAll();
         MandaCorreos m = new MandaCorreos();
+        
+        //Convierte a un cliente en frecuente si cumple con los criterios 
+        Boolean cumpleCriterios;
+        EsFrecuente frecuente= new EsFrecuente();
+       Optional<Cliente> cliente; 
+      cliente=cli.get(Constantes.USUARIOLOGUEADO.getId());
+     
+        cumpleCriterios=frecuente.clienteFrecuente(cliente.get());
+        
+          String params[]=new String[4];
+      
+        if(cumpleCriterios){
+           
+           cliente.get().setIsPref(true);
+           
+            cli.update(cliente.get(), params);
+        }
+        
+        
+        
+        
+        
+        //manda un correo si stockActual<=stockMinimo
     try{    
 
         for (Producto prod : lstprod){
@@ -50,7 +76,7 @@ public class Observador implements IObservador{
                
                //Seteamos el stock 
                prod.setStockActual(nuevoStock);
-              String params[]=new String[4];
+            
                producto.update(prod, params);
             }
         }

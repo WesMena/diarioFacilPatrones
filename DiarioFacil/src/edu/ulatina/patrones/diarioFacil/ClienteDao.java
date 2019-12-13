@@ -157,9 +157,12 @@ public class ClienteDao implements Dao<Cliente>{
             Conexion conexion = Conexion.getInstance();
             conexion.conectar();
             proc = conexion.conn.prepareCall("{Call update_user(?,?,?,?,?,?)}");
+            
             proc.setString("nombre", t.getNombreUsuario());
             proc.setString("email", t.getEmailUsuario());
+            
             proc.setString("userPassword", t.getPassword());
+           
             proc.setInt("idMod", t.getId());
             proc.setBoolean("borrado", t.isIsActive());
             proc.setBoolean("isPref", t.isIsPref());
