@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.Field;
@@ -63,6 +64,7 @@ public class MenuCliente extends Observado implements IMenu {
         JButton btnVerReporte = new JButton("Ver Reporte");
         JButton btnCambiarPass = new JButton("Cambiar Contraseña");
 
+
         
         btnUltimaOrden.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/buscarOrden.png"));
         btnCrearOrden.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/orden.png"));
@@ -72,6 +74,7 @@ public class MenuCliente extends Observado implements IMenu {
         pnlBack.add(btnUltimaOrden);
         pnlBack.add(btnCrearOrden);
         pnlBack.add(btnVerReporte);
+        pnlBack.add(btnCambiarPass);
         pnlBack.add(btnCambiarPass);
        
         JComponent[] component = new JComponent[]{pnlBack};
@@ -100,8 +103,7 @@ public class MenuCliente extends Observado implements IMenu {
               Optional op = Optional.empty();
               clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
               dialog.setVisible(true);
-          })
-                  ;
+          });
          
          
          
@@ -1118,13 +1120,16 @@ public class MenuCliente extends Observado implements IMenu {
     JPanel panlBack = new JPanel();
     JPanel pnlButtons = new JPanel();
     JPanel pnlPassword = new JPanel();
+    JButton btnResetPass = new JButton("Revertir cambio");
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="UI">
     pnlButtons.setSize(10,25);
-    pnlButtons.setLayout(new BorderLayout());
-    pnlButtons.add(btnPassAceptar,BorderLayout.CENTER);
+    pnlButtons.setLayout(new GridLayout(2,1));
+    pnlButtons.add(btnPassAceptar);
+    pnlButtons.add(btnResetPass);
+    
     
     pnlPassword.setSize(10,25);
     pnlPassword.setLayout(new BorderLayout());
@@ -1146,7 +1151,7 @@ public class MenuCliente extends Observado implements IMenu {
     JDialog dialog = opt.createDialog(null, "Cambio de Contraseña");
     dialog.setIconImage(icon);
     dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    dialog.setSize(200, 150);
+    dialog.setSize(200, 155);
     dialog.setResizable(false);
     JButton btCerrar = opt.getRootPane().getDefaultButton(); 
     btCerrar.setLabel("Cerrar");
@@ -1154,14 +1159,37 @@ public class MenuCliente extends Observado implements IMenu {
     
     //<editor-fold defaultstate="collapsed" desc="Logica" >
     int idUser  = Constantes.USUARIOLOGUEADO.getId();
+    btnResetPass.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dao = new ClienteDao();
+            if(((ClienteDao)dao).passChanged(Constantes.USUARIOLOGUEADO.Id)){
+                int result = -1;
+                result = JOptionPane.showConfirmDialog(null, "Desea restaurar su antigua contraseña ? ","Sys", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+                if(result==JOptionPane.YES_OPTION){
+                    dao = new ClienteDao();
+                    Constantes.USUARIOLOGUEADO.setPassword(Constantes.MEMENTOS.get(0).getEstado());
+                    ((ClienteDao)dao).update(Constantes.USUARIOLOGUEADO, new String[]{});
+                    JOptionPane.showMessageDialog(null, "Contraseña Actualizada","Sys",JOptionPane.INFORMATION_MESSAGE);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "No se han realizado cambios","Sys",JOptionPane.ERROR_MESSAGE);
+                btnResetPass.setEnabled(false);
+            }
+        }
+    });
     btnPassAceptar.addActionListener((ActionEvent e) -> {
       //Guardar Contraseña Nueva
     if(txtPassword.getText().length()==0){
-    JOptionPane.showMessageDialog(null, "Por favor ingrese nueva contraseña");
+        JOptionPane.showMessageDialog(null, "Por favor ingrese nueva contraseña");
     }else{
-    dao = new ClienteDao();
-    ((ClienteDao)dao).cambiarPassword(txtPassword.getText(), idUser);
-    JOptionPane.showMessageDialog(null, "Contraseña Actualizada");
+        dao = new ClienteDao();
+        ((ClienteDao)dao).cambiarPassword(txtPassword.getText(), idUser);
+        btnResetPass.setEnabled(true);
+        
+        ((ClienteDao)dao).login(Constantes.USUARIOLOGUEADO.getNombreUsuario(), Constantes.USUARIOLOGUEADO.getPassword());
+        
+        JOptionPane.showMessageDialog(null, "Contraseña Actualizada");
     } 
      
     });

@@ -66,7 +66,10 @@ public class ClienteDao implements Dao<Cliente>{
 //                System.out.println(""+e.getMessage());
 //            }
 //        }
-        
+        Constantes.MEMENTOS = new ArrayList<>();
+        this.getMementos(this.getByPassAndUser(password, password).Id).forEach((m) -> {
+            Constantes.MEMENTOS.add(m);
+        });
         return ok;
     }
     
@@ -137,8 +140,7 @@ public class ClienteDao implements Dao<Cliente>{
             proc.setString("nombre", t.getNombreUsuario());
             proc.setString("email", t.getEmailUsuario());
             proc.setString("userPassword", t.getPassword());
-            proc.execute();
-        }catch(SQLException e ){
+            proc.execute();        }catch(SQLException e ){
             System.err.println(""+e.getMessage());
         }
 //        finally{
@@ -656,16 +658,63 @@ public class ClienteDao implements Dao<Cliente>{
     }
     
     
-
-       public void cambiarPassword(String pass,int idCliente){
+    public void cambiarPassword(String pass,int idCliente){
+            try{
+                Conexion conexion = Conexion.getInstance();
+                conexion.conectar();
+                String sql = "UPDATE cliente SET PassCliente = '" + pass + "' WHERE idCliente = " + idCliente;
+                stm = conexion.conn.prepareStatement(sql);
+                stm.executeUpdate(sql);
+                }catch(SQLException e){
+                System.err.println(""+e.getMessage());
+            }
+        }
+       
+    public void mementoSave(int idCLiente,String newpass){
+        try{
+            Conexion conexion  = Conexion.getInstance();
+            conexion.conectar();
+            proc = conexion.conn.prepareCall("Call insert_memento(?,?)");
+            proc.setInt(1, idCLiente);
+            proc.setString(2, newpass);
+            proc.execute();
+        }catch(SQLException ex){
+            System.err.println(""+ex.getMessage());
+        }
+                
+    }   
+    
+    public List<Memento> getMementos(int idUser){
+        List<Memento> returned = new ArrayList<>();
         try{
             Conexion conexion = Conexion.getInstance();
-            conexion.conectar();
-            String sql = "UPDATE cliente SET PassCliente = '" + pass + "' WHERE idCliente = " + idCliente;
-            stm = conexion.conn.prepareStatement(sql);
-            stm.executeUpdate(sql);
-            }catch(SQLException e){
+            stm = conexion.conn.createStatement();
+            rset = stm.executeQuery("select pass from memento where memento.idMemento = \'"+idUser+"\'");
+            while(rset.next()){
+                returned.add(new Memento(rset.getString(1)));
+            }
+        }catch(SQLException e){
             System.err.println(""+e.getMessage());
         }
+        return returned;
+    }
+    
+    public boolean passChanged(int idCliente){
+        boolean returned  = false;
+        int caster =-1;
+        try{
+            Conexion conexion  = Conexion.getInstance();
+            stm = conexion.conn.createStatement();
+            rset = stm.executeQuery(String.format("select count(*) from memento where memento.cliente =  %1$o \n" +
+            "and memento.pass  not in (select cliente.PassCliente from cliente  where cliente.idCliente = %1$o  );",idCliente));
+            while(rset.next())
+                caster = rset.getInt(1);
+            if(caster==1)
+                returned = true;
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
         }
+        return returned;
+    }
+
 }

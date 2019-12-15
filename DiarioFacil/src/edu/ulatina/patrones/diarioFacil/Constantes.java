@@ -5,6 +5,9 @@
  */
 package edu.ulatina.patrones.diarioFacil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Nvidi
@@ -12,4 +15,5 @@ package edu.ulatina.patrones.diarioFacil;
 public final class Constantes {
        public static  Cliente USUARIOLOGUEADO = new Cliente(); 
        public static  Administrador ADMINLOGUEADO = new Administrador(); 
+       public static  List<Memento> MEMENTOS = new  ArrayList<>();
 }

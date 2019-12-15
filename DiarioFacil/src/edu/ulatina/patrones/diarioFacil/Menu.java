@@ -14,6 +14,6 @@ public abstract class Menu {
     protected IMenu menu;
     
     public void DesplegarMenu(){
-     menu.mostrarMenu();
+        menu.mostrarMenu();
     }
 }
