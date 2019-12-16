@@ -412,7 +412,7 @@ public class MenuAdministrador implements IMenu {
                 if(!txtUserName.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtPassword.getText().isEmpty()){
                     dao = new ClienteDao();
                     dao.save(new Cliente(txtEmail.getText(),txtPassword.getText(),txtUserName.getText(),true,false));
-                    //Mensaje de exito y limpieza de campos
+                    //Mensaje de exito y limpieza de camposz`
                     txtUserName.setText("");
                     txtEmail.setText("");
                     txtPassword.setText("");
