@@ -50,7 +50,8 @@ public class ClienteDao implements Dao<Cliente>{
             Conexion conexion = Conexion.getInstance();
             conexion.conectar();
             stm = conexion.conn.createStatement();
-            rset = stm.executeQuery(String.format("select * from cliente where NombreCliente =\"%s\" and PassCliente=\"%s\" and borrado != 1",nombreUsuario,password));
+            String query  = String.format("select * from cliente where NombreCliente =\"%s\" and PassCliente=\"%s\" and borrado != 1",nombreUsuario,password);
+            rset = stm.executeQuery(query);
             while(rset.next())
                 ok=true;
             
@@ -66,10 +67,13 @@ public class ClienteDao implements Dao<Cliente>{
 //                System.out.println(""+e.getMessage());
 //            }
 //        }
+        
         Constantes.MEMENTOS = new ArrayList<>();
-        this.getMementos(this.getByPassAndUser(password, password).Id).forEach((m) -> {
+        this.getMementos(this.getByPassAndUser(nombreUsuario, password).Id).forEach((m) -> {
             Constantes.MEMENTOS.add(m);
+            Constantes.USUARIOLOGUEADO.setPassword(password);
         });
+        
         return ok;
     }
     
@@ -262,13 +266,15 @@ public class ClienteDao implements Dao<Cliente>{
             Conexion conexion = Conexion.getInstance();
             conexion.conectar();
             stm = conexion.conn.createStatement();
-            rset = stm.executeQuery(String.format("select cliente.idCliente,cliente.NombreCliente,cliente.ClientePref from cliente \n" +
+            rset = stm.executeQuery(String.format("select cliente.idCliente,cliente.NombreCliente,cliente.ClientePref,cliente.PassCliente,cliente.CorreoCliente from cliente \n" +
             "where cliente.PassCliente = '%s'\n" +
             "and cliente.NombreCliente='%s'", pass,user));
             while(rset.next()){
                 returned.setNombreUsuario(rset.getString(2));
                 returned.setIsPref(rset.getBoolean(3));
                 returned.setId(rset.getInt(1));
+                returned.setPassword(rset.getString(4));
+                returned.setEmailUsuario(rset.getString(5));
             }
                 
         }catch(SQLException e){
