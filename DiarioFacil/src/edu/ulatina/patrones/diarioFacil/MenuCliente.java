@@ -1168,9 +1168,12 @@ public class MenuCliente extends Observado implements IMenu {
                 result = JOptionPane.showConfirmDialog(null, "Desea restaurar su antigua contraseña ? ","Sys", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                 if(result==JOptionPane.YES_OPTION){
                     dao = new ClienteDao();
-                    Constantes.USUARIOLOGUEADO.setPassword(Constantes.MEMENTOS.get(0).getEstado());
+                    Constantes.MEMENTOS = new ArrayList();
+                    ((ClienteDao)dao).login(Constantes.USUARIOLOGUEADO.getNombreUsuario(), Constantes.USUARIOLOGUEADO.getPassword());
+
                     ((ClienteDao)dao).update(Constantes.USUARIOLOGUEADO, new String[]{});
                     JOptionPane.showMessageDialog(null, "Contraseña Actualizada","Sys",JOptionPane.INFORMATION_MESSAGE);
+                     btnResetPass.setEnabled(false);
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "No se han realizado cambios","Sys",JOptionPane.ERROR_MESSAGE);
@@ -1185,7 +1188,7 @@ public class MenuCliente extends Observado implements IMenu {
     }else{
         dao = new ClienteDao();
         ((ClienteDao)dao).cambiarPassword(txtPassword.getText(), idUser);
-        btnResetPass.setEnabled(true);
+         btnResetPass.setEnabled(true);
         
         ((ClienteDao)dao).login(Constantes.USUARIOLOGUEADO.getNombreUsuario(), Constantes.USUARIOLOGUEADO.getPassword());
         
