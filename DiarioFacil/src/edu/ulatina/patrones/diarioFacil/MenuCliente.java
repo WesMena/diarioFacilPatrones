@@ -1186,7 +1186,14 @@ public class MenuCliente extends Observado implements IMenu {
 
             
             carritoVer.stream().forEach((Properties prop)->{
-                model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});
+                dao = new ProductoDao();
+                Double idProd = Double.parseDouble(prop.getProperty("ProductoID"));
+                if(((ProductoDao)dao).isPromoDisp(idProd.intValue()) && Constantes.USUARIOLOGUEADO.isIsPref()){
+                    dao = new ClienteDao();
+                    model.addRow(new Object[]{ Double.parseDouble(prop.getProperty(precio_unitario))-Double.parseDouble(prop.getProperty(precio_unitario))*0.10 ,prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                }else{
+                  model.addRow(new Object[]{prop.getProperty(precio_unitario),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});     
+                }
             });
             
 

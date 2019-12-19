@@ -261,6 +261,7 @@ public class ClienteDao implements Dao<Cliente>{
     }
     
     public Cliente getByPassAndUser(String user,String pass){
+
         Cliente returned = new Cliente();
         try{
             Conexion conexion = Conexion.getInstance();
@@ -596,7 +597,7 @@ public class ClienteDao implements Dao<Cliente>{
             if(idFactura.isPresent()){
                 int idFact =Integer.parseInt(idFactura.get().toString());
                 query = "select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
-                "            item.cantidad as Cantidad, \n" +
+                "            producto.idProducto as productID,item.cantidad as Cantidad, \n" +
                 "            item.subtotal as Monto, \n" +
                 "            item.isCombo,\n" +
                 "            item.producto as productID ,\n" +
@@ -608,7 +609,7 @@ public class ClienteDao implements Dao<Cliente>{
                 "            and orden.idOrden =  "+idFact;
             }else{
                 query = String.format("select producto.NombreProducto as Producto,producto.PrecioProducto as Precio_unitario, \n" +
-                "            item.cantidad as Cantidad, \n" +
+                "            producto.idProducto as productID,item.cantidad as Cantidad, \n" +
                 "            item.subtotal as Monto, \n" +
                 "            item.isCombo,\n" +
                 "		 item.producto as productID ,\n" +
