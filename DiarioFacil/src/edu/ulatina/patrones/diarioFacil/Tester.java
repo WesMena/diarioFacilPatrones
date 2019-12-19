@@ -19,7 +19,9 @@ public class Tester {
   
     
    public static void main(String[] args) throws SQLException, MessagingException {  
-       MandaCorreos correo=new MandaCorreos();
+       
+       MandaCorreos m = new MandaCorreos();
+       //m.enviarCorreo(2, 3, 10);
        //IdProveedor,IdProducto,CantidadPedir
        
      

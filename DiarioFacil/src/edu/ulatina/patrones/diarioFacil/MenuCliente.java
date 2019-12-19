@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.Field;
@@ -43,7 +44,7 @@ import javax.swing.table.TableColumnModel;
  *
  * @author josem
  */
-public class MenuCliente implements IMenu {
+public class MenuCliente extends Observado implements IMenu {
     public static Dao dao;
     
     OrdenCompra  carrito= new CarritoCompra();
@@ -66,6 +67,7 @@ public class MenuCliente implements IMenu {
         JButton btnVerReporte = new JButton("Ver Reporte");
         JButton btnCambiarPass = new JButton("Cambiar Contraseña");
 
+
         
         btnUltimaOrden.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/buscarOrden.png"));
         btnCrearOrden.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/orden.png"));
@@ -75,6 +77,7 @@ public class MenuCliente implements IMenu {
         pnlBack.add(btnUltimaOrden);
         pnlBack.add(btnCrearOrden);
         pnlBack.add(btnVerReporte);
+        pnlBack.add(btnCambiarPass);
         pnlBack.add(btnCambiarPass);
        
         JComponent[] component = new JComponent[]{pnlBack};
@@ -96,7 +99,18 @@ public class MenuCliente implements IMenu {
         //</editor-fold>
         
          //<editor-fold defaultstate="collapsed" desc="Logica">
-          btnCrearOrden.addActionListener((ActionEvent e) -> {
+          
+          btnUltimaOrden.addActionListener((ActionEvent e) -> {
+              //Abrir Ver Ultima Orden
+              dialog.setVisible(false);
+              Optional op = Optional.empty();
+              clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
+              dialog.setVisible(true);
+          });
+         
+         
+         
+         btnCrearOrden.addActionListener((ActionEvent e) -> {
               //Abrir menu de ordenes
               dialog.setVisible(false);
               menuClienteCrearCompra();
@@ -613,6 +627,7 @@ public class MenuCliente implements IMenu {
                         this.carrito = new CarritoCompra();
                         JOptionPane.showMessageDialog(null, "La compra se ha relizado con exito", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png")); 
                         this.compraRealizada = true;
+                        notificarObservadores();
                         Optional op = Optional.empty();
                         clienteVerUltimaOrden(Constantes.USUARIOLOGUEADO.getId(),op);
                    }else if(!returned.errors().equals("")){
@@ -1161,7 +1176,7 @@ public class MenuCliente implements IMenu {
             btnUpdate.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/expediente.png"));
             btnDelete.setIcon(new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/borrar.png"));
             
-            
+            dao = new ClienteDao();
             carritoVer = ((ClienteDao)dao).getUltimaOrden(Constantes.USUARIOLOGUEADO.Id,op);
             
             //Cargando modelo 
@@ -1284,13 +1299,16 @@ public class MenuCliente implements IMenu {
     JPanel panlBack = new JPanel();
     JPanel pnlButtons = new JPanel();
     JPanel pnlPassword = new JPanel();
+    JButton btnResetPass = new JButton("Revertir cambio");
     
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="UI">
     pnlButtons.setSize(10,25);
-    pnlButtons.setLayout(new BorderLayout());
-    pnlButtons.add(btnPassAceptar,BorderLayout.CENTER);
+    pnlButtons.setLayout(new GridLayout(2,1));
+    pnlButtons.add(btnPassAceptar);
+    pnlButtons.add(btnResetPass);
+    
     
     pnlPassword.setSize(10,25);
     pnlPassword.setLayout(new BorderLayout());
@@ -1312,7 +1330,7 @@ public class MenuCliente implements IMenu {
     JDialog dialog = opt.createDialog(null, "Cambio de Contraseña");
     dialog.setIconImage(icon);
     dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    dialog.setSize(200, 150);
+    dialog.setSize(200, 155);
     dialog.setResizable(false);
     JButton btCerrar = opt.getRootPane().getDefaultButton(); 
     btCerrar.setLabel("Cerrar");
@@ -1320,14 +1338,40 @@ public class MenuCliente implements IMenu {
     
     //<editor-fold defaultstate="collapsed" desc="Logica" >
     int idUser  = Constantes.USUARIOLOGUEADO.getId();
+    btnResetPass.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dao = new ClienteDao();
+            if(((ClienteDao)dao).passChanged(Constantes.USUARIOLOGUEADO.Id)){
+                int result = -1;
+                result = JOptionPane.showConfirmDialog(null, "Desea restaurar su antigua contraseña ? ","Sys", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+                if(result==JOptionPane.YES_OPTION){
+                    dao = new ClienteDao();
+                    Constantes.MEMENTOS = new ArrayList();
+                    ((ClienteDao)dao).login(Constantes.USUARIOLOGUEADO.getNombreUsuario(), Constantes.USUARIOLOGUEADO.getPassword());
+
+                    ((ClienteDao)dao).update(Constantes.USUARIOLOGUEADO, new String[]{});
+                    JOptionPane.showMessageDialog(null, "Contraseña Actualizada","Sys",JOptionPane.INFORMATION_MESSAGE);
+                     btnResetPass.setEnabled(false);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "No se han realizado cambios","Sys",JOptionPane.ERROR_MESSAGE);
+                btnResetPass.setEnabled(false);
+            }
+        }
+    });
     btnPassAceptar.addActionListener((ActionEvent e) -> {
       //Guardar Contraseña Nueva
     if(txtPassword.getText().length()==0){
-    JOptionPane.showMessageDialog(null, "Por favor ingrese nueva contraseña");
+        JOptionPane.showMessageDialog(null, "Por favor ingrese nueva contraseña");
     }else{
-    dao = new ClienteDao();
-    ((ClienteDao)dao).cambiarPassword(txtPassword.getText(), idUser);
-    JOptionPane.showMessageDialog(null, "Contraseña Actualizada");
+        dao = new ClienteDao();
+        ((ClienteDao)dao).cambiarPassword(txtPassword.getText(), idUser);
+         btnResetPass.setEnabled(true);
+        
+        ((ClienteDao)dao).login(Constantes.USUARIOLOGUEADO.getNombreUsuario(), Constantes.USUARIOLOGUEADO.getPassword());
+        
+        JOptionPane.showMessageDialog(null, "Contraseña Actualizada");
     } 
      
     });

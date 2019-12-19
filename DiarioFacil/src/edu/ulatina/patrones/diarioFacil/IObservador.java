@@ -9,11 +9,8 @@ package edu.ulatina.patrones.diarioFacil;
  *
  * @author josem
  */
-public class AdminLogin extends Menu {
+public interface IObservador {
     
-    public AdminLogin(){
-
-        menu = new MenuAdministrador();
-        
-    }
+    public void observadoActualizado();
+    
 }

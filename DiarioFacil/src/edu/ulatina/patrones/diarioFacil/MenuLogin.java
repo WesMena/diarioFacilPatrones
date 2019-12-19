@@ -152,8 +152,8 @@ public class MenuLogin {
                 if(((AdminDao)userDao).login(txtUserNam.getText(), txtPassword.getText())){
                     JOptionPane.showMessageDialog(null, "Login correcto", "Sys", JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/edu/ulatina/patrones/diarioFacil/imagenes/icons8-ok-24.png"));
                     //Admin Logueado
-                    
-                    
+                   
+      
                     //Abrir menu de admin
                     Menu admin = new AdminLogin();
                     dialog.setVisible(false);

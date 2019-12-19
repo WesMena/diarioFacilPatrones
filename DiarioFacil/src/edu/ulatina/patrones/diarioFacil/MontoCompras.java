@@ -46,6 +46,7 @@ public class MontoCompras {
         
         //Condiciones para ser frecuente
        if(cantCompras>=5 && totalCompras>50000) {
+           
            elegible=true;
        }
        

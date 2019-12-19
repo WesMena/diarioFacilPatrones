@@ -133,6 +133,14 @@ public class MenuAdministrador implements IMenu {
             reporte.verOrdenes();
             dialog.setVisible(true);
     });
+        
+        btnAdminBuscarOrd.addActionListener((ActionEvent e)->{
+            dialog.setVisible(false);
+            BuscarFacturaMenu buscar = new BuscarFacturaMenu();
+            buscar.BuscarOrden();
+            dialog.setVisible(true);
+    });
+        
         //</editor-fold>
         //Arranque
         dialog.setVisible(true);
