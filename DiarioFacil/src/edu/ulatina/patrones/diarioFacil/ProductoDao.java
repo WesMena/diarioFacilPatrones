@@ -227,4 +227,23 @@ for(Producto prodModi:productos){
 //          }
 //      }
     }
+    
+    public boolean isPromoDisp(int idProducto){
+        boolean returned = false;
+        Statement stm  = null;
+        ResultSet rset = null;
+        try{
+
+            Conexion conn = Conexion.getInstance();
+            stm = conn.conn.createStatement();
+            rset = stm.executeQuery(String.format("select producto.promo from producto \n" +
+            "where producto.idProducto = %o",idProducto));
+            while(rset.next()){
+                returned = rset.getBoolean(1);
+            }
+        }catch(SQLException e){
+            System.err.println(""+e.getMessage());
+        }
+        return returned;
+    }
 }

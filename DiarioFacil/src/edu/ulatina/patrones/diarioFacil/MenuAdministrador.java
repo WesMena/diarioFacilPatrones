@@ -267,7 +267,7 @@ public class MenuAdministrador implements IMenu {
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                     if(!Character.isDigit(e.getKeyChar()))
                         e.consume();
-                }
+                    }
 
                 @Override
                 public void keyPressed(KeyEvent e) {
@@ -412,7 +412,7 @@ public class MenuAdministrador implements IMenu {
                 if(!txtUserName.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtPassword.getText().isEmpty()){
                     dao = new ClienteDao();
                     dao.save(new Cliente(txtEmail.getText(),txtPassword.getText(),txtUserName.getText(),true,false));
-                    //Mensaje de exito y limpieza de camposz`
+                    //Mensaje de exito y limpieza de campos
                     txtUserName.setText("");
                     txtEmail.setText("");
                     txtPassword.setText("");
