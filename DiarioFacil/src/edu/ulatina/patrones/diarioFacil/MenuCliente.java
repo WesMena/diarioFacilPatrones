@@ -529,7 +529,7 @@ public class MenuCliente extends Observado implements IMenu {
                     dao = new ClienteDao();
                     Double precioOr = Double.parseDouble(prop.getProperty(precio_unitario));
                     precioOr = precioOr - (precioOr*0.10);
-                    model.addRow(new Object[]{String.format("%,.2f", precioOr),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),prop.getProperty(monto), ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
+                    model.addRow(new Object[]{String.format("%,.2f", precioOr),prop.getProperty(producto),prop.getProperty("ProductoID"),prop.getProperty("isComboID"),prop.getProperty(cantidad),Double.parseDouble(prop.getProperty(cantidad))*precioOr, ((ClienteDao)dao).getComboByID(Integer.parseInt(prop.getProperty("isCombo")))});   
                 }
             });
             
